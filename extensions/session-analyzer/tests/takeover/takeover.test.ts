@@ -2,7 +2,7 @@
  * session-takeover doTakeover — 集成测试
  *
  * 测试 doTakeover 主函数与外部依赖的协作
- * @pi-lainforge/shared-utils 由 vitest.config.ts 的 alias 重定向到 mock
+ * @pi-atelier/shared-utils 由 vitest.config.ts 的 alias 重定向到 mock
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";

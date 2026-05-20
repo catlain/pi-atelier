@@ -2,7 +2,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, unlinkSync, rmSync, statSync } from "fs";
 import { join } from "path";
 import { tmpdir } from "os";
-import { getSettingsSection, patchSettingsSection, getSettingsValue, setSettingsValue } from "@pi-lainforge/shared-utils";
+import { getSettingsSection, patchSettingsSection, getSettingsValue, setSettingsValue } from "@pi-atelier/shared-utils";
 
 export const DISTILL_DIR = join(tmpdir(), "pi-distill");
 export const RECORDINGS_DIR = join(DISTILL_DIR, "recordings");

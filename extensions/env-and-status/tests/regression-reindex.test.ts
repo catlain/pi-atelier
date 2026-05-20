@@ -18,8 +18,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const mockBuildProjectIndex = vi.fn();
 const mockSyncSymlinksOnly = vi.fn();
 
-vi.mock("@pi-lainforge/cartog-manager", async () => {
-	const actual = await vi.importActual("@pi-lainforge/cartog-manager");
+vi.mock("@pi-atelier/cartog-manager", async () => {
+	const actual = await vi.importActual("@pi-atelier/cartog-manager");
 	return {
 		...actual,
 		buildProjectIndex: mockBuildProjectIndex,

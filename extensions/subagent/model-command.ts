@@ -9,7 +9,7 @@ import {
 	setSubagentModel,
 	isSubagentModelRestored,
 	setSubagentModelRestored,
-} from "@pi-lainforge/workflow-core";
+} from "@pi-atelier/workflow-core";
 
 export function registerModelManagement(pi: ExtensionAPI): void {
 	// /subagent-model 命令

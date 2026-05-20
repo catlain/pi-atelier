@@ -1,5 +1,5 @@
 /**
- * @pi-lainforge/shared-utils — barrel export
+ * @pi-atelier/shared-utils — barrel export
  */
 export {
 	parseFileName,

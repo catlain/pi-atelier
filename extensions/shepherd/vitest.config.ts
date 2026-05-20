@@ -11,7 +11,7 @@ export default defineConfig({
 				globalNodeModules,
 				"@earendil-works/pi-coding-agent/dist/index.js",
 			),
-			"@pi-lainforge/shepherd": path.resolve(__dirname, "../packages/shepherd/src/index.ts"),
+			"@pi-atelier/shepherd": path.resolve(__dirname, "../packages/shepherd/src/index.ts"),
 		},
 	},
 	test: {

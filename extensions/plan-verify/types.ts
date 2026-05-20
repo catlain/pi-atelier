@@ -4,7 +4,7 @@
  * 通用类型（SubagentResult / SubagentEvent）从 workflow 导入。
  */
 
-export type { SubagentResult, SubagentEvent } from "@pi-lainforge/workflow-core";
+export type { SubagentResult, SubagentEvent } from "@pi-atelier/workflow-core";
 
 export type Phase = "idle" | "planning" | "verifying" | "fixing" | "review-decision" | "writing-tests" | "test-review-decision" | "executing" | "fixing-tests" | "simplifying";
 

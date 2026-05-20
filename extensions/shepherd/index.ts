@@ -30,10 +30,10 @@ import {
 	pushWarning, hasWarnings, notifySummary,
 	drainHints,
 	registerToolCall, registerToolResult, type ToolState,
-} from "@pi-lainforge/shepherd";
+} from "@pi-atelier/shepherd";
 import { writeFileSync, mkdirSync, readdirSync } from "fs";
 import { tmpdir } from "os";
-import { getSettingsValue } from "@pi-lainforge/shared-utils";
+import { getSettingsValue } from "@pi-atelier/shared-utils";
 
 /** 本地 hints 缓冲区（收集 pi.events.emit("ephemeral:hint") 的数据） */
 const _localHints: { text: string; short?: string }[] = [];

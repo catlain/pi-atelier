@@ -24,7 +24,7 @@ import {
   isSubagent,
   getMatchTargets,
   type Rule,
-} from "@pi-lainforge/shepherd";
+} from "@pi-atelier/shepherd";
 
 // ── 测试临时目录 ──────────────────────────────────────────
 

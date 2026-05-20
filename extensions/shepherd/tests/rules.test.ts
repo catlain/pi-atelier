@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import * as path from "node:path";
 import * as fs from "node:fs";
 import { execSync } from "node:child_process";
-import { getMatchTargets } from "@pi-lainforge/shepherd";
+import { getMatchTargets } from "@pi-atelier/shepherd";
 
 const RULES_PATH = path.resolve(
 	path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1")),

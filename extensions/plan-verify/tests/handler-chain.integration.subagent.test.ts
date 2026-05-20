@@ -18,7 +18,7 @@ import * as os from "node:os";
 // ============================================================
 
 const mockRunSubagent = vi.fn();
-vi.mock("@pi-lainforge/workflow-core", () => ({
+vi.mock("@pi-atelier/workflow-core", () => ({
 	runSubagent: mockRunSubagent,
 	createSubagentWidget: vi.fn(() => ({ onEvent: vi.fn(), cleanup: vi.fn() })),
 	saveSubagentOutput: vi.fn((_cwd, _name, _output, _meta) => ({

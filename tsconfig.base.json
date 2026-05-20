@@ -41,28 +41,28 @@
       "@earendil-works/pi-ai/*": [
         "/home/lain/.local/share/fnm/node-versions/v22.22.2/installation/lib/node_modules/@earendil-works/pi-coding-agent/node_modules/@earendil-works/pi-ai/*"
       ],
-      "@pi-lainforge/shared-utils": [
+      "@pi-atelier/shared-utils": [
         "lib/shared-utils/src/index"
       ],
-      "@pi-lainforge/shared-utils/*": [
+      "@pi-atelier/shared-utils/*": [
         "lib/shared-utils/src/*"
       ],
-      "@pi-lainforge/workflow-core": [
+      "@pi-atelier/workflow-core": [
         "lib/workflow-core/src/index"
       ],
-      "@pi-lainforge/workflow-core/*": [
+      "@pi-atelier/workflow-core/*": [
         "lib/workflow-core/src/*"
       ],
-      "@pi-lainforge/shepherd": [
+      "@pi-atelier/shepherd": [
         "lib/shepherd/src/index"
       ],
-      "@pi-lainforge/shepherd/*": [
+      "@pi-atelier/shepherd/*": [
         "lib/shepherd/src/*"
       ],
-      "@pi-lainforge/cartog-manager": [
+      "@pi-atelier/cartog-manager": [
         "lib/cartog-manager/src/index"
       ],
-      "@pi-lainforge/cartog-manager/*": [
+      "@pi-atelier/cartog-manager/*": [
         "lib/cartog-manager/src/*"
       ]
     }

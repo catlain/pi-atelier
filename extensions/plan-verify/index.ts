@@ -21,7 +21,7 @@ import type { PlanVerifyState, Phase } from "./types";
 import { loadSubagentRules } from "./prompts";
 import { ORCHESTRATOR_PLANNING_HEADER, buildReviewDecisionPrompt, buildTestReviewDecisionPrompt } from "./orchestrator";
 import { registerPvTool } from "./handlers/index";
-import { setSessionFileResolver } from "@pi-lainforge/workflow-core";
+import { setSessionFileResolver } from "@pi-atelier/workflow-core";
 import {
 	getState,
 	resetState,

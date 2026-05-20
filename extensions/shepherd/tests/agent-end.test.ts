@@ -8,7 +8,7 @@
 
 import { describe, it, beforeEach } from "vitest";
 import assert from "node:assert/strict";
-import { pushWarning, hasWarnings, drainHints } from "@pi-lainforge/shepherd";
+import { pushWarning, hasWarnings, drainHints } from "@pi-atelier/shepherd";
 
 // ── 模拟 agent_end handler 的核心逻辑 ──
 

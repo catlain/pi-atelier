@@ -19,8 +19,8 @@ import {
 	CARTOG_EXT_DIR, CARTOG_MERGE_BASE, GLOBAL_CONFIG_PATH,
 	safeExec, getDbMtime, projectHash,
 	loadConfig, resolveExtraDirs, buildProjectIndex, syncSymlinksOnly, getDbStats, cleanupLegacyMergeDir,
-} from "@pi-lainforge/cartog-manager";
-import { getSettingsValue, setSettingsValue } from "@pi-lainforge/shared-utils";
+} from "@pi-atelier/cartog-manager";
+import { getSettingsValue, setSettingsValue } from "@pi-atelier/shared-utils";
 
 // ── GLM 环境变量注入 ───────────────────────────────────
 

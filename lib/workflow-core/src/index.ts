@@ -1,5 +1,5 @@
 /**
- * @pi-lainforge/workflow-core — barrel export
+ * @pi-atelier/workflow-core — barrel export
  */
 export { runSubagent, validateOutputConstraints, setSessionFileResolver, type OutputConstraint } from "./subagent";
 export { loadAgentDef, type AgentDef } from "./agent-loader";

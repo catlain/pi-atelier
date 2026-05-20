@@ -4,7 +4,7 @@
 
 import { describe, it } from "vitest";
 import assert from "node:assert/strict";
-import { getMatchTargets, ruleMatches } from "@pi-lainforge/shepherd";
+import { getMatchTargets, ruleMatches } from "@pi-atelier/shepherd";
 import { makeRule } from "./helpers.js";
 
 // ================================================================

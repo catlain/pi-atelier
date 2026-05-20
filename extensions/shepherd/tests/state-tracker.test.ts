@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { StateTracker } from "@pi-lainforge/shepherd";
+import { StateTracker } from "@pi-atelier/shepherd";
 
 function makeResettableRule(overrides: Record<string, any> = {}) {
   return {

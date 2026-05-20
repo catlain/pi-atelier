@@ -10,9 +10,9 @@ import * as path from "node:path";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { PlanVerifyState } from "../types";
 import { validatePlanFile, isSubagentSuccess, buildTask } from "../utils";
-import { runSubagent } from "@pi-lainforge/workflow-core";
-import { createSubagentWidget } from "@pi-lainforge/workflow-core";
-import { saveSubagentOutput } from "@pi-lainforge/workflow-core";
+import { runSubagent } from "@pi-atelier/workflow-core";
+import { createSubagentWidget } from "@pi-atelier/workflow-core";
+import { saveSubagentOutput } from "@pi-atelier/workflow-core";
 
 
 export async function doWriteTests(

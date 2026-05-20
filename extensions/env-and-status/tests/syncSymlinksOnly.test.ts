@@ -14,7 +14,7 @@ import { describe, it, expect, afterEach, beforeAll, afterAll } from "vitest";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
-import { syncSymlinksOnly, CARTOG_EXT_DIR } from "@pi-lainforge/cartog-manager";
+import { syncSymlinksOnly, CARTOG_EXT_DIR } from "@pi-atelier/cartog-manager";
 import { createTempProject, addExtraDir, writeConfig, cleanupProject, linkTarget } from "./helpers";
 
 // 使用临时全局配置文件，避免污染真实全局 cartog-index.json

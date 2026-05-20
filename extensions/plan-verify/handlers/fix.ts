@@ -6,9 +6,9 @@ import * as fs from "node:fs";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { PlanVerifyState } from "../types";
 import { buildTask, extractIssues, NO_RETRO_LABEL_CONSTRAINT, ISSUES_JSON_CONSTRAINT, isSubagentSuccess, validatePlanFile } from "../utils";
-import { runSubagent } from "@pi-lainforge/workflow-core";
-import { createSubagentWidget } from "@pi-lainforge/workflow-core";
-import { saveSubagentOutput } from "@pi-lainforge/workflow-core";
+import { runSubagent } from "@pi-atelier/workflow-core";
+import { createSubagentWidget } from "@pi-atelier/workflow-core";
+import { saveSubagentOutput } from "@pi-atelier/workflow-core";
 
 
 export async function doFix(

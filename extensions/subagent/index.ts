@@ -17,9 +17,9 @@ import * as path from "node:path";
 import * as os from "node:os";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import { runSubagent, isSubagentSuccess, createSubagentWidget, saveSubagentOutput, loadAgentDef, setSessionFileResolver } from "@pi-lainforge/workflow-core";
+import { runSubagent, isSubagentSuccess, createSubagentWidget, saveSubagentOutput, loadAgentDef, setSessionFileResolver } from "@pi-atelier/workflow-core";
 import { registerModelManagement } from "./model-command";
-import { discoverAgents, getAgentDescription } from "@pi-lainforge/shared-utils";
+import { discoverAgents, getAgentDescription } from "@pi-atelier/shared-utils";
 
 // ============================================================
 // 扩展入口

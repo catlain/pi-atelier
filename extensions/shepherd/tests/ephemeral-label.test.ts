@@ -10,13 +10,13 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { pushWarning, notifySummary } from "@pi-lainforge/shepherd";
+import { pushWarning, notifySummary } from "@pi-atelier/shepherd";
 import {
   pushHint,
   drainHints,
   injectHints,
   peekLabels,
-} from "@pi-lainforge/shepherd";
+} from "@pi-atelier/shepherd";
 
 function resetHints() {
   drainHints();

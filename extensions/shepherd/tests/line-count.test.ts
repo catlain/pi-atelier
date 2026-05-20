@@ -15,7 +15,7 @@ import * as os from "node:os";
 
 // 由于 checkLineCount 通过 pushWarning 触发副作用，
 // 我们通过监视 pushWarning 的调用来验证行为
-import * as ephemeral from "@pi-lainforge/shepherd";
+import * as ephemeral from "@pi-atelier/shepherd";
 
 // Mock ephemeral.pushWarning
 import { vi } from "vitest";
@@ -59,7 +59,7 @@ describe("checkLineCount", () => {
 
   it("200 行以下不触发警告（无 pushWarning）", async () => {
     // 需要动态 import 模块来获取未被 mock 的函数
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     const filePath = createTempFile("small.ts", 50);
@@ -70,7 +70,7 @@ describe("checkLineCount", () => {
   });
 
   it("200-300 行触发 WARN 级别警告", async () => {
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     const filePath = createTempFile("moderate.ts", 250);
@@ -84,7 +84,7 @@ describe("checkLineCount", () => {
   });
 
   it("300-500 行触发 MUST 级别警告（必须拆分）", async () => {
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     const filePath = createTempFile("large.py", 350);
@@ -99,7 +99,7 @@ describe("checkLineCount", () => {
   });
 
   it("超过 500 行触发 BAN 级别警告（严禁）", async () => {
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     const filePath = createTempFile("huge.rs", 600);
@@ -114,7 +114,7 @@ describe("checkLineCount", () => {
   });
 
   it("恰好 200 行应触发警告（≥200 是 WARN 阈值）", async () => {
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     const filePath = createTempFile("exact200.ts", 200);
@@ -127,7 +127,7 @@ describe("checkLineCount", () => {
   // ── 记忆文件行数检查 ────────────────────────────────────
 
   it("记忆文件超过 80 行触发拆分提醒", async () => {
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     const filePath = createTempFile("memory/test_topic.md", 100);
@@ -142,7 +142,7 @@ describe("checkLineCount", () => {
   });
 
   it("记忆文件 80 行以下不触发警告", async () => {
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     const filePath = createTempFile("memory/small_topic.md", 50);
@@ -155,7 +155,7 @@ describe("checkLineCount", () => {
   // ── 非检查扩展名 ────────────────────────────────────────
 
   it("非检查扩展名不触发警告", async () => {
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     const filePath = createTempFile("data.json", 1000);
@@ -166,7 +166,7 @@ describe("checkLineCount", () => {
   });
 
   it("未识别的扩展名不触发警告", async () => {
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     const filePath = createTempFile("doc.docx", 5000);
@@ -179,7 +179,7 @@ describe("checkLineCount", () => {
   // ── 文件不存在 ──────────────────────────────────────────
 
   it("文件不存在时不抛异常", async () => {
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     // 不存在的文件
@@ -192,7 +192,7 @@ describe("checkLineCount", () => {
   // ── 边界值 ──────────────────────────────────────────────
 
   it("正好 500 行触发 BAN", async () => {
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     const filePath = createTempFile("boundary500.ts", 500);
@@ -205,7 +205,7 @@ describe("checkLineCount", () => {
   });
 
   it("正好 300 行触发 MUST", async () => {
-    const lineCount = await import("@pi-lainforge/shepherd");
+    const lineCount = await import("@pi-atelier/shepherd");
     pushWarningSpy = vi.spyOn(ephemeral, "pushWarning");
 
     const filePath = createTempFile("boundary300.ts", 300);

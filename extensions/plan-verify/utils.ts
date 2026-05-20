@@ -6,11 +6,11 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { type OutputConstraint } from "@pi-lainforge/workflow-core";
+import { type OutputConstraint } from "@pi-atelier/workflow-core";
 import type { Issue } from "./types";
 
 // 通用函数 re-export
-export { findSessionFile, getSubagentStatusSummary, isSubagentSuccess } from "@pi-lainforge/workflow-core";
+export { findSessionFile, getSubagentStatusSummary, isSubagentSuccess } from "@pi-atelier/workflow-core";
 
 // ============================================================
 // 方案文件路径管理

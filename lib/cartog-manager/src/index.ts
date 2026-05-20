@@ -1,5 +1,5 @@
 /**
- * @pi-lainforge/cartog-manager — barrel export
+ * @pi-atelier/cartog-manager — barrel export
  *
  * Cartog 聚合索引管理。
  * 从 env-and-status 拆分而来。

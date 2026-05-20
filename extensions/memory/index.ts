@@ -17,7 +17,7 @@ import { Type } from "@sinclair/typebox";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { AGENT_DIR, MAX_FILE_LINES } from "./lib/types";
-import { scanMemoryDir, parseFileName, type MemoryEntry } from "@pi-lainforge/shared-utils";
+import { scanMemoryDir, parseFileName, type MemoryEntry } from "@pi-atelier/shared-utils";
 import { updateIndex } from "./lib/writer";
 
 /** 检测同目录中与目标文件存在 topic 或关键词重叠的文件 */

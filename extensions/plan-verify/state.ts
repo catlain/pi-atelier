@@ -8,7 +8,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { createStateManager, createUIUpdater } from "@pi-lainforge/workflow-core";
+import { createStateManager, createUIUpdater } from "@pi-atelier/workflow-core";
 import type { PlanVerifyState, Phase } from "./types";
 
 const PV_PHASES = [

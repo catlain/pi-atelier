@@ -11,7 +11,7 @@ export default defineConfig({
 				globalNodeModules,
 				"@earendil-works/pi-coding-agent/dist/index.js",
 			),
-			"@pi-lainforge/cartog-manager": path.resolve(
+			"@pi-atelier/cartog-manager": path.resolve(
 				__dirname,
 				"../../packages/cartog-manager/src/index.ts",
 			),

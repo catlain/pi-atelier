@@ -3,11 +3,11 @@
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { registerWorkflowTool } from "@pi-lainforge/workflow-core";
-import { discoverAgents, getAgentDescription } from "@pi-lainforge/shared-utils";
+import { registerWorkflowTool } from "@pi-atelier/workflow-core";
+import { discoverAgents, getAgentDescription } from "@pi-atelier/shared-utils";
 import { Type } from "typebox";
 import { stateManager, uiUpdater } from "../state";
-import { getSubagentModel } from "@pi-lainforge/workflow-core";
+import { getSubagentModel } from "@pi-atelier/workflow-core";
 import { doPlan } from "./plan";
 import { doReview } from "./review";
 import { doFix } from "./fix";

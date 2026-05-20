@@ -1,4 +1,4 @@
-# pi-lainforge
+# pi-atelier
 
 [pi](https://github.com/earendil-works/pi-coding-agent) 的扩展工具集合。
 
@@ -35,7 +35,7 @@
 ## 安装
 
 ```bash
-pi install git:github.com/<your-username>/pi-lainforge
+pi install git:github.com/<your-username>/pi-atelier
 ```
 
 > ⚠️ **voice-input** 需要 native 依赖（sherpa-onnx-node、naudiodon2），安装时可能需要额外的系统库。如果不需要语音输入功能，可以排除。
@@ -44,8 +44,8 @@ pi install git:github.com/<your-username>/pi-lainforge
 
 ```bash
 # 克隆后安装依赖
-git clone https://github.com/<your-username>/pi-lainforge.git
-cd pi-lainforge
+git clone https://github.com/<your-username>/pi-atelier.git
+cd pi-atelier
 npm install
 
 # 验证 typecheck

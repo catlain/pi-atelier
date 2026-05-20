@@ -10,12 +10,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 // 必须在所有 import 之前 mock
-vi.mock("@pi-lainforge/shared-utils", () => ({
+vi.mock("@pi-atelier/shared-utils", () => ({
 	scanMemoryDir: vi.fn(),
 }));
 
 import { collectMemoryChanges } from "../lib/memory";
-import { scanMemoryDir } from "@pi-lainforge/shared-utils";
+import { scanMemoryDir } from "@pi-atelier/shared-utils";
 import type { Mock } from "vitest";
 
 // ── Mock 数据 ────────────────────────────────────────────

@@ -6,7 +6,7 @@
  */
 
 import * as fs from "node:fs";
-import { parseFileName } from "@pi-lainforge/shared-utils";
+import { parseFileName } from "@pi-atelier/shared-utils";
 import { MAX_FILE_LINES } from "./types";
 
 /** 更新 MEMORY.md 索引：追加条目到最后一个索引行之后 */

@@ -19,7 +19,7 @@ import {
   buildEntryMap,
   assignBranch,
 } from "./branches";
-import { truncatedResult } from "@pi-lainforge/shared-utils";
+import { truncatedResult } from "@pi-atelier/shared-utils";
 
 export { doDigest } from "./digest";
 

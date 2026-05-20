@@ -3,7 +3,7 @@
  *
  * 所有扩展共享同一份 ~/.pi/agent/settings.json，通过 namespace 区分各扩展的配置段。
  * 用法：
- *   import { getSettingsSection, patchSettingsSection } from "@pi-lainforge/shared-utils";
+ *   import { getSettingsSection, patchSettingsSection } from "@pi-atelier/shared-utils";
  *   const cfg = getSettingsSection("context", defaults);
  *   patchSettingsSection("context", { distillThreshold: 3000 });
  */

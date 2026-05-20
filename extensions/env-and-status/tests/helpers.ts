@@ -8,7 +8,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
-import { CARTOG_EXT_DIR } from "@pi-lainforge/cartog-manager";
+import { CARTOG_EXT_DIR } from "@pi-atelier/cartog-manager";
 
 export interface TempProject {
 	dir: string;

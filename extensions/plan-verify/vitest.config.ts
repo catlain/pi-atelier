@@ -18,7 +18,7 @@ export default defineConfig({
 				globalNodeModules,
 				"@earendil-works/pi-coding-agent/node_modules/typebox/build/index.mjs",
 			),
-			"@pi-lainforge/workflow-core": path.resolve(__dirname, "../packages/workflow-core/src/index.ts"),
+			"@pi-atelier/workflow-core": path.resolve(__dirname, "../packages/workflow-core/src/index.ts"),
 		},
 	},
 	test: {
@@ -29,7 +29,7 @@ export default defineConfig({
 	},
 	server: {
 		deps: {
-			inline: ["@pi-lainforge/workflow-core", "@pi-lainforge/workflow-research"],
+			inline: ["@pi-atelier/workflow-core", "@pi-atelier/workflow-research"],
 		},
 	},
 });

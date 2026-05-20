@@ -3,13 +3,13 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { pushWarning } from "@pi-lainforge/shepherd";
+import { pushWarning } from "@pi-atelier/shepherd";
 import {
 	pushHint,
 	hasHints,
 	peekHints,
 	drainHints,
-} from "@pi-lainforge/shepherd";
+} from "@pi-atelier/shepherd";
 
 function resetHints() { drainHints(); }
 

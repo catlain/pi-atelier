@@ -22,7 +22,7 @@ const mockSyncSymlinksOnly = vi.fn();
 const mockBuildProjectIndex = vi.fn();
 const mockCleanupLegacyMergeDir = vi.fn();
 
-vi.mock("@pi-lainforge/cartog-manager", () => ({
+vi.mock("@pi-atelier/cartog-manager", () => ({
 	syncSymlinksOnly: mockSyncSymlinksOnly,
 	buildProjectIndex: mockBuildProjectIndex,
 	cleanupLegacyMergeDir: mockCleanupLegacyMergeDir,

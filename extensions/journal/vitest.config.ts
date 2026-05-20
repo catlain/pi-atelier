@@ -6,11 +6,11 @@ const EXTENSIONS_DIR = path.resolve(__dirname, "..");
 export default defineConfig({
 	resolve: {
 		alias: {
-			"@pi-lainforge/shared-utils": path.resolve(
+			"@pi-atelier/shared-utils": path.resolve(
 				EXTENSIONS_DIR,
 				"packages/shared-utils/src/index",
 			),
-			"@pi-lainforge/shared-utils/*": path.resolve(
+			"@pi-atelier/shared-utils/*": path.resolve(
 				EXTENSIONS_DIR,
 				"packages/shared-utils/src/*",
 			),

@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import { createStateManager } from "@pi-lainforge/workflow-core";
+import { createStateManager } from "@pi-atelier/workflow-core";
 
 // ============================================================
 // Test 1: 单实例一致性

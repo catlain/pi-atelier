@@ -9,10 +9,10 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { PlanVerifyState } from "../types";
-import { runSubagent } from "@pi-lainforge/workflow-core";
-import { createSubagentWidget } from "@pi-lainforge/workflow-core";
+import { runSubagent } from "@pi-atelier/workflow-core";
+import { createSubagentWidget } from "@pi-atelier/workflow-core";
 import { isSubagentSuccess, validatePlanFile, buildTask } from "../utils";
-import { saveSubagentOutput } from "@pi-lainforge/workflow-core";
+import { saveSubagentOutput } from "@pi-atelier/workflow-core";
 
 export async function handleExplore(
   params: any,

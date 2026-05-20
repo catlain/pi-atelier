@@ -1,5 +1,5 @@
 /**
- * @pi-lainforge/shepherd — barrel export
+ * @pi-atelier/shepherd — barrel export
  */
 export {
 	loadRules, loadRulesFromFile, compileRules,
