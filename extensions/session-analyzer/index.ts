@@ -74,7 +74,17 @@ export default function (pi: ExtensionAPI) {
     name: "session_analyze",
     label: "Session Analyze",
     description:
-      "分析单个 Pi 会话。支持 summary（元信息+摘要）、entries（条目列表）、timeline（时间线，自动标注分支）、chain（子代理链）、raw（原始 JSONL）、audit（审计违规问题）、digest（user/assistant 对话序列）、branches（分支分析，识别 /tree 产生的平行分支）、takeover（会话接手报告，提取 5 维上下文：用户意图/修改文件/最近步骤/下一步推断/关键决策）。",
+      "分析单个 Pi 会话。\n"
+      + "⚠ 注意：action 只接受以下值，不要传 grep/file/list（那是 session_search 的 action）。\n"
+      + "- summary: 元信息+摘要（首次分析首选）\n"
+      + "- entries: 条目列表（支持 offset 偏移 + grep 关键词过滤）\n"
+      + "- timeline: 时间线（自动标注分支）\n"
+      + "- chain: 子代理链\n"
+      + "- raw: 原始 JSONL\n"
+      + "- audit: 审计违规问题\n"
+      + "- digest: user/assistant 对话序列\n"
+      + "- branches: 分支分析（/tree 产生的平行分支）\n"
+      + "- takeover: 会话接手报告（5 维上下文）",
     promptSnippet: "深入分析单个 Pi 会话的详情",
     promptGuidelines: [
       "Use session_analyze to inspect a specific session: summary, entries, timeline, subagent chains, or raw JSONL.",
@@ -93,6 +103,12 @@ export default function (pi: ExtensionAPI) {
       ]),
       limit: Type.Optional(
         Type.Number({ description: "限制条目数", default: 20 }),
+      ),
+      offset: Type.Optional(
+        Type.Number({ description: "entries 模式：从第 N 条开始（0-based），默认从尾部倒数。结合 limit 使用可实现分页浏览大会话" }),
+      ),
+      grep: Type.Optional(
+        Type.String({ description: "entries 模式：关键词过滤，只返回包含此关键词的条目。支持正则表达式（如 'error|fail'）" }),
       ),
     }),
 
@@ -113,7 +129,7 @@ export default function (pi: ExtensionAPI) {
           case "summary":
             return doSummary(entries, resolved.filepath);
           case "entries":
-            return doEntries(entries, params.limit ?? 20);
+            return doEntries(entries, params.limit ?? 20, params.offset, params.grep);
           case "timeline":
             return doTimeline(entries);
           case "chain":

@@ -57,8 +57,36 @@ export function doSummary(entries: Entry[], filepath: string) {
   return truncatedResult(text, { toolName: "session_analyze", label: "summary", maxLines: ANALYZE_MAX_LINES, maxBytes: ANALYZE_MAX_BYTES });
 }
 
-export function doEntries(entries: Entry[], limit: number) {
-  const items = entries.slice(-limit);
+/** 提取条目的文本内容（用于 grep 过滤） */
+function extractEntryText(entry: Entry): string {
+  if (entry.message) {
+    const content = entry.message.content;
+    const text = typeof content === "string" ? content : extractText(content);
+    return `${entry.message.role ?? ""} ${text} ${entry.message.model ?? ""} ${entry.message.toolName ?? ""}`;
+  }
+  if (entry.type === "session") {
+    return `[session] cwd=${entry.cwd ?? ""} id=${entry.id ?? ""}`;
+  }
+  return entry.type;
+}
+
+export function doEntries(entries: Entry[], limit: number, offset?: number, grep?: string) {
+  let items = entries;
+
+  // 关键词过滤（先过滤再切片，减少输出量）
+  if (grep) {
+    const keyword = grep.toLowerCase();
+    items = items.filter((entry) => {
+      // 搜索文本内容
+      const text = extractEntryText(entry);
+      return text.toLowerCase().includes(keyword);
+    });
+  }
+
+  // 偏移 + 限制
+  const totalCount = items.length;
+  const start = offset ? Math.max(0, offset) : Math.max(0, items.length - limit);
+  items = items.slice(start, start + limit);
   const lines = items.map((entry, idx) => {
     const role = entry.message?.role ?? "";
     const time = entry.timestamp ? fmtTime(entry.timestamp) : "";
@@ -84,8 +112,13 @@ export function doEntries(entries: Entry[], limit: number) {
     return `${String(idx).padStart(4)} | ${entry.type.padEnd(8)} | ${role.padEnd(12)} | ${time} | ${text}`;
   });
 
+  const rangeDesc = offset != null
+    ? `条目 ${start}-${start + items.length - 1}/${totalCount}`
+    : `最后 ${items.length}/${entries.length} 条`;
+  const filterDesc = grep ? `（过滤: "${grep}"）` : '';
+
   return truncatedResult(
-    `条目列表（最后 ${items.length}/${entries.length} 条）：\n${lines.join("\n")}`,
+    `条目列表 ${rangeDesc}${filterDesc}：\n${lines.join("\n")}`,
     { toolName: "session_analyze", label: "entries", maxLines: ANALYZE_MAX_LINES, maxBytes: ANALYZE_MAX_BYTES },
   );
 }
