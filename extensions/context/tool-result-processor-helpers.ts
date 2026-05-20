@@ -82,16 +82,13 @@ export function handleLargeResult(
 	toolName: string,
 	tokens: number,
 	tmpPath: string | null,
-	indexTimeStr: string | null,
 ): ToolResultEventResult {
 	// 写入失败降级：返回格式化结果
 	if (!tmpPath) {
-		let fallback = formatted;
-		if (indexTimeStr) fallback += `\n> cartog 索引时间: ${indexTimeStr}`;
-		return { content: [{ type: "text", text: fallback }] };
+		return { content: [{ type: "text", text: formatted }] };
 	}
 
-	const summary = buildSummary(formatted, toolName, tokens, tmpPath, indexTimeStr);
+	const summary = buildSummary(formatted, toolName, tokens, tmpPath);
 	return { content: [{ type: "text", text: summary }] };
 }
 
@@ -102,7 +99,6 @@ export function buildSummary(
 	toolName: string,
 	tokens: number,
 	tmpPath: string,
-	indexTimeStr: string | null = null,
 ): string {
 	const lines = formatted.split("\n");
 	const previewLines = lines.slice(0, PREVIEW_LINES);
@@ -111,15 +107,11 @@ export function buildSummary(
 		? `\n... (${lines.length - PREVIEW_LINES} more lines)`
 		: "";
 
-	const parts = [
+	return [
 		`[processed] ${toolName} 结果（~${formatTokens(tokens)} tokens）`,
 		`完整内容：${tmpPath}`,
 		"",
 		preview,
 		more,
-	];
-	if (indexTimeStr) {
-		parts.push(`\n> cartog 索引时间: ${indexTimeStr}`);
-	}
-	return parts.join("\n");
+	].join("\n");
 }

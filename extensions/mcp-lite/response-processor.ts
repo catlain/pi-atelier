@@ -46,11 +46,6 @@ export function processResponse(
 			return processWebSearch(unwrapped);
 		}
 
-		// cartog server：注入索引时间提示
-		if (serverName === "cartog" && extra?.cwd) {
-			const dbPath = path.join(extra.cwd, ".cartog.db");
-			return injectCartogIndexTime(rawText, dbPath);
-		}
 	} catch {
 		// 解析失败时 fallback 返回原始内容
 	}
@@ -162,26 +157,4 @@ export function unwrapDoubleEncodedJson(rawText: string): string {
 		return rawText;
 	}
 }
-
-// ── cartog 索引时间注入 ────────────────────────────────
-
-/** 获取 cartog db 的最后修改时间字符串 */
-export function getCartogIndexTime(dbPath: string): string | null {
-	try {
-		const stat = fs.statSync(dbPath);
-		const d = new Date(stat.mtime);
-		const now = new Date();
-		const isToday = d.toDateString() === now.toDateString();
-		const hhmm = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-		return isToday ? `今天 ${hhmm}` : `${d.getMonth()+1}/${d.getDate()} ${hhmm}`;
-	} catch {
-		return null;
-	}
-}
-
-/** 在 cartog 响应末尾注入索引时间 */
-function injectCartogIndexTime(rawText: string, dbPath: string): string {
-	const timeStr = getCartogIndexTime(dbPath);
-	if (!timeStr) return rawText;
-	return `${rawText}\n\n> cartog 索引时间: ${timeStr}`;
-}
+// cartog 索引时间注入已移除

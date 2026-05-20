@@ -4,8 +4,7 @@
  * 被 formatters.ts 和 tool-result-processor.ts 共用。
  */
 
-import * as fs from "node:fs";
-import * as path from "node:path";
+
 
 /**
  * 从文本中提取前导 JSON（数组或对象）。
@@ -85,27 +84,4 @@ export function truncateAtParagraph(text: string, maxChars: number): string {
 	return text.slice(0, maxChars) + `\n\n...(内容已截断，共 ${text.length} 字符)`;
 }
 
-function formatDateTime(d: Date): string {
-	const y = d.getFullYear();
-	const M = String(d.getMonth() + 1).padStart(2, "0");
-	const day = String(d.getDate()).padStart(2, "0");
-	const hh = String(d.getHours()).padStart(2, "0");
-	const mm = String(d.getMinutes()).padStart(2, "0");
-	const ss = String(d.getSeconds()).padStart(2, "0");
-	return `${y}-${M}-${day} ${hh}:${mm}:${ss}`;
-}
 
-/**
- * 获取 cartog db 的最后修改时间字符串。
- * 格式：YYYY-MM-DD HH:MM:SS
- * .cartog.db 不存在时返回当前时间作为 fallback。
- */
-export function getCartogIndexTime(): string | null {
-	try {
-		const dbPath = path.join(process.cwd(), ".cartog.db");
-		const stat = fs.statSync(dbPath);
-		return formatDateTime(new Date(stat.mtime));
-	} catch {
-		return formatDateTime(new Date());
-	}
-}

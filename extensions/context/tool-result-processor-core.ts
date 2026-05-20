@@ -15,7 +15,7 @@ import {
 	formatWebSearchResult,
 	formatGhResult,
 } from "./formatters.js";
-import { getCartogIndexTime } from "./formatters-utils.js";
+// getCartogIndexTime 已移除（cartog 索引时间不再注入）
 
 // ── 类型 ──────────────────────────────────────────
 
@@ -79,12 +79,10 @@ export function processToolResult(
 	// 注意：web_search 在 cartog 之前，因为两者都返回数组，web_search 的字段更具体
 	const formatters = [formatWebSearchResult, formatGhResult, formatWebReadResult, formatCartogResult] as const;
 	let formatted = rawText;
-	let injectIndex = false;
 	for (const fn of formatters) {
 		const result = fn(rawText);
 		if (result !== rawText) {
 			formatted = result;
-			injectIndex = fn === formatCartogResult; // 只有 cartog 注入索引时间
 			break;
 		}
 	}
@@ -92,8 +90,7 @@ export function processToolResult(
 	// 用原始文本估算 tokens（格式化函数可能做了展示级截断，但原始内容才是真正占上下文的大小）
 	const tokens = estimateTokens(rawText);
 
-	// Cartog 索引时间注入（延迟到最终输出时再追加）
-	const indexTimeStr = (injectIndex) ? getCartogIndexTime() : null;
+
 
 	// 所有结果都写原文临时文件（AI 可按需精读）
 	// bash 如果已被 pi 截断，从 pi 的临时文件复制原文
@@ -101,14 +98,13 @@ export function processToolResult(
 	const tmpPath = writeRawToFile(rawText, toolName, writeFallback, bashSourcePath, event.input, event.toolCallId, sessionId);
 
 	if (tokens < threshold) {
-		// 小结果：格式化文本 + 原文路径 + 索引时间
+		// 小结果：格式化文本 + 原文路径
 		let smallResult = formatted;
 		if (tmpPath) smallResult += `\n\n原文：${tmpPath}`;
-		if (indexTimeStr) smallResult += `\n> cartog 索引时间: ${indexTimeStr}`;
 		return { content: [{ type: "text", text: smallResult }] };
 	}
 
-	return handleLargeResult(formatted, toolName, tokens, tmpPath, indexTimeStr);
+	return handleLargeResult(formatted, toolName, tokens, tmpPath);
 }
 
 // ── 写原文临时文件 ───────────────────────────────
@@ -179,16 +175,13 @@ function handleLargeResult(
 	toolName: string,
 	tokens: number,
 	tmpPath: string | null,
-	indexTimeStr: string | null,
 ): ToolResultEventResult {
 	// 写入失败降级：返回格式化结果
 	if (!tmpPath) {
-		let fallback = formatted;
-		if (indexTimeStr) fallback += `\n> cartog 索引时间: ${indexTimeStr}`;
-		return { content: [{ type: "text", text: fallback }] };
+		return { content: [{ type: "text", text: formatted }] };
 	}
 
-	const summary = buildSummary(formatted, toolName, tokens, tmpPath, indexTimeStr);
+	const summary = buildSummary(formatted, toolName, tokens, tmpPath);
 	return { content: [{ type: "text", text: summary }] };
 }
 
@@ -199,7 +192,6 @@ function buildSummary(
 	toolName: string,
 	tokens: number,
 	tmpPath: string,
-	indexTimeStr: string | null = null,
 ): string {
 	const lines = formatted.split("\n");
 	const previewLines = lines.slice(0, PREVIEW_LINES);
@@ -215,8 +207,5 @@ function buildSummary(
 		preview,
 		more,
 	];
-	if (indexTimeStr) {
-		parts.push(`\n> cartog 索引时间: ${indexTimeStr}`);
-	}
 	return parts.join("\n");
 }

@@ -9,12 +9,11 @@
 import {
 	unwrapDoubleEncodedJson,
 	truncateAtParagraph,
-	getCartogIndexTime,
 	extractJsonPrefix,
 } from "./formatters-utils.js";
 import { formatGhResult } from "./formatters-gh.js";
 
-export { unwrapDoubleEncodedJson, truncateAtParagraph, getCartogIndexTime, formatGhResult };
+export { unwrapDoubleEncodedJson, truncateAtParagraph, formatGhResult };
 
 // ── 配置常量 ──────────────────────────────────────
 
