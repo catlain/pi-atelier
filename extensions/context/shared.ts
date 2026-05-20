@@ -4,6 +4,15 @@ import { join } from "path";
 import { tmpdir } from "os";
 import { getSettingsSection, patchSettingsSection, getSettingsValue, setSettingsValue } from "@pi-atelier/shared-utils";
 
+const MAX_READ_SIZE = 10 * 1024 * 1024; // 10MB
+
+/** 安全读取文件，防止大文件导致 OOM */
+function safeReadFileSync(p: string): string {
+	const s = statSync(p);
+	if (s.size > MAX_READ_SIZE) throw new Error(`文件过大: ${p} (${(s.size / 1024 / 1024).toFixed(1)}MB)`);
+	return readFileSync(p, "utf-8");
+}
+
 export const DISTILL_DIR = join(tmpdir(), "pi-distill");
 export const RECORDINGS_DIR = join(DISTILL_DIR, "recordings");
 const MANIFEST_PATH = join(DISTILL_DIR, "manifest.json");
@@ -14,7 +23,7 @@ export const distilledMap = new Map<string, DistillEntry>();
 // 启动时从 manifest 恢复（跳过无 tmpPath 的过期条目——可能是被精读覆盖后的残留）
 if (existsSync(MANIFEST_PATH)) {
 	try {
-		const entries = JSON.parse(readFileSync(MANIFEST_PATH, "utf-8")) as [string, DistillEntry][];
+		const entries = JSON.parse(safeReadFileSync(MANIFEST_PATH)) as [string, DistillEntry][];
 		for (const [k, v] of entries) {
 			if (v.tmpPath) distilledMap.set(k, v);  // 只恢复有 tmpPath 的条目（阶段 3 兜底蒸馏）
 		}
@@ -33,7 +42,7 @@ const MSG_CACHE = join(DISTILL_DIR, "last-messages.json");
 // 启动时从缓存恢复
 if (existsSync(MSG_CACHE)) {
 	try {
-		lastContextMessages = JSON.parse(readFileSync(MSG_CACHE, "utf-8"));
+		lastContextMessages = JSON.parse(safeReadFileSync(MSG_CACHE));
 	} catch {}
 }
 
@@ -51,12 +60,12 @@ const PAYLOAD_CACHE = join(DISTILL_DIR, "last-payload.json");
 export let lastProviderPayload: any = null;
 
 if (existsSync(PAYLOAD_CACHE)) {
-	try { lastProviderPayload = JSON.parse(readFileSync(PAYLOAD_CACHE, "utf-8")); } catch {}
+	try { lastProviderPayload = JSON.parse(safeReadFileSync(PAYLOAD_CACHE)); } catch {}
 }
 
 export function reloadLastProviderPayload(): void {
 	try {
-		if (existsSync(PAYLOAD_CACHE)) lastProviderPayload = JSON.parse(readFileSync(PAYLOAD_CACHE, "utf-8"));
+		if (existsSync(PAYLOAD_CACHE)) lastProviderPayload = JSON.parse(safeReadFileSync(PAYLOAD_CACHE));
 	} catch {}
 }
 

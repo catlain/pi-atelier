@@ -51,7 +51,8 @@ describe("createTimerEngine", () => {
     // 第一次触发
     vi.advanceTimersByTime(300_000 + 30_000); // 5m + max jitter
 
-    expect(pi.sendUserMessage).toHaveBeenCalledWith("check deploy");
+    const timers = engine.list();
+    expect(pi.sendUserMessage).toHaveBeenCalledWith(`[定时任务 ${timers[0].id}] check deploy`);
     expect(timer.firedCount).toBe(1);
     expect(timer.status).toBe("active"); // 仍然活跃
   });
@@ -64,7 +65,8 @@ describe("createTimerEngine", () => {
 
     vi.advanceTimersByTime(60_000 + 5_000);
 
-    expect(pi.sendUserMessage).toHaveBeenCalledWith("remind me");
+    const timers = engine.list();
+    expect(pi.sendUserMessage).toHaveBeenCalledWith(`[定时任务 ${timers[0].id}] remind me`);
     expect(timer.firedCount).toBe(1);
     expect(timer.status).toBe("completed");
   });
@@ -134,7 +136,7 @@ describe("createTimerEngine", () => {
 
     // 应该在剩余时间后触发
     vi.advanceTimersByTime(200_000 + 30_000);
-    expect(pi.sendUserMessage).toHaveBeenCalledWith("check");
+    expect(pi.sendUserMessage).toHaveBeenCalledWith(`[定时任务 abc12345] check`);
   });
 
   it("should_skip_expired_timers_on_restore", () => {
