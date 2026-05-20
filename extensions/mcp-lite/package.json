@@ -1,0 +1,19 @@
+{
+  "name": "mcp-lite",
+  "version": "1.0.0",
+  "description": "轻量 MCP 调度扩展 — 替代 pi-mcp-adapter",
+  "type": "commonjs",
+  "main": "index.ts",
+  "scripts": {
+    "test": "node --import tsx --test ./**/*.test.ts",
+    "test:watch": "node --import tsx --test --watch ./**/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.2",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  }
+}

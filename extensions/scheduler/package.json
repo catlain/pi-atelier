@@ -1,0 +1,15 @@
+{
+  "name": "scheduler",
+  "version": "1.0.0",
+  "description": "会话内定时任务：/loop、/remind、/tasks 命令 + schedule 工具",
+  "main": "index.ts",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  }
+}

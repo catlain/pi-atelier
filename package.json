@@ -1,0 +1,40 @@
+{
+  "name": "pi-lainforge",
+  "version": "1.0.0",
+  "description": "Extension forge for pi-coding-agent \u2014 tools, workflows, and utilities",
+  "private": true,
+  "workspaces": [
+    "extensions/context",
+    "extensions/env-and-status",
+    "extensions/journal",
+    "extensions/mcp-lite",
+    "extensions/memory",
+    "extensions/notification",
+    "extensions/payload-analyzer",
+    "extensions/plan-verify",
+    "extensions/scheduler",
+    "extensions/session-analyzer",
+    "extensions/shepherd",
+    "extensions/subagent",
+    "extensions/workflow"
+  ],
+  "pi": {
+    "extensions": [
+      "extensions/context",
+      "extensions/env-and-status",
+      "extensions/journal",
+      "extensions/mcp-lite",
+      "extensions/memory",
+      "extensions/notification",
+      "extensions/payload-analyzer",
+      "extensions/plan-verify",
+      "extensions/scheduler",
+      "extensions/session-analyzer",
+      "extensions/shepherd",
+      "extensions/subagent",
+      "extensions/workflow"
+    ],
+    "skills": [],
+    "agents": []
+  }
+}

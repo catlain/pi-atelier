@@ -1,0 +1,18 @@
+{
+  "name": "shepherd",
+  "version": "1.0.0",
+  "description": "通用 Hook 规则引擎：tool_call block/rewrite、tool_result steer/notify、agent_end 提醒",
+  "main": "index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "tsc --noEmit && vitest run"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "^0.74.0",
+    "@types/node": "^25.6.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "plan-verify",
+  "version": "1.0.0",
+  "description": "\u4f7f\u7528\u5b50\u4ee3\u7406\u5b9e\u73b0 **Plan \u2192 Verify \u2192 Fix \u2192 Execute** \u5de5\u4f5c\u6d41\uff0c\u786e\u4fdd\u6280\u672f\u65b9\u6848\u7ecf\u8fc7\u72ec\u7acb\u5ba1\u67e5\u540e\u624d\u6267\u884c\u3002",
+  "main": "index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^25.6.2",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  }
+}
