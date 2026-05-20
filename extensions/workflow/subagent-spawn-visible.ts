@@ -41,7 +41,7 @@ export function spawnVisible(
 	const launchScript = path.join(taskDir, "launch.sh");
 	const script = [
 		"#!/bin/bash",
-		"export FNM_PATH=\"/home/lain/.local/share/fnm\"",
+		"export FNM_PATH=\"$HOME/.local/share/fnm\"",
 		"if [ -d \"$FNM_PATH\" ]; then export PATH=\"$FNM_PATH:$PATH\" && eval \"$(fnm env --shell bash)\"; fi",
 		`cd "${cwd}"`,
 		"export PI_SUBAGENT_AUTO_EXIT=1",
