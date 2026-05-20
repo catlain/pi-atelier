@@ -84,9 +84,15 @@ pi uninstall pi-atelier
 
 **实现逻辑：** 监听 pi 的 `tool_result` 和 `context` 事件。Processor 在工具返回时即时处理；Distill 和 Aging 在每次发送请求前（`context` 事件）扫描所有消息，三层串行处理。
 
-**外部依赖：** 无
+**配置命令：**
+- `/record on/off` — 开关 payload 录制
+- `/distill-config [threshold]` — 查看/设置 distill token 阈值
+- `/aging-config [threshold|off]` — 查看/设置 aging 轮次阈值
+- `/processor-config [threshold]` — 查看/设置 processor token 阈值
 
 **配置文件：** `~/.pi/agent/extensions/context/config.json`（存储 distillThreshold、agingThreshold、processorThreshold）
+
+**外部依赖：** 无
 
 ---
 
@@ -291,13 +297,19 @@ pi uninstall pi-atelier
 
 | 命令 | 来源扩展 | 说明 |
 |------|---------|------|
-| `/loop [interval] <prompt>` | scheduler | 创建重复定时任务 |
-| `/remind <time> <prompt>` | scheduler | 创建一次性提醒 |
-| `/tasks` | scheduler | 查看活跃任务 |
-| `/context` | context | 可视化上下文使用情况 |
-| `/subagent-model` | subagent | 查看/切换子代理模型 |
-| `/reload` | shepherd | 重载规则文件 |
-| `/record on/off` | context | 开关 payload 录制 |
+| `/loop [interval] <prompt>` | scheduler | 创建重复定时任务。如 `/loop 5m 检查部署状态` |
+| `/remind <time> <prompt>` | scheduler | 创建一次性提醒。如 `/remind 30m 休息一下` |
+| `/tasks` | scheduler | 查看活跃任务列表；`/tasks cancel <id>` 取消指定任务 |
+| `/context` | context | 四层 TUI 可视化上下文使用情况（总览→分类→记录→内容） |
+| `/record on/off` | context | 开关 payload 录制（开启后 `/tmp/pi-distill/recordings/` 下生成录制文件） |
+| `/distill-config [threshold]` | context | 查看或设置 distill token 阈值。如 `/distill-config 1500` |
+| `/aging-config [threshold]` | context | 查看或设置 aging 老化轮次。如 `/aging-config 10` 或 `/aging-config off` 关闭 |
+| `/processor-config [threshold]` | context | 查看或设置 processor token 阈值。如 `/processor-config 2000` |
+| `/mcp-refresh` | mcp-lite | 强制刷新 MCP 工具缓存（重新发现所有 server 的工具） |
+| `/mcp-status` | mcp-lite | 查看 MCP 服务器连接状态 |
+| `/cartog-reindex` | env-and-status | 重建 Cartog 聚合索引（项目 + 外部目录） |
+| `/cartog-config` | env-and-status | 查看当前 Cartog 索引配置和状态 |
+| `/cartog-autoindex` | env-and-status | 切换 Cartog 自动索引（启动时是否自动索引） |
 
 ---
 
