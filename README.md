@@ -256,16 +256,6 @@ pi uninstall pi-atelier
 
 ---
 
-## 语音输入
-
-语音输入扩展因为有 native 依赖（sherpa-onnx-node、naudiodon2），单独发布：
-
-```bash
-pi install git:github.com/catlain/pi-voice-input
-```
-
----
-
 ## 配置速查
 
 | 配置项 | 文件位置 | 说明 |
