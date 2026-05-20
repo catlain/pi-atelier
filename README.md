@@ -66,15 +66,27 @@ pi uninstall pi-atelier
 
 ---
 
-#### context — 上下文管理与蒸馏
+#### context — 上下文三层处理引擎
 
-**做什么：** 管理 LLM 上下文窗口——工具结果蒸馏（distill，大结果压缩为摘要）、超大结果写临时文件、token 预算控制、请求/响应录制回放。
+**做什么：** 管理 LLM 上下文窗口，通过三层机制控制上下文增长：
 
-**实现逻辑：** 监听 `tool_result` 事件，根据配置的阈值（行数/token 数）决定是蒸馏压缩还是写文件。`before_provider_request` 时注入 token 预算信息。支持录制完整 payload 到 `/tmp/pi-distill/` 供分析。
+1. **Processor（后处理器）** — 工具返回超大结果时，自动格式化压缩或写入临时文件，保留摘要在上下文中。`tool_result` 事件触发。
+2. **Distill（蒸馏）** — 上下文发送前，检测超过 token 阈值的工具结果。首次超标：保留全文 + 提示用户读取需要的内容。再次遇到：静默移除工具结果及关联的 toolCall。`context` 事件触发。
+3. **Aging（老化遗忘）** — 跟踪每个工具结果被发送给 LLM 的次数，达到阈值轮次后自动移除。模拟人类"短期记忆衰减"，防止上下文无限膨胀。与 distill 互斥（已被 distill 处理的跳过 aging）。
+
+**`/context` 交互式可视化：** 四层导航式 TUI 界面，可逐层深入查看上下文详情：
+- **总览层** — 显示 System Prompt / Tools / Messages / Available 各类别 token 占比
+- **分类层** — 进入某类别后显示详细分项（如 Tools 下列出每个工具的 call/result token）
+- **记录层** — 列出该分项下的所有消息记录，支持翻页滚动
+- **内容层** — 查看单条消息的完整原文
+
+额外功能：payload 录制（`/record on/off`）、toolCall 参数截断。
+
+**实现逻辑：** 监听 pi 的 `tool_result` 和 `context` 事件。Processor 在工具返回时即时处理；Distill 和 Aging 在每次发送请求前（`context` 事件）扫描所有消息，三层串行处理。
 
 **外部依赖：** 无
 
-**配置文件：** `~/.pi/agent/extensions/context/config.json`
+**配置文件：** `~/.pi/agent/extensions/context/config.json`（存储 distillThreshold、agingThreshold、processorThreshold）
 
 ---
 
