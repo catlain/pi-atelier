@@ -5,7 +5,7 @@
 ## 安装
 
 ```bash
-pi install git:github.com/<your-github-username>/pi-atelier
+pi install git:github.com/catlain/pi-atelier
 ```
 
 一行命令，pi 会自动 clone 到 `~/.pi/agent/git/`、运行 `npm install`、发现并注册所有扩展。重启 pi 即可使用。
@@ -316,7 +316,7 @@ pi uninstall pi-atelier
 ## 开发
 
 ```bash
-git clone https://github.com/<your-github-username>/pi-atelier.git
+git clone https://github.com/catlain/pi-atelier.git
 cd pi-atelier
 npm install
 
