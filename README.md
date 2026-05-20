@@ -5,7 +5,7 @@
 ## 安装
 
 ```bash
-pi install git:github.com/catlain/pi-atelier
+pi install git:github.com/<your-github-username>/pi-atelier
 ```
 
 一行命令，pi 会自动 clone 到 `~/.pi/agent/git/`、运行 `npm install`、发现并注册所有扩展。重启 pi 即可使用。
@@ -261,7 +261,7 @@ pi uninstall pi-atelier
 语音输入扩展因为有 native 依赖（sherpa-onnx-node、naudiodon2），单独发布：
 
 ```bash
-pi install git:github.com/catlain/pi-voice-input
+pi install git:github.com/<your-github-username>/pi-voice-input
 ```
 
 ---
@@ -302,7 +302,7 @@ pi install git:github.com/catlain/pi-voice-input
 ## 开发
 
 ```bash
-git clone https://github.com/catlain/pi-atelier.git
+git clone https://github.com/<your-github-username>/pi-atelier.git
 cd pi-atelier
 npm install
 
