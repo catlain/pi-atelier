@@ -7,6 +7,7 @@ import * as path from "node:path";
 import { homedir } from "node:os";
 import { execSync } from "node:child_process";
 import type { StateCondition, ResettableRule } from "./state-tracker.js";
+import { pushRuleError } from "./ephemeral.js";
 
 // ── 类型定义 ──────────────────────────────────────────────────
 
@@ -142,14 +143,19 @@ export const CODE_EXT_RE = /\.(py|rs|ts|js|toml|json)(\*|"|')?$/;
 // RULES_PATH 已移除——规则路径由 loadRules(rulesDir) 参数传入
 
 /** 从单个文件加载规则（不编译），处理文件不存在和 JSON 解析错误 */
-export function loadRulesFromFile(filePath: string): Rule[] {
+export function loadRulesFromFile(filePath: string): { rules: Rule[]; error?: string } {
 	try {
 		const raw = fs.readFileSync(filePath, "utf-8");
-		return JSON.parse(raw) as Rule[];
+		const parsed = JSON.parse(raw);
+		if (!Array.isArray(parsed)) {
+			const fileName = path.basename(filePath);
+			return { rules: [], error: `${fileName}: 顶层必须是 JSON 数组，当前是 ${typeof parsed}` };
+		}
+		return { rules: parsed };
 	} catch (e: any) {
-		if (e.code === "ENOENT") return [];
-		console.error(`[shepherd] failed to load rules: ${filePath}:`, e.message);
-		return [];
+		if (e.code === "ENOENT") return { rules: [] };
+		const fileName = path.basename(filePath);
+		return { rules: [], error: `${fileName}: JSON 解析失败 — ${e.message}` };
 	}
 }
 
@@ -175,12 +181,16 @@ export function compileRules(rules: Rule[]): Rule[] {
 	return active;
 }
 
+/** 加载所有规则并校验格式，返回编译后的规则列表 */
 export function loadRules(rulesDir?: string): Rule[] {
 	const allRules: Rule[] = [];
+	const errors: string[] = [];
 
 	// 1. 全局规则：由消费者传入规则文件所在目录
 	if (rulesDir) {
-		allRules.push(...loadRulesFromFile(path.join(rulesDir, "rules.json")));
+		const result = loadRulesFromFile(path.join(rulesDir, "rules.json"));
+		allRules.push(...result.rules);
+		if (result.error) errors.push(result.error);
 	}
 
 	// 2. 项目级规则（<cwd>/.pi/extensions/shepherd-rules-*.json）
@@ -188,9 +198,18 @@ export function loadRules(rulesDir?: string): Rule[] {
 	if (fs.existsSync(projectExtDir)) {
 		for (const file of fs.readdirSync(projectExtDir).sort()) {
 			if (file.startsWith("shepherd-rules-") && file.endsWith(".json")) {
-				allRules.push(...loadRulesFromFile(path.join(projectExtDir, file)));
+				const result = loadRulesFromFile(path.join(projectExtDir, file));
+				allRules.push(...result.rules);
+				if (result.error) errors.push(result.error);
 			}
 		}
+	}
+
+	// 格式校验失败时推入 shepherd 提示缓冲区
+	if (errors.length > 0) {
+		const msg = errors.join("；");
+		console.error(`[shepherd] 规则文件格式错误: ${msg}`);
+		pushRuleError(msg);
 	}
 
 	return compileRules(allRules);

@@ -110,23 +110,50 @@ export function checkSearchOnly(entries: Entry[]): AuditIssue[] {
 }
 
 export function checkRepeatedErrors(entries: Entry[]): AuditIssue[] {
-  const errorCounts: Record<string, number> = {};
+  // 按错误内容分组（忽略工具名），统计每个错误影响了哪些工具
+  const errorMsg = new Map<string, { tools: Set<string>; count: number; sample: string }>();
   for (const entry of entries) {
     if (entry.type !== "message" || !entry.message?.isError) continue;
     const text = typeof entry.message.content === "string"
       ? entry.message.content : extractText(entry.message.content);
     const tool = entry.message.toolName ?? "?";
-    const key = `${tool}:${text.slice(0, 80)}`;
-    errorCounts[key] = (errorCounts[key] ?? 0) + 1;
+    const key = text.slice(0, 80);
+    const existing = errorMsg.get(key);
+    if (existing) {
+      existing.tools.add(tool);
+      existing.count++;
+    } else {
+      errorMsg.set(key, { tools: new Set([tool]), count: 1, sample: text.slice(0, 120) });
+    }
   }
+
   const issues: AuditIssue[] = [];
-  for (const [key, count] of Object.entries(errorCounts)) {
-    if (count >= 3) {
-      const sep = key.indexOf(":");
+  for (const [key, data] of errorMsg) {
+    if (data.count < 3) continue;
+    const toolCount = data.tools.size;
+    const toolList = [...data.tools].join(", ");
+
+    if (toolCount >= 3) {
+      // 跨 3+ 工具的系统性错误 → error 级别
+      issues.push({
+        rule: "框架级错误", severity: "error",
+        detail: `系统性错误影响 ${toolCount} 种工具（${toolList}），重复 ${data.count} 次。所有工具不可用，模型应立即停止重试并告知用户`,
+        evidence: key, fixScope: "none",
+        fixSuggestion: "这是 pi 工具框架 bug，不是项目代码问题。应重启会话或报告给用户",
+      });
+    } else if (toolCount >= 2) {
+      // 跨 2 种工具 → warning
       issues.push({
         rule: "解决问题原则", severity: "warning",
-        detail: `工具 ${key.slice(0, sep)} 同类错误重复 ${count} 次，未解决根本原因`,
-        evidence: key.slice(sep + 1).slice(0, 120), fixScope: "none",
+        detail: `错误影响 ${toolCount} 种工具（${toolList}），重复 ${data.count} 次`,
+        evidence: key, fixScope: "none",
+      });
+    } else {
+      // 单工具重复 → warning
+      issues.push({
+        rule: "解决问题原则", severity: "warning",
+        detail: `工具 ${toolList} 同类错误重复 ${data.count} 次，未解决根本原因`,
+        evidence: key, fixScope: "none",
       });
     }
   }

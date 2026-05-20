@@ -35,6 +35,11 @@ function pushShepherdHint(reason: string, _label?: string): void {
 	_pushShared(`${SHEPHERD_PREFIX}${reason}`);
 }
 
+/** 推入规则格式错误提示（加 ❌ 前缀区别于普通 warning） */
+export function pushRuleError(msg: string): void {
+	_pushShared(`❌ shepherd 规则格式错误: ${msg}`);
+}
+
 /** shepherd 是否有待发送的提示 */
 export function hasWarnings(): boolean {
 	return hasHints();
