@@ -1,6 +1,6 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { formatTokens } from "./utils.js";
-import { lastContextMessages, lastProviderPayload, manuallyDeletedIds, agingSnapshot } from "./shared.js";
+import { lastContextMessages, lastProviderPayload, manuallyDeletedIds, agingSnapshot, setSessionId } from "./shared.js";
 import type { ContextData, RecordItem, DetailItem, CategoryItem } from "./types.js";
 import { appendFileSync } from "fs";
 const PID = process.pid;
@@ -48,8 +48,11 @@ function extractToolsFromPayload(payload: any): any[] {
 
 export function collectData(
 	pi: ExtensionAPI,
-	ctx: { getContextUsage(): any; getSystemPrompt(): string },
+	ctx: { getContextUsage(): any; getSystemPrompt(): string; sessionManager?: { getSessionId?(): string } },
 ): ContextData | null {
+	// 确保 sessionId 已设置（collect 可能在 context 事件之前执行）
+	const sid = ctx?.sessionManager?.getSessionId?.();
+	if (sid) setSessionId(sid);
 	const usage = ctx.getContextUsage() as { tokens: number; contextWindow: number; percent: number } | undefined;
 	if (!usage || usage.tokens == null || usage.contextWindow == null) return null;
 
@@ -214,7 +217,10 @@ export function collectData(
 	// DEBUG: aging snapshot 状态
 	const snapKeys = [...agingSnapshot.keys()];
 	const recordsWithAging = cats.flatMap(c => c.children?.flatMap(ch => ch.records?.filter(r => r.agingCount !== undefined) || []) || []);
-	DBG(`[collect] snapSize=${snapKeys.length} snapSamples=${snapKeys.slice(0, 5).join(",")} recordsWithAging=${recordsWithAging.length} globalThis_ref=${(globalThis as any).__agingSnapshot ? 'exists' : 'MISSING'}`);
+	const _g = globalThis as any;
+	const allSessionKeys = _g.__agingSnapshots ? Object.keys(_g.__agingSnapshots) : [];
+	const snapSizes = allSessionKeys.map((k: string) => `${k.slice(-6)}=${_g.__agingSnapshots[k].size}`);
+	DBG(`[collect] snapSize=${snapKeys.length} recordsWithAging=${recordsWithAging.length} allSessions=[${snapSizes.join(", ")}]`);
 
 	return { categories: cats, totalActual: total, limit, percent: usage.percent };
 }
