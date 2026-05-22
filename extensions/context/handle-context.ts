@@ -25,11 +25,8 @@ export function handleContextEvent(
 	// 设置 sessionId 并加载对应的 manifest
 	const sid = _ctx?.sessionManager?.getSessionId?.();
 	if (sid && sid !== state.sessionId) {
-		const oldId = state.sessionId;
 		state.sessionId = sid;
-		if (oldId) {
-			loadManifest(sid, { manuallyDeleted: manuallyDeletedIds, agingDeleted: agingDeletedIds });
-		}
+		loadManifest(sid, { manuallyDeleted: manuallyDeletedIds, agingDeleted: agingDeletedIds });
 	}
 
 	const messages = event.messages as any[];
