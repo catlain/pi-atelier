@@ -117,6 +117,21 @@ export function handleContextEvent(
 		saveManifest(state.sessionId, { manuallyDeleted: manuallyDeletedIds, agingDeleted: agingDeletedIds });
 	}
 
+	// distill 删除的也加入 agingDeletedIds，确保面板不显示已被 distill 移除的结果
+	if (distillRemovedIds.size > 0) {
+		let changed = false;
+		for (const tcId of distillRemovedIds) {
+			if (!agingDeletedIds.has(tcId)) {
+				agingDeletedIds.add(tcId);
+				agingTracker.delete(tcId);
+				changed = true;
+			}
+		}
+		if (changed) {
+			saveManifest(state.sessionId, { manuallyDeleted: manuallyDeletedIds, agingDeleted: agingDeletedIds });
+		}
+	}
+
 	for (const tcId of agingTracker.keys()) {
 		if (!activeTcIds.has(tcId)) agingTracker.delete(tcId);
 	}
