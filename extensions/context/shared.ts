@@ -24,10 +24,12 @@ export const distilledMap = new Map<string, DistillEntry>();
 export const agingTracker = new Map<string, number>();
 
 /** aging 快照：在每次 context 事件结束时保存，供 collect 展示用 */
-export let agingSnapshot = new Map<string, number>();
+export const agingSnapshot = new Map<string, number>();
 
 export function setAgingSnapshot(snapshot: Map<string, number>) {
-	agingSnapshot = new Map(snapshot);
+	// 操作同一个 Map 对象（不重新赋值），确保 jiti/CJS 下 export live binding 生效
+	agingSnapshot.clear();
+	for (const [k, v] of snapshot) agingSnapshot.set(k, v);
 	// 持久化到 manifest，reload 后可恢复
 	try { saveManifest(); } catch {}
 }
