@@ -52,84 +52,60 @@ export function handleContextEvent(
 	}
 
 	const toRemove: number[] = [];
-	const distillRemovedIds = new Set<string>();
 
-	// ── 第一遍：distill ──
+	// ── 统一遍历：distill（大结果阈值=2）+ aging（通用阈值=N）──
+	const activeTcIds = new Set<string>();
+	const removedTcIds = new Set<string>();
+
 	for (let i = 0; i < messages.length; i++) {
 		const msg = messages[i];
 		if (msg.role !== "toolResult") continue;
 		const tcId = msg.toolCallId || "";
 		if (!tcId) continue;
-		const toolName = msg.toolName || "unknown";
 
-		const textParts = (msg.content as any[]).filter((p: any) => p.type === "text");
-		const origText = textParts.map((p: any) => p.text).join("");
-		const origTokens = estimateTokens(origText);
-		if (origTokens < distillThreshold) continue;
-
-		if (seenArgs.has(tcId)) {
+		// 已被永久删除（之前轮次达到阈值）
+		if (agingDeletedIds.has(tcId)) {
 			toRemove.push(i);
-			distillRemovedIds.add(tcId);
+			removedTcIds.add(tcId);
 			continue;
 		}
 
-		seenArgs.add(tcId);
-		const meta = toolMeta(msg, toolCallMap);
-		const label = meta.meta || toolName;
-		const short = `📋 [auto-distill] 「${label}」~${origTokens} tokens`;
-		pi.events.emit("ephemeral:hint", { text: `${short}。此结果超过上下文阈值，下轮请求时会被自动移除。`, short });
-	}
+		const toolName = msg.toolName || "unknown";
+		const textParts = (msg.content as any[]).filter((p: any) => p.type === "text");
+		const origText = textParts.map((p: any) => p.text).join("");
+		const origTokens = estimateTokens(origText);
 
-	// ── 第二遍：aging ──
-	const activeTcIds = new Set<string>();
-	const agingRemovedTcIds = new Set<string>();
+		// 计算该 tcId 的实际阈值
+		const effectiveThreshold = origTokens >= distillThreshold ? 2 : agingThreshold;
+		if (effectiveThreshold <= 0) continue; // aging 关闭时跳过普通结果
 
-	if (agingThreshold > 0) {
-		for (let i = 0; i < messages.length; i++) {
-			const msg = messages[i];
-			if (msg.role !== "toolResult") continue;
-			const tcId = msg.toolCallId || "";
-			if (!tcId) continue;
-			if (distillRemovedIds.has(tcId)) continue;
+		activeTcIds.add(tcId);
+		const count = (agingTracker.get(tcId) || 0) + 1;
+		agingTracker.set(tcId, count);
 
-			if (agingDeletedIds.has(tcId)) {
-				toRemove.push(i);
-				continue;
-			}
-
-			activeTcIds.add(tcId);
-			const count = (agingTracker.get(tcId) || 0) + 1;
-			agingTracker.set(tcId, count);
-
-			if (count >= agingThreshold) {
-				toRemove.push(i);
-				agingRemovedTcIds.add(tcId);
+		if (count >= effectiveThreshold) {
+			// 达到阈值 → 删除
+			toRemove.push(i);
+			removedTcIds.add(tcId);
+		} else if (origTokens >= distillThreshold && count === 1) {
+			// 大结果首次出现 → 提示用户
+			if (!seenArgs.has(tcId)) {
+				seenArgs.add(tcId);
+				const meta = toolMeta(msg, toolCallMap);
+				const label = meta.meta || toolName;
+				const short = `📋 [auto-distill] 「${label}」~${origTokens} tokens`;
+				pi.events.emit("ephemeral:hint", { text: `${short}。此结果超过上下文阈值，下轮请求时会被自动移除。`, short });
 			}
 		}
 	}
 
 	// cleanup：移除达到阈值的 tcId，加入永久删除集合
-	if (agingRemovedTcIds.size > 0) {
-		for (const tcId of agingRemovedTcIds) {
+	if (removedTcIds.size > 0) {
+		for (const tcId of removedTcIds) {
 			agingTracker.delete(tcId);
 			agingDeletedIds.add(tcId);
 		}
 		saveManifest(state.sessionId, { manuallyDeleted: manuallyDeletedIds, agingDeleted: agingDeletedIds });
-	}
-
-	// distill 删除的也加入 agingDeletedIds，确保面板不显示已被 distill 移除的结果
-	if (distillRemovedIds.size > 0) {
-		let changed = false;
-		for (const tcId of distillRemovedIds) {
-			if (!agingDeletedIds.has(tcId)) {
-				agingDeletedIds.add(tcId);
-				agingTracker.delete(tcId);
-				changed = true;
-			}
-		}
-		if (changed) {
-			saveManifest(state.sessionId, { manuallyDeleted: manuallyDeletedIds, agingDeleted: agingDeletedIds });
-		}
 	}
 
 	for (const tcId of agingTracker.keys()) {
