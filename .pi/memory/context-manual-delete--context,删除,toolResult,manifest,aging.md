@@ -1,48 +1,34 @@
-# Context 面板：删除 + Aging 展示
+# Context 面板：删除 + Aging 展示 + Distill/Aging 调查
 
-关键词：`context` `删除` `toolResult` `manifest` `aging` `agingSnapshot`
+关键词：`context` `aging` `distill` `toolResult` `未删除`
 
 ## 实现决策（2025-05-22）
 
-### 机制
+### 手动删除机制
 - **和 aging 完全一致**：标记 toolCallId，在 context 事件的浅拷贝 messages 上 splice，不修改 pi 原始对话历史
 - pi 传入 `[...messages]`（浅拷贝），扩展 splice 后返回，pi 用修改后的版本发送给 LLM
-
-### 持久化
 - `manuallyDeletedIds: Set<string>` 持久化到 `manifest.json`（和 distilledMap 共享文件）
-- manifest 格式：`{ distilledMap: {...}, manuallyDeleted: [...] }`
-- 启动时从 manifest 恢复，每次修改后保存
 
-### UI 交互
-- content 层（Level 3）按 `d` → 确认状态（y/n）→ 加入集合 → 自动返回 records 层
-- records 层已删除项显示 `[deleted]` 标记
+### Aging 计数展示
+- 踩坑：`setLastContextMessages()` 在 aging 遍历前调用，agingTracker 遍历后被清空
+- 修复：新增 `agingSnapshot`，在 aging 遍历后、清理 tracker 前保存快照
+- 代码：`shared.ts` agingTracker + agingSnapshot | `collect.ts` 从 snapshot 读取 | `render.ts` 显示 ⏳N
 
-### 清理
-- 每轮 context 事件后调用 `cleanupDeletedIds()`，移除 messages 中已不存在的 tcId
-- 防止集合无限增长
+## Distill/Aging 未删除巨型 toolResult 调查（2025-05-22）
 
-## Aging 计数展示（2025-05-22）
+### 现象
+会话 b2c0-9864943ac996（990+ 轮）中 6 个巨型 toolResult（每个 ~13k tokens，合计 ~77k）50+ 轮都没被删除。
 
-### 需求
-在 Level 2 记录列表中显示每条工具结果已被发送给 LLM 多少次，结合 aging 阈值判断即将被遗忘的内容。
+### 已排除
+- JSONL 格式正确（`role:"toolResult"`, `toolCallId` 有）
+- payload 中 `role:"tool"` 是 provider 适配器后转换的，不影响 aging
+- plan-verify 的 `.filter()` 不重新引入已删消息
+- `emitContext` → `transformContext` 链路正确
 
-### 踩坑：agingTracker 时序问题
-- **根因**：`setLastContextMessages()` 在 aging 遍历 **之前** 调用，agingTracker 在遍历结束后被清理（删除不在 messages 中的 tcId）
-- collect 在面板打开时执行，读到的 agingTracker 已被清空 → `trackerSize=0`
-- **修复**：新增 `agingSnapshot`，在 aging 遍历后、清理 tracker 前保存快照，collect 从快照读取
+### 未确认的怀疑方向
+1. **handler 内部抛异常被静默吞掉**：runner.js try-catch 捕获但 splice 不执行
+2. **getContextConfig() 返回异常值**：如 distillThreshold=0
+3. **messages 数组引用被替换**：splice 修改不生效
 
-### 数据流
-```
-context 事件 → aging 遍历（更新 agingTracker）
-            → setAgingSnapshot(agingTracker)  // 快照
-            → 清理 agingTracker（删除不存在的 tcId）
-面板打开   → collect 从 agingSnapshot 读取 → render 显示 ⏳N
-```
-
-### 代码位置
-- `extensions/context/shared.ts` — agingTracker + agingSnapshot + manuallyDeletedIds
-- `extensions/context/index.ts` — context 事件：aging 遍历 + 快照保存 + 清理
-- `extensions/context/collect.ts` — RecordItem.agingCount 从 agingSnapshot 读取
-- `extensions/context/render.ts` — Level 2 显示 ⏳N 标签
-- `extensions/context/types.ts` — RecordItem.agingCount?: number
-- `extensions/context/context.ts` — UI 交互
+### 调试方案
+在 handler 中加日志写 `~/.pi/agent/memory/_aging-debug.log`，需在该会话触发一轮请求后查看。代码已准备好但未提交。

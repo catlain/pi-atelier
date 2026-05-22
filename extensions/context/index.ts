@@ -107,6 +107,7 @@ export default function (pi: ExtensionAPI) {
 
 		// ── 第二遍：aging（旧内容自动遗忘） ──
 		const activeTcIds = new Set<string>();
+		DBG(`[ctx-event] BEFORE aging: trackerSize=${agingTracker.size} warmup=${seenArgs.size}`);
 
 		if (agingThreshold > 0) {
 			for (let i = 0; i < messages.length; i++) {
@@ -138,12 +139,15 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		// 保存 aging 快照（在清理之前，供 collect 展示用）
+		DBG(`[ctx-event] BEFORE snapshot: trackerSize=${agingTracker.size} activeTcIds=${activeTcIds.size}`);
 		setAgingSnapshot(agingTracker);
+		DBG(`[ctx-event] AFTER snapshot: snapSize=${agingSnapshot.size}`);
 
 		// 清理 tracker 中不在当前 messages 里的 tcId（防止无限增长）
 		for (const tcId of agingTracker.keys()) {
 			if (!activeTcIds.has(tcId)) agingTracker.delete(tcId);
 		}
+		DBG(`[ctx-event] AFTER cleanup: trackerSize=${agingTracker.size}`);
 
 		// ── 第三遍：手动删除（用户在 context 面板中标记删除的） ──
 		const manualRemoveIds = new Set<string>();
