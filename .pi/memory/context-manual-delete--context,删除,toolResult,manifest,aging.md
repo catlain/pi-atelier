@@ -36,6 +36,7 @@
 ### 踩坑记录（2025-05-22）
 1. **agingTracker 闭包变量** → 移到 shared.ts 作为 `export const`
 2. **`export let` jiti/CJS live binding 失效** → 改用 `export const` + clear/set 操作同一对象
+3. **`export const` Map 在 jiti 多模块实例间不同步** → 必须用 `globalThis` 注册单例
 3. **达标 tcId 未清理，值无限累积** → aging 遍历中记录并删除
 4. **多进程共享 manifest** → 按会话隔离 manifest 路径
 5. **aging 删除后下轮又回来** → agingDeletedIds 持久集合，和 manuallyDeletedIds 同级

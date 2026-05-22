@@ -5,42 +5,43 @@
  * 使用"分段精简 + 相关性筛选 + 合并压缩"三阶段策略，
  * 解决超长 session serialize 后超过 LLM 窗口的问题。
  */
-import type { CompactionResult, SessionBeforeCompactEvent, ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import type { CompactionResult, SessionBeforeCompactEvent, ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import { segmentMessages } from "./segmenter.js";
 import { summarizeSegments, type SegmentSummary } from "./summarizer.js";
 import { mergeAndCompact } from "./merger.js";
 import { loadConfig } from "./config.js";
+import { createLLMCaller } from "./llm-caller.js";
 
 export default async function (pi: ExtensionAPI) {
 	// 注册命令：触发增强版 compaction
 	pi.registerCommand("smart-compact", {
 		description: "分段精简 + 相关性筛选 + 合并压缩",
-		handler: async (_args: string, ctx: ExtensionContext) => {
-			ctx.log("触发 smart-compact...");
-			await ctx.compact();
+		handler: async (_args: string, ctx: ExtensionCommandContext) => {
+			console.log("[smart-compact] 触发增强压缩...");
+			ctx.compact();
 		},
 	});
 
 	// 注册命令：查看/修改配置
 	pi.registerCommand("smart-compact-config", {
 		description: "查看 smart-compact 配置",
-		handler: async (_args: string, ctx: ExtensionContext) => {
+		handler: async (_args: string, ctx: ExtensionCommandContext) => {
 			const config = await loadConfig();
-			ctx.log(JSON.stringify(config, null, 2));
+			ctx.ui.notify(JSON.stringify(config, null, 2), "info");
 		},
 	});
 
 	// 监听 compaction 事件，接管 pi 内置 compaction
-	pi.on("session_before_compact", async (event: SessionBeforeCompactEvent, ctx: ExtensionContext) => {
+	pi.on("session_before_compact", async (event: SessionBeforeCompactEvent, ctx: ExtensionCommandContext) => {
 		const config = await loadConfig();
 
 		if (!config.enabled) {
-			ctx.log("smart-compact 已禁用，使用 pi 内置 compaction");
+			console.log("[smart-compact] 已禁用，使用 pi 内置 compaction");
 			return {};
 		}
 
 		const { preparation, branchEntries, signal } = event;
-		ctx.log(`smart-compact 接管: ${(preparation as any).messagesToSummarize?.length ?? "?"} 条消息待摘要`);
+		console.log(`[smart-compact] 接管: ${(preparation as any).messagesToSummarize?.length ?? "?"} 条消息待摘要`);
 
 		try {
 			// Phase 0: 分段
@@ -52,43 +53,40 @@ export default async function (pi: ExtensionAPI) {
 			const tokensBefore: number = (preparation as any).tokensBefore ?? 0;
 
 			if (messagesToSummarize.length === 0) {
-				ctx.log("没有需要摘要的消息，跳过");
+				console.log("[smart-compact] 没有需要摘要的消息，跳过");
 				return {};
 			}
 
 			const segments = segmentMessages(messagesToSummarize, config);
-			ctx.log(`分段完成: ${segments.length} 段`);
+			console.log(`[smart-compact] 分段完成: ${segments.length} 段`);
+
+			// 创建 LLM 调用函数
+			const callLLM = createLLMCaller(ctx, config.segmentModel);
+			const segmentCallLLM = config.segmentModel
+				? createLLMCaller(ctx, config.segmentModel)
+				: callLLM;
 
 			// Phase 1: 分段摘要 + 相关性判断
-			const model = ctx.model;
-			if (!model) {
-				ctx.log("无可用模型，回退到 pi 内置 compaction");
-				return {};
-			}
-
-			const segmentModel = config.segmentModel
-				? ctx.modelRegistry.find(config.segmentModel.split("/")[0], config.segmentModel.split("/")[1])
-				: model;
-
 			const summaries = await summarizeSegments(
 				segments,
 				/* currentTask */ "",
-				segmentModel ?? model,
-				ctx.modelRegistry,
-				{ maxParallel: config.maxParallelSegments },
+				config,
+				segmentCallLLM,
 				signal,
 			);
 			const relevantSummaries = summaries.filter((s: SegmentSummary) => s.relevant);
-			ctx.log(`相关性筛选: ${relevantSummaries.length}/${summaries.length} 段相关`);
+			console.log(`[smart-compact] 相关性筛选: ${relevantSummaries.length}/${summaries.length} 段相关`);
 
 			// Phase 2: 合并压缩
 			const summary = await mergeAndCompact(
-				relevantSummaries,
-				turnPrefixMessages,
-				previousSummary,
-				model,
-				ctx.modelRegistry,
+				{
+					relevantSummaries,
+					turnPrefixMessages,
+					previousSummary,
+					currentTask: "",
+				},
 				config,
+				callLLM,
 				signal,
 			);
 
@@ -108,7 +106,7 @@ export default async function (pi: ExtensionAPI) {
 				if (modifiedFiles.length > 0) fullSummary += `Modified: ${modifiedFiles.join(", ")}\n`;
 			}
 
-			ctx.log("smart-compact 完成");
+			console.log("[smart-compact] 完成");
 
 			const result: CompactionResult = {
 				summary: fullSummary,
@@ -119,7 +117,7 @@ export default async function (pi: ExtensionAPI) {
 
 			return { compaction: result };
 		} catch (err) {
-			ctx.log(`smart-compact 失败，回退到 pi 内置: ${err}`);
+			console.error(`[smart-compact] 失败，回退 pi 内置: ${err}`);
 			return {}; // 返回空 = 使用 pi 内置 compaction
 		}
 	});
