@@ -91,20 +91,22 @@ interface ManifestData {
 	distilled: [string, DistillEntry][];
 	manuallyDeleted: string[];
 	agingDeleted: string[];
+	agingCounts: [string, number][];
 }
 
-export function saveManifest(sessionId: string, opts: { manuallyDeleted: Iterable<string>; agingDeleted: Iterable<string> }) {
+export function saveManifest(sessionId: string, opts: { manuallyDeleted: Iterable<string>; agingDeleted: Iterable<string>; agingCounts?: Iterable<[string, number]> }) {
 	try {
 		const data: ManifestData = {
 			distilled: [...distilledMap],
 			manuallyDeleted: [...opts.manuallyDeleted],
 			agingDeleted: [...opts.agingDeleted],
+			agingCounts: opts.agingCounts ? [...opts.agingCounts] : [],
 		};
 		writeFileSync(getManifestPath(sessionId), JSON.stringify(data));
 	} catch { /* ignore */ }
 }
 
-export function loadManifest(sessionId: string, opts: { manuallyDeleted: Set<string>; agingDeleted: Set<string> }) {
+export function loadManifest(sessionId: string, opts: { manuallyDeleted: Set<string>; agingDeleted: Set<string>; agingTracker?: Map<string, number> }) {
 	try {
 		const p = getManifestPath(sessionId);
 		if (!existsSync(p)) return;
@@ -115,6 +117,10 @@ export function loadManifest(sessionId: string, opts: { manuallyDeleted: Set<str
 		for (const id of data.manuallyDeleted || []) opts.manuallyDeleted.add(id);
 		opts.agingDeleted.clear();
 		for (const id of data.agingDeleted || []) opts.agingDeleted.add(id);
+		if (opts.agingTracker) {
+			opts.agingTracker.clear();
+			for (const [k, v] of data.agingCounts || []) opts.agingTracker.set(k, v);
+		}
 	} catch { /* ignore */ }
 }
 
