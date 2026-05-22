@@ -5,3 +5,4 @@
 - [context-manual-delete](context-manual-delete--context,删除,toolResult,manifest,aging.md)
 - [cartog-removed](cartog-removed--cartog,清理,删除,扩展.md)
 - [smart-compact-pitfalls](smart-compact-pitfalls--smart-compact,callLLM,currentTask,相关性筛选,默认关闭.md)
+- [formatter-chain-pattern](formatter-chain-pattern--processor,formatters,语义验证,误匹配,sniffing.md)
