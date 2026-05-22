@@ -33,6 +33,11 @@ Last validated: 2025-05-22
 │  │plan-     │ │scheduler │ │subagent  │ │ journal(WIP) │   │
 │  │verify    │ │          │ │          │ │              │   │
 │  └────┬─────┘ └──────────┘ └────┬─────┘ └──────────────┘   │
+│                                                              │
+│  ┌──────────────┐                                           │
+│  │smart-compact │ 事件接管 compaction                        │
+│  │(分段+筛选)   │                                           │
+│  └──────────────┘                                           │
 │       │                        │                            │
 ├───────┼────────────────────────┼────────────────────────────┤
 │  Shared Libraries              │                            │
@@ -47,6 +52,26 @@ Last validated: 2025-05-22
 ## Component Map
 
 ### Extensions (Leaf Modules)
+
+#### smart-compact
+
+**Purpose**: 增强版 compaction，解决超长 session 的 serialize 后超过 LLM 窗口问题。
+
+**Mechanism**: 监听 `session_before_compact` 事件，返回 `CompactionResult` 接管 pi 内置 compaction。
+
+**Three-phase strategy**:
+1. **Phase 0 (segmenter)**: 按 turn 边界分段，每段 ~15 turns
+2. **Phase 1 (summarizer)**: 并行 LLM 调用生成精简摘要 + 相关性判断
+3. **Phase 2 (merger)**: 合并相关段摘要为最终 compaction summary
+
+**Key design**:
+- Enhanced `serializeConversation` with thinking truncation (500 chars) and tool result truncation
+- Configurable segment model (cheap/fast model for Phase 1, session model for Phase 2)
+- Graceful fallback to pi built-in compaction on error
+
+**Commands**: `/smart-compact`, `/smart-compact-config`
+
+**Dependencies**: pi-coding-agent (ExtensionAPI, types, serializeConversation), pi-ai (completeSimple)
 
 | Extension | Role | Tools | Commands | Events |
 |-----------|------|-------|----------|--------|

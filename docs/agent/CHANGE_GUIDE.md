@@ -28,6 +28,12 @@ Last validated: 2025-05-22
 6. Add to root `package.json` workspaces if needed
 7. Test with `npx vitest run extensions/<name>/`
 
+**Example: smart-compact** — Event-based compaction override:
+- Listens on `session_before_compact`, returns `CompactionResult` to take over
+- Commands: `/smart-compact`, `/smart-compact-config`
+- Multi-phase LLM calls via `completeSimple` from `@earendil-works/pi-ai`
+- Config via `loadConfig()` with `SmartCompactConfig` defaults
+
 ### Adding a Shepherd Rule
 
 1. Edit `extensions/shepherd/rules.json`
