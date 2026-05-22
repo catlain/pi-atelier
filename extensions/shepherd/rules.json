@@ -315,6 +315,17 @@
         "enabled": true
     },
     {
+        "comment": "[code-graph] grep 搜索函数/类定义时提醒用 search_symbols",
+        "hook": "tool_call",
+        "tool": "grep",
+        "action": "steer",
+        "pattern": "\\b(function|class|interface|type|const|fn|def|impl|trait|struct|enum)\\b",
+        "flags": "i",
+        "reason": "🔍 你在 grep 搜索函数/类定义。code-graph 的 `search_symbols` 更精确——直接匹配符号名、类型和位置，不会误匹配注释或字符串中的同名文本。建议先试 `search_symbols`。",
+        "subagent": false,
+        "enabled": true
+    },
+    {
         "comment": "[通用] 脚本执行失败时提醒先 --help",
         "hook": "tool_result",
         "tool": "bash",

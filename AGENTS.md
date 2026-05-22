@@ -70,6 +70,27 @@ npx vitest run extensions/shepherd/tests/
 npx tsc --noEmit
 ```
 
+## Code Intelligence (code-graph)
+
+项目已配置 `code-graph` MCP server（通过 `~/.pi/agent/mcp.json`）。在以下场景优先使用 code-graph 工具而非 grep/find：
+
+| 场景 | 用什么 | 工具名 |
+|------|--------|--------|
+| 搜索函数/类/变量名 | `search_symbols` | 比 grep 精确，直接匹配符号名 |
+| 查看项目架构 | `project_map` | 自动识别模块、依赖、入口 |
+| 查找谁调用了 X | `find_references` | 含 call/import/export 全类型引用 |
+| 追踪调用链 | `get_call_graph` | callers/callees 深度追踪 |
+| 修改前评估影响 | `find_references` + 分析 | blast radius 评估 |
+| 查找死代码 | `dead_code` | exported-unused / orphan 检测 |
+| 模块内部结构 | `module_overview` | 文件级符号列表 |
+
+**使用原则**：
+- **搜索已知名称** → code-graph `search_symbols` > grep
+- **理解调用关系** → code-graph `find_references` / `get_call_graph` > 手动 grep
+- **评估变更影响** → code-graph `find_references` 先查引用，再决定改不改
+- **探索不熟悉的模块** → code-graph `module_overview` 先看结构，再 read 代码
+- **找不到时 fallback** → code-graph 找不到再用 grep，可能符号名拼写不同
+
 ## Coding Conventions
 
 - TypeScript strict mode throughout

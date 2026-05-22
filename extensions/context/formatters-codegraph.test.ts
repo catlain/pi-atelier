@@ -25,8 +25,8 @@ describe("sniffCodeGraph — 嗅探", () => {
 	it("references 行", () => {
 		expect(sniffCodeGraph("3 references to 'MyFunc':")).toBe(true);
 	});
-	it("Modules 行", () => {
-		expect(sniffCodeGraph("Modules:\nextensions/context (25 files, 108 symbols, typescript)")).toBe(true);
+	it("Module overview 行", () => {
+		expect(sniffCodeGraph("Module: extensions/context (108 nodes)\n  fn processToolResult  extensions/context/core.ts:50-105")).toBe(true);
 	});
 	it("Dead code 行", () => {
 		expect(sniffCodeGraph("Dead code: 10 results (5 orphan, 5 exported-unused)")).toBe(true);
@@ -166,16 +166,15 @@ describe("formatCodeGraphResult — 内容保持", () => {
 
 	it("map 输出保留模块信息", () => {
 		const input = [
-			"Modules:",
-			"extensions/context (25 files, 108 symbols, typescript)",
-			"  registerToolResultProcessor, formatTokens",
-			"extensions/session-analyzer (14 files, 67 symbols, typescript)",
+			"Module: extensions/context (108 nodes)",
+			"  fn processToolResult  extensions/context/core.ts:50-105",
+			"  class DataStore  lib/storage.ts:10-200",
 		].join("\n");
 
 		const result = formatCodeGraphResult(input);
 		expect(result).toContain("extensions/context");
-		expect(result).toContain("25 files");
-		expect(result).toContain("extensions/session-analyzer");
+		expect(result).toContain("108 nodes");
+		expect(result).toContain("processToolResult");
 	});
 
 	it("dead-code 输出保留分类信息", () => {

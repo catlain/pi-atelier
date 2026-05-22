@@ -34,31 +34,21 @@ const SYMBOL_ORDER: Record<string, number> = {
 // ── 嗅探：检测 code-graph 输出 ────────────────────
 
 export function sniffCodeGraph(text: string): boolean {
-	// search: "fn name  file:line-range  ((params)) -> ret" 或 "class Name  file:line-range"
-	if (/^(fn |class |struct |enum |interface |type |const |var |method )\S+\s{2,}\S+:\d+/m.test(text)) {
-		return true;
-	}
-	// callgraph: 缩进箭头
-	if (/^ {2}[←→]/m.test(text)) {
-		return true;
-	}
-	// impact
-	if (/^Impact:\s+\S+\s+—\s+Risk:/m.test(text)) {
-		return true;
-	}
-	// references
-	if (/^\d+\s+references?\s+to\s+['"]/m.test(text)) {
-		return true;
-	}
-	// map
-	if (/^Modules:\s*$/m.test(text)) {
-		return true;
-	}
-	// dead code
-	if (/^Dead code:\s+\d+\s+results?/m.test(text)) {
-		return true;
-	}
-	return false;
+	// 每条特征都是 code-graph 独有的行模式，单条命中即判定
+	return (
+		// search: "fn name  file:line-range  ((params)) -> ret"
+		/^(fn |class |struct |enum |interface |type |const |var |method )\S+\s{2,}\S+:\d+/.test(text) ||
+		// callgraph: 缩进箭头（← callers / → callees）
+		/^ {2}[←→]/m.test(text) ||
+		// impact: "Impact: xxx — Risk: LOW/MEDIUM/HIGH"
+		/^Impact:\s+\S+\s+—\s+Risk:\s*(LOW|MEDIUM|HIGH)/m.test(text) ||
+		// references: "3 references to 'symbol'"
+		/^\d+\s+references?\s+to\s+['"][^'"]+['"]/m.test(text) ||
+		// dead code: "Dead code: 42 results"
+		/^Dead code:\s+\d+\s+results?/m.test(text) ||
+		// module overview header: "Module: xxx (42 nodes)"
+		/^Module:\s+\S+\s*\(\d+\s+nodes?\)/m.test(text)
+	);
 }
 
 // ── 搜索结果分组排序 ─────────────────────────────
@@ -82,11 +72,16 @@ export function formatCodeGraphResult(text: string): string {
 	let lines = text.split("\n");
 
 	// 搜索结果（符号列表）→ 按类型分组排序
-	const isSearch = lines.length >= 1 && lines.some(
-		(l) => /^(fn |class |struct |enum |interface |type |const |var |method )\S+\s{2,}/.test(l),
-	) && lines.every(
-		(l) => !l.trim() || /^(fn |class |struct |enum |interface |type |const |var |method )\S+\s{2,}/.test(l),
-	);
+	const isSearch =
+		lines.length >= 1 &&
+		lines.some((l) =>
+			/^(fn |class |struct |enum |interface |type |const |var |method )\S+\s{2,}/.test(l),
+		) &&
+		lines.every(
+			(l) =>
+				!l.trim() ||
+				/^(fn |class |struct |enum |interface |type |const |var |method )\S+\s{2,}/.test(l),
+		);
 	if (isSearch) {
 		lines = sortSearchLines(lines);
 	}
