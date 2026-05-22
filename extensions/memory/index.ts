@@ -16,7 +16,7 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { AGENT_DIR, MAX_FILE_LINES } from "./lib/types";
+import { AGENT_DIR, MAX_FILE_LINES, HARD_FILE_LIMIT, SOFT_FILE_LIMIT, HINT_FILE_LIMIT } from "./lib/types";
 import { scanMemoryDir, parseFileName, type MemoryEntry } from "@pi-atelier/shared-utils";
 import { updateIndex } from "./lib/writer";
 
@@ -163,13 +163,11 @@ export default function memoryToolsExtension(pi: ExtensionAPI) {
       const totalFiles = fs.existsSync(targetDir)
         ? fs.readdirSync(targetDir).filter(f => f.endsWith(".md") && f !== "MEMORY.md").length
         : 0;
-      const HARD_LIMIT = 40;
-      const SOFT_LIMIT = 25;
       // 覆盖已有文件不增加总数，不算超标
       const effectiveTotal = isOverwrite ? totalFiles : totalFiles + 1;
-      if (effectiveTotal > HARD_LIMIT) {
+      if (effectiveTotal > HARD_FILE_LIMIT) {
         return {
-          content: [{ type: "text", text: `❌ ${effectiveScope} 记忆文件已达 ${totalFiles} 个（硬限制 ${HARD_LIMIT}），拒绝写入。请先用 memory_index 查看，合并/删除后重试。` }],
+          content: [{ type: "text", text: `❌ ${effectiveScope} 记忆文件已达 ${totalFiles} 个（硬限制 ${HARD_FILE_LIMIT}），拒绝写入。请先用 memory_index 查看，合并/删除后重试。` }],
           details: {},
         };
       }
@@ -203,9 +201,9 @@ export default function memoryToolsExtension(pi: ExtensionAPI) {
 
       // 成功消息
       const action = isOverwrite ? "覆盖" : "新建";
-      const totalWarning = totalFiles > SOFT_LIMIT
-        ? `\n⚠️ ${effectiveScope} 记忆文件 ${totalFiles} 个，接近 ${HARD_LIMIT} 硬限制，请尽快清理合并`
-        : totalFiles > 20
+      const totalWarning = totalFiles > SOFT_FILE_LIMIT
+        ? `\n⚠️ ${effectiveScope} 记忆文件 ${totalFiles} 个，接近 ${HARD_FILE_LIMIT} 硬限制，请尽快清理合并`
+        : totalFiles > HINT_FILE_LIMIT
           ? `\n💡 ${effectiveScope} 记忆文件 ${totalFiles} 个，注意控制数量`
           : "";
 
