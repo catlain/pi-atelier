@@ -1,4 +1,4 @@
-# Context 面板：删除 + Aging 展示 + 持久化
+# Context 面板：删除 + Aging 展示
 
 关键词：`context` `aging` `distill` `toolResult` `manifest`
 
@@ -13,41 +13,32 @@
 2. `collect.ts` collectData → 从 agingSnapshot 读取 → RecordItem.agingCount
 3. `render.ts` renderRecords → 显示 `⏳{agingCount}`
 
-### 三次踩坑（2025-05-22）
+### 踩坑记录（2025-05-22）
 
-#### 坑1：agingTracker 在 collect 时为空
-- **原因**：agingTracker 是 index.ts 闭包内的局部变量，collect 无法访问
-- **修复**：agingTracker 移到 shared.ts 作为模块级导出
+#### 坑1：agingTracker 闭包变量无法跨模块访问
+- **修复**：agingTracker 移到 shared.ts 作为 `export const` 模块级导出
 
-#### 坑2：reload 后 agingSnapshot 为空
-- **原因**：agingSnapshot 没有持久化，reload 后重置为空 Map
-- **修复**：manifest.json 新增 `aging` 字段，启动时恢复到 agingTracker + agingSnapshot
+#### 坑2：`export let` 在 jiti/CJS 下 live binding 失效
+- **现象**：index.ts 写 agingSnapshot，collect.ts 读到的是初始值
+- **根因**：jiti 编译为 CJS，`let` 重新赋值只改局部变量，不更新 exports
+- **修复**：改用 `export const agingSnapshot = new Map()` + `clear()/set()` 操作同一对象
 
-#### 坑3：所有记录显示 36，但 aging 没删除
-- **原因**：达到阈值的 tcId 没有从 agingTracker 清除，每轮 +1 永远 >= threshold，但
-  context 事件前两轮（handler 内部）因 emitContext 时序未执行到 aging 逻辑
-- **修复**：aging 遍历后，将 count >= agingThreshold 的 tcId 从 tracker 删除
-  （它们已被 splice 出 messages，下次不再出现，tracker 保留无意义且会导致值无限累积）
+#### 坑3：达到阈值的 tcId 未从 agingTracker 清除，值无限累积
+- **修复**：aging 遍历中记录 `agingRemovedTcIds`，遍历后从 tracker 删除
 
-### setAgingSnapshot 保存时机
-- **在 tracker cleanup 之后**调用（cleanup 后不含已删除项）
-- **禁止用 `export let` + 重新赋值**：jiti/CJS 下 live binding 失效，collect 读到的是初始 Map
-- 改用 `export const agingSnapshot = new Map()` + `clear()/set()` 操作同一对象
+#### 坑4：多 pi 进程共享 manifest 导致 aging 数据互相覆盖
+- **现象**：进程 A 写入 300 条 aging，进程 B 触发 context 事件时 `setAgingSnapshot` 把 manifest 清空
+- **修复**：**aging 不持久化到 manifest**。它是短暂运行时状态，reload 后从 0 重新计数
 
-## Manifest 格式
+### Manifest 格式（aging 已移除）
 ```json
 {
   "distilled": [[tcId, {tmpPath, originalTokens, ...}]],
-  "manuallyDeleted": ["tcId1", "tcId2"],
-  "aging": [[tcId, count]]
+  "manuallyDeleted": ["tcId1", "tcId2"]
 }
 ```
 
-## Distill/Aging 未删除巨型 toolResult 的根因（已确认）
-990+ 轮的长会话中，emitContext 在某些路径下（如 distill 路径）直接 return，
-导致 aging 逻辑不执行。修复后 aging 和 distill 路径都正确执行 toRemove + splice。
-
-## 调试日志
-- `index.ts` 中 DBG 函数写 `/tmp/pi-context-debug.log`
-- `collect.ts` 中有 snapSize/recordsWithAging 日志
-- 调试完成后可移除
+### 关键约束
+- **禁止 `export let` + 重新赋值**：必须用 `export const` + 操作同一对象引用
+- **aging 不持久化**：避免多进程竞争
+- **调试日志**：DBG 函数写 `/tmp/pi-context-debug.log`，按 `[PID]` 区分进程
