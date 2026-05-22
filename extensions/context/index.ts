@@ -1,6 +1,8 @@
 import { type ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { appendFileSync } from "fs";
+const DBG = (msg: string) => appendFileSync("/tmp/pi-context-debug.log", msg + "\n");
 import registerContextCommand from "./context.js";
-import { setLastContextMessages, getContextConfig, manuallyDeletedIds, agingTracker, setAgingSnapshot } from "./shared.js";
+import { setLastContextMessages, getContextConfig, manuallyDeletedIds, agingTracker, agingSnapshot, setAgingSnapshot } from "./shared.js";
 import {
 	buildToolCallMap,
 	estimateTokens,
@@ -138,16 +140,33 @@ export default function (pi: ExtensionAPI) {
 			}
 		}
 
-		// 保存 aging 快照（在清理之前，供 collect 展示用）
-		DBG(`[ctx-event] BEFORE snapshot: trackerSize=${agingTracker.size} activeTcIds=${activeTcIds.size}`);
-		setAgingSnapshot(agingTracker);
-		DBG(`[ctx-event] AFTER snapshot: snapSize=${agingSnapshot.size}`);
+		DBG(`[ctx-event] AFTER aging: toRemove=${toRemove.length} agingThreshold=${agingThreshold}`);
+		const agingSamples = [...agingTracker.entries()].slice(0, 3);
+		for (const [k, v] of agingSamples) DBG(`  agingSample: ${k.slice(0, 8)}=${v}`);
+
+		// 清理 tracker：移除已达到 aging 阈值（即将被删除）的 tcId
+		// 这样 manifest 不会累积巨值
+		const agingRemovedIds = new Set<string>();
+		if (toRemove.length > 0) {
+			for (let i = 0; i < messages.length; i++) {
+				if (toRemove.includes(i)) {
+					const msg = messages[i];
+					if (msg.role === "toolResult" && msg.toolCallId) {
+						agingRemovedIds.add(msg.toolCallId);
+					}
+				}
+			}
+		}
+		for (const tcId of agingRemovedIds) agingTracker.delete(tcId);
 
 		// 清理 tracker 中不在当前 messages 里的 tcId（防止无限增长）
 		for (const tcId of agingTracker.keys()) {
-			if (!activeTcIds.has(tcId)) agingTracker.delete(tcId);
+			if (!activeTcIds.has(tcId) && !agingRemovedIds.has(tcId)) agingTracker.delete(tcId);
 		}
-		DBG(`[ctx-event] AFTER cleanup: trackerSize=${agingTracker.size}`);
+
+		// 保存 aging 快照（cleanup 后，已删除的不在快照中）
+		setAgingSnapshot(agingTracker);
+		DBG(`[ctx-event] AFTER snapshot: snapSize=${agingSnapshot.size} trackerSize=${agingTracker.size}`);
 
 		// ── 第三遍：手动删除（用户在 context 面板中标记删除的） ──
 		const manualRemoveIds = new Set<string>();
@@ -168,12 +187,14 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		// 反向删除（避免索引偏移）+ 清理孤立 toolCall block
+		DBG(`[ctx-event] toRemove=${toRemove.length} msgsBefore=${messages.length}`);
 		if (toRemove.length > 0) {
 			for (let i = toRemove.length - 1; i >= 0; i--) {
 				messages.splice(toRemove[i], 1);
 			}
 			removeOrphanedToolCalls(messages);
 		}
+		DBG(`[ctx-event] msgsAfter=${messages.length}`);
 
 		// ── 第三遍：截断 toolCall.arguments（大参数防膨胀） ──
 		const processorThreshold = getContextConfig().processorThreshold;
