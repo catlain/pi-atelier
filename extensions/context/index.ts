@@ -109,6 +109,7 @@ export default function (pi: ExtensionAPI) {
 
 		// ── 第二遍：aging（旧内容自动遗忘） ──
 		const activeTcIds = new Set<string>();
+		const agingRemovedTcIds = new Set<string>();
 		DBG(`[ctx-event] BEFORE aging: trackerSize=${agingTracker.size} warmup=${seenArgs.size}`);
 
 		if (agingThreshold > 0) {
@@ -136,6 +137,7 @@ export default function (pi: ExtensionAPI) {
 				if (count >= agingThreshold) {
 					// 静默移除（不发 hint，避免 AI 浪费 thinking tokens 决定是否保留）
 					toRemove.push(i);
+					agingRemovedTcIds.add(tcId);
 				}
 			}
 		}
@@ -144,24 +146,12 @@ export default function (pi: ExtensionAPI) {
 		const agingSamples = [...agingTracker.entries()].slice(0, 3);
 		for (const [k, v] of agingSamples) DBG(`  agingSample: ${k.slice(0, 8)}=${v}`);
 
-		// 清理 tracker：移除已达到 aging 阈值（即将被删除）的 tcId
-		// 这样 manifest 不会累积巨值
-		const agingRemovedIds = new Set<string>();
-		if (toRemove.length > 0) {
-			for (let i = 0; i < messages.length; i++) {
-				if (toRemove.includes(i)) {
-					const msg = messages[i];
-					if (msg.role === "toolResult" && msg.toolCallId) {
-						agingRemovedIds.add(msg.toolCallId);
-					}
-				}
-			}
-		}
-		for (const tcId of agingRemovedIds) agingTracker.delete(tcId);
+		// 清理 tracker：移除已达到 aging 阈值的 tcId，防止 manifest 值无限累积
+		for (const tcId of agingRemovedTcIds) agingTracker.delete(tcId);
 
 		// 清理 tracker 中不在当前 messages 里的 tcId（防止无限增长）
 		for (const tcId of agingTracker.keys()) {
-			if (!activeTcIds.has(tcId) && !agingRemovedIds.has(tcId)) agingTracker.delete(tcId);
+			if (!activeTcIds.has(tcId)) agingTracker.delete(tcId);
 		}
 
 		// 保存 aging 快照（cleanup 后，已删除的不在快照中）

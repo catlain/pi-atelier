@@ -30,8 +30,9 @@
   （它们已被 splice 出 messages，下次不再出现，tracker 保留无意义且会导致值无限累积）
 
 ### setAgingSnapshot 保存时机
-- **在 aging 遍历和 tracker cleanup 之后**调用（之前放在 cleanup 前会保存即将被删的 stale tcId）
-- 持久化到 manifest，reload 后恢复
+- **在 tracker cleanup 之后**调用（cleanup 后不含已删除项）
+- **禁止用 `export let` + 重新赋值**：jiti/CJS 下 live binding 失效，collect 读到的是初始 Map
+- 改用 `export const agingSnapshot = new Map()` + `clear()/set()` 操作同一对象
 
 ## Manifest 格式
 ```json
