@@ -1,6 +1,7 @@
 import { type ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { appendFileSync } from "fs";
-const DBG = (msg: string) => appendFileSync("/tmp/pi-context-debug.log", msg + "\n");
+const PID = process.pid;
+const DBG = (msg: string) => appendFileSync("/tmp/pi-context-debug.log", `[${PID}] ${msg}\n`);
 import registerContextCommand from "./context.js";
 import { setLastContextMessages, getContextConfig, manuallyDeletedIds, agingTracker, agingSnapshot, setAgingSnapshot } from "./shared.js";
 import {
@@ -58,9 +59,10 @@ export default function (pi: ExtensionAPI) {
 					if (msg.role === "toolResult" && msg.toolCallId) {
 						seenArgs.add(msg.toolCallId);
 						if (agingThreshold > 0 && !agingTracker.has(msg.toolCallId)) {
-							// 只对 manifest 中未恢复的 tcId 预填 agingThreshold
-							// 已恢复的保留 manifest 值，避免叠加溢出
-							agingTracker.set(msg.toolCallId, agingThreshold);
+							// 预填 agingThreshold - 1：保留 1 轮缓冲，避免 reload 后立即全删
+							const initCount = agingThreshold - 1;
+							agingTracker.set(msg.toolCallId, initCount);
+							agingSnapshot.set(msg.toolCallId, initCount);
 						}
 					}
 				}
