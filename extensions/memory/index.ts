@@ -19,39 +19,14 @@ import * as path from "node:path";
 import { AGENT_DIR, MAX_FILE_LINES, HARD_FILE_LIMIT, SOFT_FILE_LIMIT, HINT_FILE_LIMIT } from "./lib/types";
 import { scanMemoryDir, parseFileName, type MemoryEntry } from "@pi-atelier/shared-utils";
 import { updateIndex } from "./lib/writer";
-
-/** 检测同目录中与目标文件存在 topic 或关键词重叠的文件 */
-function detectConflicts(
-  dir: string,
-  newFileName: string,
-  newParsed: ReturnType<typeof parseFileName>,
-): Array<{ name: string; reason: string }> {
-  const results: Array<{ name: string; reason: string }> = [];
-  const newKeywords = new Set(newParsed.keywords);
-  const newTopic = newParsed.topic;
-
-  for (const f of fs.readdirSync(dir)) {
-    if (!f.endsWith(".md") || f === "MEMORY.md" || f === newFileName) continue;
-    const existing = parseFileName(f);
-    if (!existing) continue;
-
-    // 同 topic → 冲突
-    if (existing.topic === newTopic) {
-      const lines = fs.readFileSync(path.join(dir, f), "utf-8").split("\n").length;
-      results.push({ name: f, reason: `同topic, ${lines}行` });
-      continue;
-    }
-    // 关键词重叠 ≥ 3 → 冲突
-    const overlap = existing.keywords.filter(k => newKeywords.has(k)).length;
-    if (overlap >= 3) {
-      const lines = fs.readFileSync(path.join(dir, f), "utf-8").split("\n").length;
-      results.push({ name: f, reason: `${overlap}关键词重叠, ${lines}行` });
-    }
-  }
-  return results;
-}
+import { registerMemoryHook } from "./lib/memory-hook";
+import { detectConflicts } from "./lib/conflict-detect";
 
 export default function memoryToolsExtension(pi: ExtensionAPI) {
+
+  // ── before_agent_start: 注入记忆说明 + 索引到 systemPrompt ──
+  registerMemoryHook(pi);
+
   // ── memory_index: 查询记忆清单 ──────────────────────
   pi.registerTool({
     name: "memory_index",

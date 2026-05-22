@@ -1,5 +1,5 @@
 /**
- * 环境变量注入 + Session ID + 记忆注入 + Cartog 聚合索引
+ * 环境变量注入 + Session ID + Cartog 聚合索引
  *
  * 核心思路：
  *   在项目根目录 cartog-ext/ 放外部目录的软链接
@@ -23,33 +23,6 @@ import {
 import { getSettingsValue, setSettingsValue } from "@pi-atelier/shared-utils";
 
 // ── GLM 环境变量注入 ───────────────────────────────────
-
-if (!process.env.GLM_API_KEY) {
-	try {
-		const raw = readFileSync(resolve(homedir(), ".pi/agent/models.json"), "utf-8");
-		const key = JSON.parse(raw)?.providers?.glm?.apiKey;
-		if (key) process.env.GLM_API_KEY = key;
-	} catch (e: any) {
-		if (e.code !== "ENOENT") console.warn("env-and-status: models.json:", e.message);
-	}
-}
-
-// ── 常量 ────────────────────────────────────────────────
-
-const MEMORY_PROMPT_PATH = resolve(
-	dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1")),
-	"memory-prompt.md",
-);
-
-
-// ── 记忆工具函数 ────────────────────────────────────────
-
-function readFileContent(filePath: string): string {
-	try {
-		if (existsSync(filePath)) return readFileSync(filePath, "utf-8").trim();
-	} catch { /* ignore */ }
-	return "";
-}
 
 
 // ── 扩展入口 ─────────────────────────────────────────────
@@ -303,13 +276,4 @@ export default function (pi: ExtensionAPI) {
 			ctx.ui.notify(`Cartog 自动索引: ${newVal ? "✓ 已开启" : "✗ 已关闭"}`, "info");
 		},
 	});
-
-	// ── 记忆注入（仅注入说明，不注入索引内容） ──────────
-
-	const memoryPrompt = readFileContent(MEMORY_PROMPT_PATH);
-	if (memoryPrompt) {
-		pi.on("before_agent_start", async (event: any) => ({
-			systemPrompt: event.systemPrompt + "\n\n" + memoryPrompt,
-		}));
-	}
 }
