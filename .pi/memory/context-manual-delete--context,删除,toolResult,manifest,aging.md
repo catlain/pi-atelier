@@ -42,6 +42,7 @@
 6. **多进程共享 manifest** → 按会话隔离 manifest 路径
 7. **aging 删除后下轮又回来** → agingDeletedIds 持久集合，和 manuallyDeletedIds 同级
 8. **collect 中 tcId 匹配不上 agingSnapshot** → setLastContextMessages 必须在 context 事件末尾（aging/distill/truncate 之后）调用，否则保存的是旧 messages，tcId 和 agingSnapshot 不同步
+9. **collect 在 context 事件之前执行时 currentSessionId 为空** → collect 必须从 `ctx.sessionManager.getSessionId()` 获取 sessionId 并调用 `setSessionId()`，否则 Proxy 查找 `globalThis.__agingSnapshots['']` 找不到数据
 
 ### 关键约束
 - **禁止 `export let` + 重新赋值**：必须用 `export const` + 操作同一对象引用
