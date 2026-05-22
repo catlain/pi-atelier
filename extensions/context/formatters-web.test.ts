@@ -152,4 +152,44 @@ describe("formatWebSearchResult", () => {
 		expect(result).toContain("[1] 双层结果");
 		expect(result).toContain("https://d.com");
 	});
+
+	// ── 交叉匹配防护（回归测试） ───────────────────────
+
+	it("cartog outline 数据不应被 formatWebSearchResult 匹配", () => {
+		const raw = JSON.stringify([
+			{ name: "hello", kind: "function", startLine: 1, endLine: 42 },
+			{ name: "main", kind: "class", startLine: 50, endLine: 120 },
+		]);
+		const result = formatWebSearchResult(raw);
+		// 应返回原文，不应输出 "搜索结果" / "URL:" 等误导格式
+		expect(result).toBe(raw);
+	});
+
+	it("cartog refs/callees 数据不应被 formatWebSearchResult 匹配", () => {
+		const raw = JSON.stringify([
+			{ target_name: "fnA", kind: "function", file_path: "src/a.ts", line: 10 },
+			{ target_name: "fnB", kind: "method", file_path: "src/b.ts", line: 20 },
+		]);
+		const result = formatWebSearchResult(raw);
+		expect(result).toBe(raw);
+	});
+
+	it("无 link/title 的任意 JSON 数组不应被匹配", () => {
+		const raw = JSON.stringify([
+			{ foo: 1, bar: 2 },
+			{ foo: 3, bar: 4 },
+		]);
+		expect(formatWebSearchResult(raw)).toBe(raw);
+	});
+
+	it("混合数组（部分有 link）仍被正确格式化", () => {
+		const raw = JSON.stringify([
+			{ title: "有效结果", link: "https://a.com", content: "摘要" },
+			{ foo: 1, bar: 2 }, // 无 web_search 字段的条目
+		]);
+		const result = formatWebSearchResult(raw);
+		expect(result).toContain("搜索结果（共 2 条）");
+		expect(result).toContain("[1] 有效结果");
+		expect(result).toContain("URL: https://a.com");
+	});
 });
