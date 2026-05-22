@@ -55,7 +55,7 @@ export default function (pi: ExtensionAPI) {
 	// ── 注册命令 ──
 	registerContextCommand(pi, stateRef);
 	registerRecordCommand(pi);
-	registerDistillConfig(pi);
-	registerAgingConfig(pi);
-	registerProcessorConfig(pi);
+	registerDistillConfigCommand(pi);
+	registerAgingConfigCommand(pi);
+	registerProcessorConfigCommand(pi);
 }
