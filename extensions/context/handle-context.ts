@@ -28,7 +28,7 @@ export function handleContextEvent(
 		const oldId = state.sessionId;
 		state.sessionId = sid;
 		if (oldId) {
-			loadManifest(sid, { manuallyDeleted, agingDeleted });
+			loadManifest(sid, { manuallyDeleted: manuallyDeletedIds, agingDeleted: agingDeletedIds });
 		}
 	}
 
@@ -114,7 +114,7 @@ export function handleContextEvent(
 			agingTracker.delete(tcId);
 			agingDeletedIds.add(tcId);
 		}
-		saveManifest(state.sessionId, { manuallyDeleted, agingDeleted });
+		saveManifest(state.sessionId, { manuallyDeleted: manuallyDeletedIds, agingDeleted: agingDeletedIds });
 	}
 
 	for (const tcId of agingTracker.keys()) {
