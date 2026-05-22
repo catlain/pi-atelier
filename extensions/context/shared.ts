@@ -1,5 +1,5 @@
 /** 共享状态：auto-distill 和 context 面板之间的桥梁 */
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, unlinkSync, rmSync, statSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, unlinkSync, rmSync, statSync, appendFileSync } from "fs";
 import { join } from "path";
 import { tmpdir } from "os";
 import { getSettingsSection, patchSettingsSection, getSettingsValue, setSettingsValue } from "@pi-atelier/shared-utils";
@@ -46,14 +46,16 @@ export const distilledMap = new Map<string, DistillEntry>();
 export const agingTracker = new Map<string, number>();
 
 /** aging 快照：在每次 context 事件结束时保存，供 collect 展示用 */
-export const agingSnapshot = new Map<string, number>();
+// jiti/CJS 可能给不同导入方创建多个 shared.ts 模块实例，
+// 导致 export 的 Map 在各实例间不同步。
+// 用 globalThis 保证单例，所有模块操作同一个 Map 对象。
+const _g = globalThis as any;
+if (!_g.__agingSnapshot) _g.__agingSnapshot = new Map<string, number>();
+export const agingSnapshot: Map<string, number> = _g.__agingSnapshot;
 
 export function setAgingSnapshot(snapshot: Map<string, number>) {
-	// 操作同一个 Map 对象（不重新赋值），确保 jiti/CJS 下 export live binding 生效
 	agingSnapshot.clear();
 	for (const [k, v] of snapshot) agingSnapshot.set(k, v);
-	// 不持久化 aging 到 manifest：aging 是短暂运行时状态，
-	// 持久化会导致多 pi 进程互相覆盖数据
 }
 
 /** 手动删除的 toolCallId 集合（持久化到 manifest） */
