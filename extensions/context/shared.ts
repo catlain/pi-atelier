@@ -16,20 +16,26 @@ export interface DistillEntry {
 
 export const distilledMap = new Map<string, DistillEntry>();
 
-// ── 配置 ──
+import { getSettingsSection, patchSettingsSection, getSettingsValue, setSettingsValue } from "@pi-atelier/shared-utils";
+
+// ── 配置（持久化到 settings.json → context） ──
 export interface ContextConfig {
 	distillThreshold: number;
 	agingThreshold: number;
 	processorThreshold: number;
 }
 
-export function getContextConfig(): ContextConfig {
-	return {
-		distillThreshold: 5000,
-		agingThreshold: 10,
-		processorThreshold: 500,
-	};
-}
+const DEFAULT_CONFIG: ContextConfig = {
+	distillThreshold: 5000,
+	agingThreshold: 10,
+	processorThreshold: 500,
+};
+
+export const getContextConfig = (): ContextConfig =>
+	getSettingsSection<ContextConfig>("context", DEFAULT_CONFIG);
+
+export const setContextConfig = (patch: Partial<ContextConfig>): ContextConfig =>
+	patchSettingsSection<ContextConfig>("context", patch, DEFAULT_CONFIG);
 
 // ── 录制 ──
 let recording = false;
