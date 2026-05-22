@@ -9,7 +9,7 @@ import type { CompactionResult, SessionBeforeCompactEvent, ExtensionAPI, Extensi
 import { segmentMessages } from "./segmenter.js";
 import { summarizeSegments, type SegmentSummary } from "./summarizer.js";
 import { mergeAndCompact } from "./merger.js";
-import { loadConfig } from "./config.js";
+import { loadConfig, saveConfig } from "./config.js";
 import { createLLMCaller, extractCurrentTask } from "./llm-caller.js";
 
 export default async function (pi: ExtensionAPI) {
@@ -24,10 +24,20 @@ export default async function (pi: ExtensionAPI) {
 
 	// 注册命令：查看/修改配置
 	pi.registerCommand("smart-compact-config", {
-		description: "查看 smart-compact 配置",
-		handler: async (_args: string, ctx: ExtensionCommandContext) => {
-			const config = await loadConfig();
-			ctx.ui.notify(JSON.stringify(config, null, 2), "info");
+		description: "查看/修改 smart-compact 配置（auto=开启自动, manual=关闭自动）",
+		handler: async (args: string, ctx: ExtensionCommandContext) => {
+			const arg = args.trim().toLowerCase();
+			if (arg === "auto" || arg === "on" || arg === "true" || arg === "enable") {
+				await saveConfig({ enabled: true });
+				ctx.ui.notify("smart-compact 自动接管已开启", "info");
+			} else if (arg === "manual" || arg === "off" || arg === "false" || arg === "disable") {
+				await saveConfig({ enabled: false });
+				ctx.ui.notify("smart-compact 自动接管已关闭（仅手动 /smart-compact 触发）", "info");
+			} else {
+				const config = await loadConfig();
+				const status = config.enabled ? "✅ 自动接管已开启" : "❌ 自动接管已关闭（仅手动 /smart-compact 触发）";
+				ctx.ui.notify(`${status}\n\n用法:\n  /smart-compact-config auto   — 开启自动\n  /smart-compact-config manual  — 关闭自动`, "info");
+			}
 		},
 	});
 
