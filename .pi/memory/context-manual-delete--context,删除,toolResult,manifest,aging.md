@@ -4,7 +4,7 @@
 
 ## 手动删除机制
 - 标记 toolCallId，在 context 事件的浅拷贝 messages 上 splice，不修改 pi 原始对话历史
-- `manuallyDeletedIds: Set<string>` 持久化到 `manifest.json`
+- `manuallyDeletedIds: Set<string>` 持久化到 manifest
 
 ## Aging 计数展示（⏳N）
 
@@ -13,32 +13,34 @@
 2. `collect.ts` collectData → 从 agingSnapshot 读取 → RecordItem.agingCount
 3. `render.ts` renderRecords → 显示 `⏳{agingCount}`
 
-### 踩坑记录（2025-05-22）
+### 关键机制：agingDeletedIds（永久删除标记）
+- aging 达到阈值后，tcId 加入 `agingDeletedIds` 集合并持久化到 manifest
+- 后续每轮 context 事件直接跳过这些 tcId（类似 manuallyDeletedIds）
+- **为什么需要**：pi 每轮从内部消息历史重建 messages，被 splice 的 toolResult 下轮又出现，
+  没有 `agingDeletedIds` 会导致"删除→回来→重新计数→再删"的无限循环
 
-#### 坑1：agingTracker 闭包变量无法跨模块访问
-- **修复**：agingTracker 移到 shared.ts 作为 `export const` 模块级导出
+### Manifest 按会话隔离
+- 路径：`/tmp/pi-distill/{sessionId}/manifest.json`
+- `setSessionId()` 在 context 事件中从 `ctx.sessionManager.getSessionId()` 获取
+- 解决多 pi 进程并行时互相覆盖 manifest 的问题
 
-#### 坑2：`export let` 在 jiti/CJS 下 live binding 失效
-- **现象**：index.ts 写 agingSnapshot，collect.ts 读到的是初始值
-- **根因**：jiti 编译为 CJS，`let` 重新赋值只改局部变量，不更新 exports
-- **修复**：改用 `export const agingSnapshot = new Map()` + `clear()/set()` 操作同一对象
-
-#### 坑3：达到阈值的 tcId 未从 agingTracker 清除，值无限累积
-- **修复**：aging 遍历中记录 `agingRemovedTcIds`，遍历后从 tracker 删除
-
-#### 坑4：多 pi 进程共享 manifest 导致 aging 数据互相覆盖
-- **现象**：进程 A 写入 300 条 aging，进程 B 触发 context 事件时 `setAgingSnapshot` 把 manifest 清空
-- **修复**：**aging 不持久化到 manifest**。它是短暂运行时状态，reload 后从 0 重新计数
-
-### Manifest 格式（aging 已移除）
+### Manifest 格式
 ```json
 {
   "distilled": [[tcId, {tmpPath, originalTokens, ...}]],
-  "manuallyDeleted": ["tcId1", "tcId2"]
+  "manuallyDeleted": ["tcId1"],
+  "agingDeleted": ["tcId2", "tcId3"]
 }
 ```
 
+### 踩坑记录（2025-05-22）
+1. **agingTracker 闭包变量** → 移到 shared.ts 作为 `export const`
+2. **`export let` jiti/CJS live binding 失效** → 改用 `export const` + clear/set 操作同一对象
+3. **达标 tcId 未清理，值无限累积** → aging 遍历中记录并删除
+4. **多进程共享 manifest** → 按会话隔离 manifest 路径
+5. **aging 删除后下轮又回来** → agingDeletedIds 持久集合，和 manuallyDeletedIds 同级
+
 ### 关键约束
 - **禁止 `export let` + 重新赋值**：必须用 `export const` + 操作同一对象引用
-- **aging 不持久化**：避免多进程竞争
+- **所有删除标记必须持久化**：manuallyDeletedIds、agingDeletedIds 都持久化到会话级 manifest
 - **调试日志**：DBG 函数写 `/tmp/pi-context-debug.log`，按 `[PID]` 区分进程
