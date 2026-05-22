@@ -31,6 +31,17 @@ pi-atelier/
 └── vitest.config.ts     # Monorepo test config
 ```
 
+## Search Priority — 搜索优先级
+
+⚠️ **所有功能实现、命令、工具的代码都在本仓库的 `extensions/` 和 `lib/` 里**，不在 pi 的全局安装目录。
+
+搜索顺序：
+1. **先搜当前项目**：`grep` / `code_intel` / `ls` 在 `extensions/` 和 `lib/` 下搜索
+2. **关键词模糊匹配**：搜不到时用模糊搜索（如 `grep -ri "aging\|ago" extensions/`），而不是立刻跳到其他目录
+3. **最后才看全局安装**：仅在需要查阅 pi 核心 API（ExtensionAPI 类型定义、events 接口等）时，才去全局安装目录
+
+典型错误：用户提到一个命令/功能，AI 直接去 pi 全局安装目录搜索 → 找不到 → 反复重试。正确做法是先在 `extensions/` 中搜索。
+
 ## Key Architectural Decisions
 
 1. **Extensions are isolated** — no cross-extension imports. Communication via events or settings only.
