@@ -1,116 +1,61 @@
 /**
- * LLM prompt 模板
+ * Smart-Compact v2 prompt 模板
  */
 
-export const SEGMENT_SYSTEM_PROMPT = `You are analyzing a conversation segment to determine its relevance to the current task and generate a concise summary.
-Always respond with valid JSON only, no markdown formatting.`;
+// ─── Phase 1: 意图总结 ───
 
-export const SEGMENT_USER_PROMPT = `<current-task>
-The user is currently working on: {currentTask}
-</current-task>
+export const INTENT_SYSTEM_PROMPT = `You are a conversation analyst. Your job is to read a conversation between a user and an AI coding assistant, and produce a concise structured summary of what's being worked on.
 
-<conversation-segment>
-{segment}
-</conversation-segment>
+Output format (markdown):
 
-Analyze this conversation segment and determine its relevance to the current task described above.
-
-Respond with ONLY a JSON object (no markdown, no code fences):
-{
-  "relevant": true or false,
-  "topics": ["topic1", "topic2"],
-  "summary": "Concise summary preserving key decisions, file paths, function names, error messages"
-}
-
-Rules:
-- Mark as relevant if the segment contains: decisions affecting current work, file paths/functions referenced later, error context needed for understanding, or background context for the current task
-- Mark as irrelevant if the segment is about: completed unrelated tasks, abandoned approaches, or idle chitchat
-- When in doubt, mark as relevant (prefer over-inclusion over loss of context)
-- Summary should be 2-5 sentences maximum
-- Preserve exact file paths, function names, and error messages`;
-
-export const MERGE_SYSTEM_PROMPT = `You are creating a structured context checkpoint summary for an AI coding agent.
-The summary will be used by another LLM to continue the user's work.
-Preserve all critical technical details: file paths, function names, error messages, and key decisions.`;
-
-export const MERGE_USER_PROMPT = `<current-task>
-{currentTask}
-</current-task>
-
-{previousSummarySection}
-<segment-summaries>
-{segmentSummaries}
-</segment-summaries>
-{turnPrefixSection}
-
-Create a structured context checkpoint summary using this EXACT format:
-
-## Goal
-[What is the user trying to accomplish? Can be multiple items if the session covers different tasks.]
-
-## Constraints & Preferences
-- [Any constraints, preferences, or requirements mentioned by user]
-- [Or "(none)" if none were mentioned]
-
-## Progress
-### Done
-- [x] [Completed tasks/changes]
-
-### In Progress
-- [ ] [Current work]
-
-### Blocked
-- [Issues preventing progress, if any]
+## Intent
+1-3 sentences describing what the user is trying to accomplish right now.
 
 ## Key Decisions
-- **[Decision]**: [Brief rationale]
+Important decisions made so far (with reasons).
 
-## Next Steps
-1. [Ordered list of what should happen next]
+## Progress
+- ✅ Done: what's already completed
+- 🔄 In Progress: what's currently being worked on
+- ⏳ Pending: what remains to be done
 
 ## Critical Context
-- [Any data, examples, or references needed to continue]
-- [Or "(none)" if not applicable]
+File paths, function names, error messages, or other details needed to continue the work.
 
-Keep each section concise. Preserve exact file paths, function names, and error messages.`;
+Rules:
+- Be specific: include actual file paths, function names, error messages
+- Be concise: no filler, no repetition
+- Focus on what matters for continuing the work
+- Write in the same language as the user's messages`;
 
-export const EXTRACT_TASK_PROMPT = `Extract a brief description (1-3 sentences) of what the user is currently working on based on the most recent messages.
-Focus on the latest active task. If there are multiple tasks, mention the primary one.
-Output ONLY the task description, no formatting.`;
+export const INTENT_USER_PROMPT = `Analyze the following conversation and produce a structured summary.
 
-/** 分段摘要 system prompt 别名 */
-export const SEGMENT_SUMMARY_SYSTEM = SEGMENT_SYSTEM_PROMPT;
+<previous-summary>
+{previousSummary}
+</previous-summary>
 
-/** 构建分段摘要的 user prompt */
-export function buildSegmentPrompt(segmentText: string, currentTask: string): string {
-	return SEGMENT_USER_PROMPT
-		.replace('{currentTask}', currentTask)
-		.replace('{segment}', segmentText);
-}
+<conversation>
+{conversation}
+</conversation>`;
 
-/** 构建合并摘要的 system prompt */
-export const MERGE_SUMMARY_SYSTEM = MERGE_SYSTEM_PROMPT;
+// ─── Phase 2: 工具去留判断 ───
 
-/** 构建合并摘要的 user prompt */
-export function buildMergePrompt(
-	segments: Array<{ topics: string[]; summary: string }>,
-	previousSummary?: string,
-	turnPrefix?: string,
-): string {
-	const previousSummarySection = previousSummary
-		? `<previous-summary>\n${previousSummary}\n</previous-summary>`
-		: "";
-	const turnPrefixSection = turnPrefix
-		? `<split-turn-context>\n${turnPrefix}\n</split-turn-context>`
-		: "";
+export const FILTER_SYSTEM_PROMPT = `You are a context manager for an AI coding assistant. Given the current task intent and a list of tool invocations, decide which tool results should be KEPT (they contain information still needed) and which can be DISCARDED (they are no longer relevant).
 
-	const segmentSummaries = segments
-		.map((s, i) => `### 段 ${i + 1}: ${s.topics.join(", ")}\n${s.summary}`)
-		.join("\n\n");
+Rules:
+- KEEP tools whose results are still needed for the current/next task steps
+- KEEP tools that contain: source code being edited, error messages being debugged, configuration being modified, data being analyzed
+- DISCARD tools whose results were only needed for a completed step (e.g., a read that was already processed, a successful write, exploratory searches that led nowhere)
+- When uncertain, KEEP rather than discard
+- Output valid JSON array only, no markdown fences`;
 
-	return MERGE_USER_PROMPT
-		.replace("{currentTask}", "(merged from segments)")
-		.replace("{previousSummarySection}", previousSummarySection)
-		.replace("{segmentSummaries}", segmentSummaries)
-		.replace("{turnPrefixSection}", turnPrefixSection);
-}
+export const FILTER_USER_PROMPT = `Current task intent:
+{intent}
+
+Tool invocations to judge:
+{toolList}
+
+Output a JSON array. Each element:
+{"toolCallId": "<id>", "keep": true/false, "reason": "<brief reason>"}
+
+Output the JSON array only:`;

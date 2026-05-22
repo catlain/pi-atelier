@@ -42,7 +42,7 @@ export default function (pi: ExtensionAPI) {
 		markManuallyDeleted: (tcId: string) => {
 			manuallyDeletedIds.add(tcId);
 			const { saveManifest } = require("./shared.js");
-			saveManifest(sessionId, { manuallyDeleted, agingDeleted });
+			saveManifest(sessionId, { manuallyDeleted: manuallyDeletedIds, agingDeleted: agingDeletedIds });
 		},
 	};
 
