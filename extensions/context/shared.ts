@@ -72,6 +72,7 @@ export const agingSnapshot: Map<string, number> = new Proxy({} as Map<string, nu
 
 export function setAgingSnapshot(snapshot: Map<string, number>) {
 	const map = getSnapshotMap();
+	DBG(`[setAgingSnapshot] sid=${currentSessionId} writeToSize=${snapshot.size} mapAddr=${String(map)}`);
 	map.clear();
 	for (const [k, v] of snapshot) map.set(k, v);
 }
