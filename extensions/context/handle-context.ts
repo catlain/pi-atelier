@@ -134,8 +134,10 @@ export function handleContextEvent(
 
 	// 反向删除 + 清理孤立 toolCall block
 	if (toRemove.length > 0) {
-		for (let i = toRemove.length - 1; i >= 0; i--) {
-			messages.splice(toRemove[i], 1);
+		// 必须降序排列，确保 splice 不影响后续 index
+		toRemove.sort((a, b) => b - a);
+		for (const idx of toRemove) {
+			messages.splice(idx, 1);
 		}
 		removeOrphanedToolCalls(messages);
 	}
