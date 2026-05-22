@@ -54,7 +54,13 @@ registerContextCommand(pi, stateRef);
 - sessionId 从 `ctx.sessionManager.getSessionId()` 获取
 - 包含：distilled、manuallyDeleted、agingDeleted
 
+### Distill 与 Aging 的交互
+- **distill 删除的 tcId 也必须加入 agingDeletedIds**：否则 pi 重建消息后，已被 distill 删除的大结果会重新出现在面板中
+- `seenArgs`（内存 Set）确保 distill 每轮继续删，但 collect 在 distill 之前运行就会看到已删的结果
+- 修复：distill 删除后同时加入 `agingDeletedIds` 持久集合
+
 ### 关键约束
 - **运行时状态必须在入口闭包中**：jiti `moduleCache:false` 导致模块级状态不可靠
 - **所有删除标记必须持久化**：manuallyDeletedIds、agingDeletedIds 持久化到会话级 manifest
 - **agingTracker/agingSnapshot 不持久化**：reload 后从 0 开始计数
+- **distill 删除 = agingDeletedIds 删除**：两个删除通道都要写入同一个持久集合
