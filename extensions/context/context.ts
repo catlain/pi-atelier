@@ -2,6 +2,7 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Container } from "@earendil-works/pi-tui";
 import { collectData } from "./collect.js";
 import { renderOverview, renderCategory, renderRecords, renderContent, getViewport } from "./render.js";
+import { markManuallyDeleted, manuallyDeletedIds } from "./shared.js";
 import type { ContextData, CategoryItem, DetailItem, RecordItem } from "./types.js";
 
 type Level = "overview" | "category" | "records" | "content";
@@ -11,25 +12,26 @@ export default function (pi: ExtensionAPI) {
 	pi.registerCommand("context", {
 		description: "Show context usage visualization.",
 		handler: async (_args, ctx) => {
-			const data = collectData(pi, ctx);
+			let data = collectData(pi, ctx);
 			if (!data) { ctx.ui.notify("Context usage info not available.", "warning"); return; }
 
 			await ctx.ui.custom((tui, theme, kb, done) => {
 				const container = new Container();
 				let lvl: Level = "overview";
 				let oIdx = 0, dIdx = 0, rIdx = 0, scroll = 0, rScroll = 0;
-				let curCat: CategoryItem = data.categories[0];
+				let curCat: CategoryItem = data!.categories[0];
 				let curDetail: DetailItem | null = null;
 				let curRecord: RecordItem | null = null;
+				let confirmingDelete = false;
 
 				const viewport = getViewport(tui);
 
 				const render = () => {
 					switch (lvl) {
-						case "overview": renderOverview(container, data, theme, oIdx); break;
-						case "category": renderCategory(container, data, theme, curCat, dIdx); break;
-						case "records": renderRecords(container, data, theme, `${curCat.label} › ${curDetail?.label}`, curDetail?.records || [], rIdx, curCat.label === "Tools", rScroll, viewport); break;
-						case "content": if (curRecord) renderContent(container, theme, `${curCat.label} › ${curDetail?.label} › #${rIdx + 1} ${curRecord.summary.slice(0, 30)}`, curRecord, scroll, viewport); break;
+						case "overview": renderOverview(container, data!, theme, oIdx); break;
+						case "category": renderCategory(container, data!, theme, curCat, dIdx); break;
+						case "records": renderRecords(container, data!, theme, `${curCat.label} › ${curDetail?.label}`, curDetail?.records || [], rIdx, curCat.label === "Tools", rScroll, viewport); break;
+						case "content": if (curRecord) renderContent(container, theme, `${curCat.label} › ${curDetail?.label} › #${rIdx + 1} ${curRecord.summary.slice(0, 30)}`, curRecord, scroll, viewport, confirmingDelete); break;
 					}
 					tui.requestRender();
 				};
@@ -51,14 +53,36 @@ export default function (pi: ExtensionAPI) {
 						const esc = kb.matches(kd, "tui.select.cancel");
 						const pgup = kb.matches(kd, "tui.editor.pageUp");
 						const pgdn = kb.matches(kd, "tui.editor.pageDown");
+						const keyD = kd === "d" || kd === "D";
+						const keyY = kd === "y" || kd === "Y";
+						const keyN = kd === "n" || kd === "N";
 
-						// Level 3: 滚动
+						// 删除确认状态
+						if (confirmingDelete) {
+							if (keyY && curRecord?.toolCallId) {
+								markManuallyDeleted(curRecord.toolCallId);
+								curRecord.manuallyDeleted = true;
+								confirmingDelete = false;
+								ctx.ui.notify(`已标记删除: ${curRecord.summary.slice(0, 40)}`, "info");
+								render(); return;
+							}
+							if (keyN || esc) {
+								confirmingDelete = false;
+								render(); return;
+							}
+							return; // 忽略其他键
+						}
+
+						// Level 3: 滚动 + 删除操作
 						if (lvl === "content" && curRecord) {
 							const max = Math.max(0, curRecord.lines.length - viewport);
 							if (up) scroll = Math.max(0, scroll - 1);
 							else if (dn) scroll = Math.min(max, scroll + 1);
 							else if (pgup) scroll = Math.max(0, scroll - viewport);
 							else if (pgdn) scroll = Math.min(max, scroll + viewport);
+							else if (keyD && curRecord.toolCallId && !curRecord.manuallyDeleted) {
+								confirmingDelete = true;
+							}
 							else if (esc) { lvl = "records"; scroll = 0; }
 							else return;
 							render(); return;
@@ -67,7 +91,7 @@ export default function (pi: ExtensionAPI) {
 						// Level 0-2: 选择/导航
 						if (up || dn) {
 							const dir = up ? -1 : 1;
-							if (lvl === "overview") oIdx = clamp(oIdx + dir, 0, data.categories.length - 1);
+							if (lvl === "overview") oIdx = clamp(oIdx + dir, 0, data!.categories.length - 1);
 							else if (lvl === "category") dIdx = clamp(dIdx + dir, 0, (curCat.children?.length ?? 1) - 1);
 							else if (lvl === "records") {
 								rIdx = clamp(rIdx + dir, 0, (curDetail?.records?.length ?? 1) - 1);
@@ -94,7 +118,7 @@ export default function (pi: ExtensionAPI) {
 						}
 						if (ok) {
 							if (lvl === "overview") {
-								const cat = data.categories[oIdx];
+								const cat = data!.categories[oIdx];
 								if (cat?.enterable && cat.children?.length) { curCat = cat; dIdx = 0; lvl = "category"; }
 							} else if (lvl === "category") {
 								const ch = curCat.children?.[dIdx];

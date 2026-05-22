@@ -1,6 +1,6 @@
 import { type ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import registerContextCommand from "./context.js";
-import { setLastContextMessages, getContextConfig } from "./shared.js";
+import { setLastContextMessages, getContextConfig, manuallyDeletedIds } from "./shared.js";
 import {
 	buildToolCallMap,
 	estimateTokens,
@@ -139,6 +139,24 @@ export default function (pi: ExtensionAPI) {
 		// 清理 tracker 中不在当前 messages 里的 tcId（防止无限增长）
 		for (const tcId of agingTracker.keys()) {
 			if (!activeTcIds.has(tcId)) agingTracker.delete(tcId);
+		}
+
+		// ── 第三遍：手动删除（用户在 context 面板中标记删除的） ──
+		const manualRemoveIds = new Set<string>();
+		if (manuallyDeletedIds.size > 0) {
+			for (let i = 0; i < messages.length; i++) {
+				const msg = messages[i];
+				if (msg.role !== "toolResult") continue;
+				const tcId = msg.toolCallId || "";
+				if (tcId && manuallyDeletedIds.has(tcId)) {
+					toRemove.push(i);
+					manualRemoveIds.add(tcId);
+				}
+			}
+			// 清理已不存在于 messages 中的手动删除条目（防止集合无限增长）
+			for (const id of manuallyDeletedIds) {
+				if (!manualRemoveIds.has(id)) manuallyDeletedIds.delete(id);
+			}
 		}
 
 		// 反向删除（避免索引偏移）+ 清理孤立 toolCall block

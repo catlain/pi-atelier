@@ -102,12 +102,16 @@ export function getViewport(tui: any): number {
 	return Math.max(10, Math.floor(termHeight * 0.8));
 }
 
-export function renderContent(c: Container, t: any, breadcrumb: string, record: RecordItem, scroll: number, viewport: number) {
+export function renderContent(c: Container, t: any, breadcrumb: string, record: RecordItem, scroll: number, viewport: number, confirmingDelete: boolean) {
 	c.clear(); bdr(c, t);
 	ln(c, t, t.fg("accent", t.bold(` Context › ${breadcrumb}`)));
 	const info = [record.callTokens > 0 ? `call: ${formatTokens(record.callTokens)}` : "", record.resultTokens > 0 ? `result: ${formatTokens(record.resultTokens)}` : ""].filter(Boolean).join("  ");
 	ln(c, t, `  ${t.fg("dim", info)}`);
 	sp(c);
+	if (record.manuallyDeleted) {
+		ln(c, t, `  ${t.fg("warning", "✗ 已标记删除 — 下轮对话起不再发送给 LLM")}`);
+		sp(c);
+	}
 	const lines = record.lines;
 	const maxScroll = Math.max(0, lines.length - viewport);
 	const start = Math.min(scroll, maxScroll);
@@ -118,10 +122,21 @@ export function renderContent(c: Container, t: any, breadcrumb: string, record: 
 		ln(c, t, `${num}${t.fg("text", content)}`);
 	}
 	sp(c);
-	if (lines.length > viewport) {
-		ln(c, t, t.fg("dim", ` ${start + 1}-${end}/${lines.length}  ↑↓ pgUp/pgDn · Esc back`));
+	// Footer — 根据状态显示不同提示
+	if (confirmingDelete) {
+		ln(c, t, t.fg("warning", " 确认删除此工具结果？ y 确认 · n/Esc 取消"));
+	} else if (record.toolCallId && !record.manuallyDeleted) {
+		if (lines.length > viewport) {
+			ln(c, t, t.fg("dim", ` ${start + 1}-${end}/${lines.length}  ↑↓ pgUp/pgDn · d delete · Esc back`));
+		} else {
+			ln(c, t, t.fg("dim", ` ${lines.length} lines · d delete · Esc back`));
+		}
 	} else {
-		ln(c, t, t.fg("dim", ` ${lines.length} lines · Esc back`));
+		if (lines.length > viewport) {
+			ln(c, t, t.fg("dim", ` ${start + 1}-${end}/${lines.length}  ↑↓ pgUp/pgDn · Esc back`));
+		} else {
+			ln(c, t, t.fg("dim", ` ${lines.length} lines · Esc back`));
+		}
 	}
 	bdr(c, t);
 }

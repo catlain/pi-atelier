@@ -1,6 +1,6 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { formatTokens } from "./utils.js";
-import { lastContextMessages, lastProviderPayload } from "./shared.js";
+import { lastContextMessages, lastProviderPayload, manuallyDeletedIds } from "./shared.js";
 import type { ContextData, RecordItem, DetailItem, CategoryItem } from "./types.js";
 
 const est = (s: string) => Math.ceil(s.length / 4);
@@ -84,6 +84,9 @@ export function collectData(
 		return buckets.get(n)!;
 	};
 
+	// toolCallId → records 的映射，用于关联 toolCall 和 toolResult
+	const tcIdToRecords = new Map<string, RecordItem[]>();
+
 	for (const m of msgs) {
 		if (m.role === "user") {
 			let text = "", sz = 0;
@@ -103,16 +106,23 @@ export function collectData(
 				if (p.type === "toolCall") {
 					const cs = est(JSON.stringify(p)); callRaw += cs;
 					const name = p.name || "unknown";
+					const tcId = (p as any).id || "";
 					const b = getBucket(name); b.callT += cs;
 					const args = (p as any).arguments || {};
 					const summary = Object.entries(args).map(([k, v]) => typeof v === "string" ? v : JSON.stringify(v)).join(" ").slice(0, 60);
-					b.records.push({ summary, callTokens: cs, resultTokens: 0, lines: [...Object.entries(args).map(([k, v]) => `${k}: ${typeof v === "string" ? v : JSON.stringify(v)}`), "────────"] });
+					const rec: RecordItem = { summary, callTokens: cs, resultTokens: 0, lines: [...Object.entries(args).map(([k, v]) => `${k}: ${typeof v === "string" ? v : JSON.stringify(v)}`), "────────"], toolCallId: tcId || undefined };
+					b.records.push(rec);
+					if (tcId) {
+						if (!tcIdToRecords.has(tcId)) tcIdToRecords.set(tcId, []);
+						tcIdToRecords.get(tcId)!.push(rec);
+					}
 				}
 			}
 			msgRaw += txtSz;
 			asstMsgs.push({ summary: textParts.join("").split("\n")[0].slice(0, 60) || "(tool calls)", callTokens: txtSz, resultTokens: 0, lines: textParts.join("\n").split("\n") });
 		} else if (m.role === "toolResult") {
 			const toolName = (m as any).toolName || "unknown";
+			const tcId = (m as any).toolCallId || "";
 			let rs = 0;
 			const textParts: string[] = [];
 			if (Array.isArray(m.content)) for (const p of m.content) if (p.type === "text") { rs += est(p.text); textParts.push(p.text); }
@@ -121,13 +131,21 @@ export function collectData(
 			const rLines = rText.split("\n");
 			const isDistilled = rText.startsWith("[distilled");
 			const b = getBucket(toolName); b.resultT += rs;
-			const matched = b.records.find(r => r.resultTokens === 0);
+			// 通过 tcId 关联到已有的 toolCall record
+			const linkedRecs = tcId ? tcIdToRecords.get(tcId) : undefined;
+			const matched = linkedRecs?.find(r => r.resultTokens === 0) || b.records.find(r => r.resultTokens === 0);
 			if (matched) {
 				matched.resultTokens = rs;
 				matched.lines.push("────────", ...rLines);
 				matched.distilled = isDistilled;
+				if (tcId && !matched.toolCallId) matched.toolCallId = tcId;
 			} else {
-				b.records.push({ summary: rLines[0]?.slice(0, 60) || "(result)", callTokens: 0, resultTokens: rs, lines: rLines, distilled: isDistilled });
+				const rec: RecordItem = { summary: rLines[0]?.slice(0, 60) || "(result)", callTokens: 0, resultTokens: rs, lines: rLines, distilled: isDistilled, toolCallId: tcId || undefined };
+				b.records.push(rec);
+				if (tcId) {
+					if (!tcIdToRecords.has(tcId)) tcIdToRecords.set(tcId, []);
+					tcIdToRecords.get(tcId)!.push(rec);
+				}
 			}
 		}
 	}
@@ -168,6 +186,12 @@ export function collectData(
 			children: [...buckets.entries()]
 				.map(([n, v]) => {
 					v.records.reverse();
+					// 标记已手动删除的 records
+					if (manuallyDeletedIds.size > 0) {
+						for (const r of v.records) {
+							if (r.toolCallId && manuallyDeletedIds.has(r.toolCallId)) r.manuallyDeleted = true;
+						}
+					}
 					return {
 						label: n, value: cal(v.callT + v.resultT), callTokens: cal(v.callT), resultTokens: cal(v.resultT),
 						color: "success", enterable: v.records.length > 0, records: v.records,

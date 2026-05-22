@@ -20,19 +20,44 @@ const MANIFEST_PATH = join(DISTILL_DIR, "manifest.json");
 export interface DistillEntry { tmpPath?: string; originalTokens: number; toolName: string; origLength: number; argsSignature?: string }
 export const distilledMap = new Map<string, DistillEntry>();
 
-// 启动时从 manifest 恢复（跳过无 tmpPath 的过期条目——可能是被精读覆盖后的残留）
+/** 手动删除的 toolCallId 集合（持久化到 manifest） */
+export const manuallyDeletedIds = new Set<string>();
+
+// 启动时从 manifest 恢复
+// 格式兼容：旧格式是纯数组 [k,v][]，新格式是 { distilled: [k,v][], manuallyDeleted: string[] }
 if (existsSync(MANIFEST_PATH)) {
 	try {
-		const entries = JSON.parse(safeReadFileSync(MANIFEST_PATH)) as [string, DistillEntry][];
-		for (const [k, v] of entries) {
-			if (v.tmpPath) distilledMap.set(k, v);  // 只恢复有 tmpPath 的条目（阶段 3 兜底蒸馏）
+		const raw = JSON.parse(safeReadFileSync(MANIFEST_PATH));
+		if (Array.isArray(raw)) {
+			// 旧格式：纯 distilled 条目数组
+			for (const [k, v] of raw as [string, DistillEntry][]) {
+				if (v.tmpPath) distilledMap.set(k, v);
+			}
+		} else if (raw && typeof raw === "object") {
+			// 新格式：{ distilled, manuallyDeleted }
+			const entries = (raw.distilled || []) as [string, DistillEntry][];
+			for (const [k, v] of entries) {
+				if (v.tmpPath) distilledMap.set(k, v);
+			}
+			for (const id of (raw.manuallyDeleted || []) as string[]) {
+				manuallyDeletedIds.add(id);
+			}
 		}
 	} catch {}
 }
 
 export function saveManifest() {
 	mkdirSync(DISTILL_DIR, { recursive: true });
-	writeFileSync(MANIFEST_PATH, JSON.stringify([...distilledMap.entries()]));
+	writeFileSync(MANIFEST_PATH, JSON.stringify({
+		distilled: [...distilledMap.entries()],
+		manuallyDeleted: [...manuallyDeletedIds],
+	}));
+}
+
+/** 将 toolCallId 加入手动删除集合并持久化 */
+export function markManuallyDeleted(toolCallId: string) {
+	manuallyDeletedIds.add(toolCallId);
+	saveManifest();
 }
 
 /** 最后一次发给 LLM 的 messages 快照 */

@@ -6,6 +6,10 @@ export interface RecordItem {
 	lines: string[];
 	/** 是否已被 auto-distill 压缩 */
 	distilled?: boolean;
+	/** 关联的 toolCallId（仅 toolResult 类型有值，用于手动删除） */
+	toolCallId?: string;
+	/** 是否已被手动标记删除 */
+	manuallyDeleted?: boolean;
 }
 
 export interface DetailItem {
