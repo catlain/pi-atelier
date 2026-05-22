@@ -3,7 +3,7 @@
  *
  * 测试场景：
  * 1) 代码文件阈值：WARN(200) / MUST(300) / BAN(500)
- * 2) 记忆文件阈值：80 行
+ * 2) 记忆文件阈值：200 行
  * 3) 非检查扩展名跳过
  * 4) 文件不存在不抛异常
  */
@@ -88,16 +88,16 @@ describe("checkLineCount", () => {
 
 	// ── 记忆文件行数检查 ────────────────────────────────────
 
-	it("记忆文件超过 80 行触发拆分提醒", () => {
-		const filePath = createTempFile("memory/test_topic.md", 100);
+	it("记忆文件超过 200 行触发拆分提醒", () => {
+		const filePath = createTempFile("memory/test_topic.md", 250);
 		const result = checkAndDrain(filePath);
 		expect(result).toContain("📝");
-		expect(result).toContain("100 行");
+		expect(result).toContain("250 行");
 		expect(result).toContain("必须拆分");
 	});
 
-	it("记忆文件 80 行以下不触发警告", () => {
-		const filePath = createTempFile("memory/small_topic.md", 50);
+	it("记忆文件 200 行以下不触发警告", () => {
+		const filePath = createTempFile("memory/small_topic.md", 150);
 		const result = checkAndDrain(filePath);
 		expect(result).toBeNull();
 	});

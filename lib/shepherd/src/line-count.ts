@@ -13,7 +13,7 @@ const LINE_MUST = 300;
 const LINE_BAN = 500;
 
 // ── 记忆文件阈值 ─────────────────────────────────────────────
-const MEMORY_LINE_LIMIT = 80;
+const MEMORY_LINE_LIMIT = 200;
 
 const CHECKED_EXTENSIONS = new Set([".ts", ".tsx", ".js", ".py", ".rs", ".go"]);
 
@@ -68,7 +68,7 @@ export function checkLineCount(
 	}
 }
 
-/** 记忆文件行数检查：超过 80 行必须拆分 */
+/** 记忆文件行数检查：超过 200 行必须拆分 */
 function checkMemoryFile(filePath: string): void {
 	let lines: number;
 	try {
