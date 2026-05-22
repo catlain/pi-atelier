@@ -1,53 +1,46 @@
 /**
- * smart-compact — 增强版 compaction 扩展
+ * smart-compact v2 — 两阶段增强压缩
  *
- * 通过 session_before_compact 事件接管 pi 内置 compaction，
- * 使用"分段精简 + 相关性筛选 + 合并压缩"三阶段策略，
- * 解决超长 session serialize 后超过 LLM 窗口的问题。
+ * Phase 1: 提取用户+AI 非工具文本 → LLM 生成意图总结
+ * Phase 2: 基于意图判断每个工具调用去留 → 删掉不需要的
+ * 压缩结果 = 意图总结 + 保留的工具结果原文
  */
 import type { CompactionResult, SessionBeforeCompactEvent, ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
-import { segmentMessages } from "./segmenter.js";
-import { summarizeSegments, type SegmentSummary } from "./summarizer.js";
-import { mergeAndCompact } from "./merger.js";
+import { extractNonToolText, summarizeIntent } from "./intent-extractor.js";
+import { collectToolPairs, filterTools } from "./tool-filter.js";
 import { loadConfig, saveConfig } from "./config.js";
-import { createLLMCaller, extractCurrentTask } from "./llm-caller.js";
+import { createLLMCaller } from "./llm-caller.js";
 
 export default async function (pi: ExtensionAPI) {
-	// 手动触发标志：/smart-compact 命令强制走 smart-compact，无视 enabled 设置
 	let forceRun = false;
 
-	// 注册命令：触发增强版 compaction
-	// 不直接调用 ctx.compact()，而是设标志后触发 compaction 事件
-	// 这样 session_before_compact 处理器能感知到是手动触发
-	// 但 fallback：如果 compact() 不可用就直接提示用户
-	const doSmartCompact = async (_args: string, ctx: ExtensionCommandContext) => {
-		forceRun = true;
-		console.log("[smart-compact] 触发增强压缩...");
-		try {
-			ctx.compact();
-		} catch {
-			// ctx.compact() 可能不可用
-			forceRun = false;
-			console.error("[smart-compact] ctx.compact() 不可用，请使用 pi 内置 /compact");
-		}
-	};
-
-	// 注册命令：触发增强版 compaction
+	// ─── /smart-compact 命令 ───
 	pi.registerCommand("smart-compact", {
-		description: "分段精简 + 相关性筛选 + 合并压缩",
-		handler: doSmartCompact,
+		description: "两阶段增强压缩：意图总结 + 工具去留",
+		handler: async (_args: string, ctx: ExtensionCommandContext) => {
+			forceRun = true;
+			console.log("[smart-compact] 触发增强压缩...");
+			try {
+				ctx.compact();
+			} catch {
+				forceRun = false;
+				console.error("[smart-compact] ctx.compact() 不可用，请使用 pi 内置 /compact");
+			}
+		},
 	});
 
-	// 注册命令：查看/修改配置
+	// ─── /smart-compact-config 命令 ───
 	pi.registerCommand("smart-compact-config", {
-		description: "查看/修改 smart-compact 配置（auto=开启自动, manual=关闭自动）",
+		description: "查看/修改 smart-compact 配置（auto|manual）",
 		handler: async (args: string, ctx: ExtensionCommandContext) => {
 			const arg = args.trim().toLowerCase();
 			if (arg === "auto" || arg === "on" || arg === "true" || arg === "enable") {
-				await saveConfig({ enabled: true });
+				const config = await loadConfig();
+				await saveConfig({ ...config, enabled: true });
 				ctx.ui.notify("smart-compact 自动接管已开启", "info");
 			} else if (arg === "manual" || arg === "off" || arg === "false" || arg === "disable") {
-				await saveConfig({ enabled: false });
+				const config = await loadConfig();
+				await saveConfig({ ...config, enabled: false });
 				ctx.ui.notify("smart-compact 自动接管已关闭（仅手动 /smart-compact 触发）", "info");
 			} else {
 				const config = await loadConfig();
@@ -57,7 +50,7 @@ export default async function (pi: ExtensionAPI) {
 		},
 	});
 
-	// 监听 compaction 事件，接管 pi 内置 compaction
+	// ─── 核心事件处理器 ───
 	pi.on("session_before_compact", async (event: SessionBeforeCompactEvent, ctx: ExtensionCommandContext) => {
 		const config = await loadConfig();
 
@@ -65,96 +58,94 @@ export default async function (pi: ExtensionAPI) {
 			console.log("[smart-compact] 已禁用，使用 pi 内置 compaction");
 			return {};
 		}
-		forceRun = false; // 重置标志
+		forceRun = false;
 
-		const { preparation, branchEntries, signal } = event;
-		console.log(`[smart-compact] 接管: ${(preparation as any).messagesToSummarize?.length ?? "?"} 条消息待摘要`);
+		const { preparation, signal } = event;
+		const messagesToSummarize: any[] = (preparation as any).messagesToSummarize ?? [];
+		const previousSummary: string | undefined = (preparation as any).previousSummary;
+		const firstKeptEntryId: string = (preparation as any).firstKeptEntryId;
+		const tokensBefore: number = (preparation as any).tokensBefore ?? 0;
+
+		if (messagesToSummarize.length === 0) {
+			console.log("[smart-compact] 没有需要摘要的消息，跳过");
+			return {};
+		}
+
+		console.log(`[smart-compact] 接管: ${messagesToSummarize.length} 条消息`);
 
 		try {
-			// Phase 0: 分段
-			const messagesToSummarize: any[] = (preparation as any).messagesToSummarize ?? [];
-			const turnPrefixMessages: any[] = (preparation as any).turnPrefixMessages ?? [];
-			const isSplitTurn: boolean = (preparation as any).isSplitTurn ?? false;
-			const previousSummary: string | undefined = (preparation as any).previousSummary;
-			const firstKeptEntryId: string = (preparation as any).firstKeptEntryId;
-			const tokensBefore: number = (preparation as any).tokensBefore ?? 0;
+			const callLLM = createLLMCaller(ctx, config.intentModel);
 
-			if (messagesToSummarize.length === 0) {
-				console.log("[smart-compact] 没有需要摘要的消息，跳过");
-				return {};
+			// ─── Phase 1: 意图总结 ───
+			console.log("[smart-compact] Phase 1: 提取意图...");
+			const nonToolText = extractNonToolText(messagesToSummarize, config);
+
+			let intent: string;
+			if (nonToolText.trim().length === 0) {
+				intent = previousSummary ?? "(无上下文)";
+			} else {
+				intent = await summarizeIntent(nonToolText, previousSummary, callLLM, signal);
+			}
+			console.log(`[smart-compact] 意图: ${intent.slice(0, 100)}...`);
+
+			// ─── Phase 2: 工具去留判断 ───
+			console.log("[smart-compact] Phase 2: 工具去留...");
+			const toolPairs = collectToolPairs(messagesToSummarize, config);
+			console.log(`[smart-compact] 收集到 ${toolPairs.length} 个工具调用`);
+
+			let verdicts: Map<string, boolean>;
+			if (toolPairs.length === 0) {
+				verdicts = new Map();
+			} else {
+				const filterCallLLM = config.filterModel
+					? createLLMCaller(ctx, config.filterModel)
+					: callLLM;
+				const results = await filterTools(toolPairs, intent, config, filterCallLLM, signal);
+				verdicts = new Map(results.map((v) => [v.toolCallId, v.keep]));
 			}
 
-			const segments = segmentMessages(messagesToSummarize, config);
-			console.log(`[smart-compact] 分段完成: ${segments.length} 段`);
+			const keptCount = toolPairs.filter((p) => verdicts.get(p.toolCallId) !== false).length;
+			console.log(`[smart-compact] 保留 ${keptCount}/${toolPairs.length} 个工具结果`);
 
-			// 创建 LLM 调用函数
-			const callLLM = createLLMCaller(ctx, config.segmentModel);
-			const segmentCallLLM = config.segmentModel
-				? createLLMCaller(ctx, config.segmentModel)
-				: callLLM;
+			// ─── Phase 3: 构建压缩结果 ───
+			let summary = intent;
 
-			// Phase 0.5: 从尾部消息提取当前任务描述（供相关性判断使用）
-			let currentTask = "";
-			try {
-				currentTask = await extractCurrentTask(messagesToSummarize, callLLM, config, signal);
-				console.log(`[smart-compact] 当前任务: ${currentTask.slice(0, 100)}`);
-			} catch {
-				console.log("[smart-compact] 任务提取失败，使用空任务描述");
+			const keptPairs = toolPairs.filter((p) => verdicts.get(p.toolCallId) !== false);
+			if (keptPairs.length > 0) {
+				summary += "\n\n## Retained Tool Results\n";
+				for (const p of keptPairs) {
+					summary += `\n### [${p.toolName}] (${p.toolCallId})\n`;
+					summary += `Args: ${p.argsSummary}\n`;
+					summary += `Result:\n${p.resultText}\n`;
+				}
 			}
 
-			// Phase 1: 分段摘要 + 相关性判断
-			const summaries = await summarizeSegments(
-				segments,
-				currentTask,
-				config,
-				segmentCallLLM,
-				signal,
-			);
-			const relevantSummaries = summaries.filter((s: SegmentSummary) => s.relevant);
-			console.log(`[smart-compact] 相关性筛选: ${relevantSummaries.length}/${summaries.length} 段相关`);
-
-			// Phase 2: 合并压缩
-			const summary = await mergeAndCompact(
-				{
-					relevantSummaries,
-					turnPrefixMessages,
-					previousSummary,
-					currentTask,
-				},
-				config,
-				callLLM,
-				signal,
-			);
-
-			// 提取文件操作信息（从 preparation）
+			// 文件操作信息
 			const readFiles: string[] = (preparation as any).fileOps?.read
 				? Array.from((preparation as any).fileOps.read)
 				: [];
 			const modifiedFiles: string[] = (preparation as any).fileOps?.edited
 				? Array.from((preparation as any).fileOps.edited)
 				: [];
-
-			// 拼接文件操作信息到 summary
-			let fullSummary = summary;
 			if (readFiles.length > 0 || modifiedFiles.length > 0) {
-				fullSummary += "\n\n## Files Tracked\n";
-				if (readFiles.length > 0) fullSummary += `Read: ${readFiles.join(", ")}\n`;
-				if (modifiedFiles.length > 0) fullSummary += `Modified: ${modifiedFiles.join(", ")}\n`;
+				summary += "\n\n## Files Tracked\n";
+				if (readFiles.length > 0) summary += `Read: ${readFiles.join(", ")}\n`;
+				if (modifiedFiles.length > 0) summary += `Modified: ${modifiedFiles.join(", ")}\n`;
 			}
 
 			console.log("[smart-compact] 完成");
 
 			const result: CompactionResult = {
-				summary: fullSummary,
+				summary,
 				firstKeptEntryId,
 				tokensBefore,
-				details: { readFiles, modifiedFiles },
+				details: { readFiles, modifiedFiles, keptTools: keptCount, totalTools: toolPairs.length },
 			};
 
 			return { compaction: result };
 		} catch (err) {
 			console.error(`[smart-compact] 失败，回退 pi 内置: ${err}`);
-			return {}; // 返回空 = 使用 pi 内置 compaction
+			return {};
 		}
 	});
 }

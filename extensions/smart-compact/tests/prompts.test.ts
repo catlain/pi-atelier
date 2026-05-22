@@ -1,41 +1,41 @@
 import { describe, it, expect } from 'vitest';
-import { parseSegmentSummary } from '../summarizer.js';
-import { SEGMENT_USER_PROMPT, MERGE_SYSTEM_PROMPT } from '../prompts.js';
+import { INTENT_SYSTEM_PROMPT, INTENT_USER_PROMPT, FILTER_SYSTEM_PROMPT, FILTER_USER_PROMPT } from '../prompts.js';
 
-describe('prompts + summarizer', () => {
-	describe('parseSegmentSummary', () => {
-		it('解析有效 JSON 输出', () => {
-			const input = `\`\`\`json
-{"relevant": true, "topics": ["refactor", "API"], "summary": "重构了 API 接口"}
-\`\`\``;
-			const result = parseSegmentSummary(0, input);
-			expect(result.relevant).toBe(true);
-			expect(result.topics).toEqual(['refactor', 'API']);
-			expect(result.summary).toContain('重构');
+describe('prompts', () => {
+	describe('prompt 模板', () => {
+		it('INTENT_USER_PROMPT 包含占位符', () => {
+			expect(INTENT_USER_PROMPT).toContain('{previousSummary}');
+			expect(INTENT_USER_PROMPT).toContain('{conversation}');
 		});
 
-		it('解析无 code fence 的 JSON', () => {
-			const input = `{"relevant": false, "topics": ["探索"], "summary": "早期代码探索"}`;
-			const result = parseSegmentSummary(2, input);
-			expect(result.relevant).toBe(false);
-			expect(result.index).toBe(2);
+		it('INTENT_SYSTEM_PROMPT 包含关键指令', () => {
+			expect(INTENT_SYSTEM_PROMPT).toContain('Intent');
+			expect(INTENT_SYSTEM_PROMPT).toContain('Progress');
+			expect(INTENT_SYSTEM_PROMPT).toContain('Critical Context');
 		});
 
-		it('解析失败时标记为 relevant 并原文返回', () => {
-			const input = 'This is not JSON at all';
-			const result = parseSegmentSummary(1, input);
-			expect(result.relevant).toBe(true); // 保守：失败时保留
-			expect(result.summary).toContain('This is not JSON');
+		it('FILTER_USER_PROMPT 包含占位符', () => {
+			expect(FILTER_USER_PROMPT).toContain('{intent}');
+			expect(FILTER_USER_PROMPT).toContain('{toolList}');
+		});
+
+		it('FILTER_SYSTEM_PROMPT 包含判断规则', () => {
+			expect(FILTER_SYSTEM_PROMPT).toContain('KEEP');
+			expect(FILTER_SYSTEM_PROMPT).toContain('DISCARD');
 		});
 	});
 
-	describe('常量', () => {
-		it('SEGMENT_USER_PROMPT 包含 current-task 占位符', () => {
-			expect(SEGMENT_USER_PROMPT).toContain('{currentTask}');
-		});
-
-		it('MERGE_SYSTEM_PROMPT 非空', () => {
-			expect(MERGE_SYSTEM_PROMPT.length).toBeGreaterThan(0);
+	describe('parseVerdicts（从 tool-filter 间接测试）', () => {
+		// parseVerdicts 是 tool-filter.ts 的内部函数，通过 formatToolList 等间接测试
+		it('formatToolList 格式正确', async () => {
+			const { formatToolList } = await import('../tool-filter.js');
+			const pairs = [
+				{ toolCallId: 'tc_1', toolName: 'read', argsSummary: '{"path":"a.ts"}', resultText: 'content', messageIndex: 0 },
+			];
+			const result = formatToolList(pairs as any);
+			expect(result).toContain('tc_1');
+			expect(result).toContain('read');
+			expect(result).toContain('a.ts');
 		});
 	});
 });
