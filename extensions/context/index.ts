@@ -1,6 +1,6 @@
 import { type ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import registerContextCommand from "./context.js";
-import { setLastContextMessages, getContextConfig, manuallyDeletedIds } from "./shared.js";
+import { setLastContextMessages, getContextConfig, manuallyDeletedIds, agingTracker } from "./shared.js";
 import {
 	buildToolCallMap,
 	estimateTokens,
@@ -30,8 +30,7 @@ export default function (pi: ExtensionAPI) {
 	// 已见（同 toolCallId）：静默删除 toolResult + 关联的 toolCall block
 	const seenArgs = new Set<string>();
 
-	// key: toolCallId, value: 被发送给 LLM 的次数（每次 emitContext +1）
-	const agingTracker = new Map<string, number>();
+	// agingTracker 从 shared.ts 共享，供 collect.ts 读取展示
 
 	// key: toolCallId, 已被截断的 toolCall ID（跨请求持久化）
 	const truncatedToolCallIds = new Set<string>();
@@ -57,7 +56,7 @@ export default function (pi: ExtensionAPI) {
 					if (msg.role === "toolResult" && msg.toolCallId) {
 						seenArgs.add(msg.toolCallId);
 						if (agingThreshold > 0) {
-							agingTracker.set(msg.toolCallId, agingThreshold);
+							agingTracker.set(msg.toolCallId, (agingTracker.get(msg.toolCallId) || 0) + agingThreshold);
 						}
 					}
 				}

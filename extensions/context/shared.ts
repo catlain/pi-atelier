@@ -20,6 +20,9 @@ const MANIFEST_PATH = join(DISTILL_DIR, "manifest.json");
 export interface DistillEntry { tmpPath?: string; originalTokens: number; toolName: string; origLength: number; argsSignature?: string }
 export const distilledMap = new Map<string, DistillEntry>();
 
+/** aging 计数器：toolCallId → 已发送给 LLM 的次数 */
+export const agingTracker = new Map<string, number>();
+
 /** 手动删除的 toolCallId 集合（持久化到 manifest） */
 export const manuallyDeletedIds = new Set<string>();
 

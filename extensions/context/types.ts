@@ -10,6 +10,8 @@ export interface RecordItem {
 	toolCallId?: string;
 	/** 是否已被手动标记删除 */
 	manuallyDeleted?: boolean;
+	/** 已随请求发送给 LLM 的次数（aging 计数） */
+	agingCount?: number;
 }
 
 export interface DetailItem {

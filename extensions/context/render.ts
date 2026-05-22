@@ -80,12 +80,13 @@ export function renderRecords(c: Container, d: ContextData, t: any, breadcrumb: 
 		const idx = t.fg("dim", `#${(i + 1).toString().padStart(2)} `);
 		const sum = (r.summary.length > 40 ? r.summary.slice(0, 37) + "..." : r.summary).padEnd(40);
 		const distilledTag = r.distilled ? " " + t.fg("warning", "✂") : "";
+		const agingTag = r.agingCount != null ? " " + t.fg("muted", `⏳${r.agingCount}`) : "";
 		if (isTool) {
 			const cv = r.callTokens > 0 ? formatTokens(r.callTokens).padStart(6) : "     -";
 			const rv = r.resultTokens > 0 ? formatTokens(r.resultTokens).padStart(6) : "     -";
-			ln(c, t, `${ptr}${idx}${t.fg("text", sum)} ${t.fg("success", cv)} ${t.fg("warning", rv)}${distilledTag} ${t.fg("dim", "…")}`);
+			ln(c, t, `${ptr}${idx}${t.fg("text", sum)} ${t.fg("success", cv)} ${t.fg("warning", rv)}${distilledTag}${agingTag} ${t.fg("dim", "…")}`);
 		} else {
-			ln(c, t, `${ptr}${idx}${t.fg("text", sum)} ${t.fg("accent", formatTokens(r.callTokens).padStart(6))}${distilledTag} ${t.fg("dim", "…")}`);
+			ln(c, t, `${ptr}${idx}${t.fg("text", sum)} ${t.fg("accent", formatTokens(r.callTokens).padStart(6))}${distilledTag}${agingTag} ${t.fg("dim", "…")}`);
 		}
 	}
 	sp(c);
