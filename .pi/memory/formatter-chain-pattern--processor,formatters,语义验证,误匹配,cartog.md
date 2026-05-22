@@ -12,7 +12,7 @@
 
 每个 formatter 签名：`(text: string) => string`，返回原文表示"不匹配"。
 
-## 文件拆分（2025-05 commit b889571）
+## 文件拆分
 
 - `formatters.ts` — formatCartogResult + formatBashResult + formatMcpError + re-export
 - `formatters-web.ts` — formatWebReadResult + formatWebSearchResult
@@ -23,14 +23,18 @@
 
 **格式嗅探必须验证语义字段，不能只检查 JSON 结构。**
 
-教训：`formatWebSearchResult` 只检查"是数组+非空"，导致 cartog 返回的
-`[{name,kind,startLine}]` 被误匹配为 web_search 结果（输出空 URL）。
+### 已修复的误匹配 bug（3 处同类问题）
 
-修复：`results.some(r => r.link || r.title)` — 至少一个条目必须有 web_search 特征字段。
+1. **formatWebSearchResult** — 只检查"是数组+非空" → cartog 数据被误匹配
+   - 修复：`results.some(r => r.link || r.title)`
+2. **formatGhResult** — `"path" in obj || "content" in obj` → web_read 数据被误匹配
+   - web_read 的 `{title, url, content}` 含 `content` 但不含 `path`
+   - 修复：收紧为 `"path" in obj`（gh_read_file 总是有 path）
+3. **formatCartogResult** — 只检查"是数组+非空" → 防御性添加
+   - 修复：`parsed.some(entry => entry.name || entry.kind || entry.startLine || ...)`
 
-`formatGhResult` 是正确范例：检查 `results`/`path`/`content`/`tree` 具体字段。
+### 测试陷阱
 
-## 已知预存问题
-
-- `tool-result-processor.test.ts` 等 16 个测试在 main 分支就已失败（mock 文件路径相关）
-- `tests/formatters-errors.test.ts` 有 import 路径问题（`no tests`）
+- **`getContextConfig()` 读取用户 settings**（不是默认值），测试必须显式传 `distillThreshold`
+  - 否则测试结果依赖外部状态，在不同机器上行为不一致
+- formatters-errors 测试在 `tests/` 子目录中，import 需用 `../formatters-errors.js`
