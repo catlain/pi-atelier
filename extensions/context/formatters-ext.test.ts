@@ -90,11 +90,22 @@ describe("formatGhResult", () => {
 		expect(typeof result).toBe("string");
 	});
 
-	it("MCP web_reader 格式结果（url+content）不崩溃", () => {
+	it("web_read 格式数据（url+content）不应被 formatGhResult 匹配", () => {
 		const raw = JSON.stringify({ url: "https://example.com", content: "Page title\nSome content" });
 		const result = formatGhResult(raw);
-		expect(typeof result).toBe("string");
-		// content 字段命中 formatGhReadFile，返回 path + content
-		expect(result).toContain("Page title");
+		// web_read 数据没有 path 字段，不应被 gh_read_file 分支匹配
+		expect(result).toBe(raw);
+	});
+
+	it("web_read 格式数据（title+url+content）不应被 formatGhResult 匹配", () => {
+		const raw = JSON.stringify({ title: "简短标题", url: "https://example.com", content: "简短正文" });
+		const result = formatGhResult(raw);
+		expect(result).toBe(raw);
+	});
+
+	it("gh_read_file 只有 content 没有 path 时返回原文（无 path 不是 gh 数据）", () => {
+		const raw = JSON.stringify({ content: "一些内容" });
+		const result = formatGhResult(raw);
+		expect(result).toBe(raw);
 	});
 });

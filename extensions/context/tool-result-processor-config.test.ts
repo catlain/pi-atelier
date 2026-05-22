@@ -96,9 +96,9 @@ describe("阈值配置读取", () => {
 		expect(text).toContain("cartog_search");
 	});
 
-	it("默认阈值 = 4000 无需配置时正常工作", () => {
+	it("显式阈值 = 4000 时正常工作", () => {
 		const { pi, triggerToolResult } = createMockPi();
-		registerToolResultProcessor(pi as any); // 无配置覆盖
+		registerToolResultProcessor(pi as any, { distillThreshold: 4000 });
 
 		const smallRaw = JSON.stringify({ title: "默认", url: "https://x.com", content: "ABC" });
 		const smallResult = triggerToolResult({

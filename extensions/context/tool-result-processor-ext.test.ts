@@ -68,28 +68,37 @@ describe("跳过场景：返回 undefined", () => {
 		})).toBeUndefined();
 	});
 
-	it("grep 工具跳过", () => {
+	it("grep 工具透传并写文件", () => {
 		const { pi, triggerToolResult } = createMockPi();
 		registerToolResultProcessor(pi as any);
-		expect(triggerToolResult({
+		const result = triggerToolResult({
 			toolName: "grep", content: [{ type: "text", text: "matches" }], input: {}, isError: false,
-		})).toBeUndefined();
+		});
+		expect(result).not.toBeUndefined();
+		expect(result.content[0].text).toContain("matches");
+		expect(result.content[0].text).toContain("原文：");
 	});
 
-	it("find 工具跳过", () => {
+	it("find 工具透传并写文件", () => {
 		const { pi, triggerToolResult } = createMockPi();
 		registerToolResultProcessor(pi as any);
-		expect(triggerToolResult({
+		const result = triggerToolResult({
 			toolName: "find", content: [{ type: "text", text: "files" }], input: {}, isError: false,
-		})).toBeUndefined();
+		});
+		expect(result).not.toBeUndefined();
+		expect(result.content[0].text).toContain("files");
+		expect(result.content[0].text).toContain("原文：");
 	});
 
-	it("ls 工具跳过", () => {
+	it("ls 工具透传并写文件", () => {
 		const { pi, triggerToolResult } = createMockPi();
 		registerToolResultProcessor(pi as any);
-		expect(triggerToolResult({
+		const result = triggerToolResult({
 			toolName: "ls", content: [{ type: "text", text: "entries" }], input: {}, isError: false,
-		})).toBeUndefined();
+		});
+		expect(result).not.toBeUndefined();
+		expect(result.content[0].text).toContain("entries");
+		expect(result.content[0].text).toContain("原文：");
 	});
 
 	it("isError 结果正常处理（不再跳过）", () => {

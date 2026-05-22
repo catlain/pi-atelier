@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatMcpError } from "./formatters-errors.js";
+import { formatMcpError } from "../formatters-errors.js";
 
 describe("formatMcpError", () => {
 	it("提取 MCP 错误码和消息", () => {

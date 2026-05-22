@@ -65,7 +65,7 @@ describe("processor read 处理", () => {
 		expect(text).toContain("[processed]");
 		expect(text).toContain("read");
 		expect(text).toContain("/tmp/pi-distill/processor/");
-		expect(text).toContain("精读提示");
+		expect(text).toContain("完整内容：");
 	});
 
 	it("read 不在 SKIP_TOOLS 中（不返回 undefined）", () => {

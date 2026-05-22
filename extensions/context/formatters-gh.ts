@@ -93,8 +93,9 @@ export function formatGhResult(text: string): string {
 	if (typeof parsed !== "object" || parsed === null) return text;
 	const obj = parsed as Record<string, unknown>;
 
-	// gh_read_file：含有 content 或 path
-	if ("path" in obj || "content" in obj) {
+	// gh_read_file：必须含有 path 字段（gh 特征字段）
+	// 不使用 "content" in obj——content 太通用，web_read 等工具也有 content 字段
+	if ("path" in obj) {
 		const formatted = formatGhReadFile(obj as GhReadFileResult);
 		if (formatted !== null) return formatted;
 	}

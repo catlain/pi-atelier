@@ -45,7 +45,7 @@ describe("registerToolResultProcessor", () => {
 describe("小结果（< 阈值）", () => {
 	it("返回格式化内容，不写临时文件", () => {
 		const { pi, triggerToolResult } = createMockPi();
-		registerToolResultProcessor(pi as any);
+		registerToolResultProcessor(pi as any, { distillThreshold: 4000 });
 
 		const rawText = JSON.stringify({
 			title: "简短标题",
@@ -66,7 +66,7 @@ describe("小结果（< 阈值）", () => {
 
 	it("cartog 小结果返回格式化表格", () => {
 		const { pi, triggerToolResult } = createMockPi();
-		registerToolResultProcessor(pi as any);
+		registerToolResultProcessor(pi as any, { distillThreshold: 4000 });
 
 		const rawText = JSON.stringify([
 			{ name: "hello", kind: "function", startLine: 1, endLine: 42 },
@@ -86,7 +86,7 @@ describe("小结果（< 阈值）", () => {
 
 	it("web_search 小结果格式化", () => {
 		const { pi, triggerToolResult } = createMockPi();
-		registerToolResultProcessor(pi as any);
+		registerToolResultProcessor(pi as any, { distillThreshold: 4000 });
 
 		const rawText = JSON.stringify([
 			{ title: "结果1", link: "https://a.com", content: "摘要" },
@@ -109,7 +109,7 @@ describe("小结果（< 阈值）", () => {
 describe("大结果（≥ 阈值）", () => {
 	it("返回摘要，写临时文件", () => {
 		const { pi, triggerToolResult } = createMockPi();
-		registerToolResultProcessor(pi as any);
+		registerToolResultProcessor(pi as any, { distillThreshold: 4000 });
 
 		const bigText = "A".repeat(20000);
 		const rawText = JSON.stringify({
@@ -133,7 +133,7 @@ describe("大结果（≥ 阈值）", () => {
 
 	it("大结果摘要格式包含全部字段", () => {
 		const { pi, triggerToolResult } = createMockPi();
-		registerToolResultProcessor(pi as any);
+		registerToolResultProcessor(pi as any, { distillThreshold: 4000 });
 
 		// 生成足够大的 cartog 数据（需要 >= 4000 tokens = 16000 chars）
 		const items = Array.from({ length: 200 }, (_, i) => ({
@@ -157,7 +157,7 @@ describe("大结果（≥ 阈值）", () => {
 
 	it("大结果摘要包含正确文件路径", () => {
 		const { pi, triggerToolResult } = createMockPi();
-		registerToolResultProcessor(pi as any);
+		registerToolResultProcessor(pi as any, { distillThreshold: 4000 });
 
 		const bigText = "X".repeat(20000);
 		const rawText = JSON.stringify({ title: "大文件", url: "https://x.com", content: bigText });
