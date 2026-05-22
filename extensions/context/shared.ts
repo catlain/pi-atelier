@@ -15,7 +15,29 @@ function safeReadFileSync(p: string): string {
 
 export const DISTILL_DIR = join(tmpdir(), "pi-distill");
 export const RECORDINGS_DIR = join(DISTILL_DIR, "recordings");
-const MANIFEST_PATH = join(DISTILL_DIR, "manifest.json");
+
+/** 当前会话 ID，由 index.ts 在 context 事件中设置 */
+let currentSessionId = "";
+
+/** 设置当前会话 ID，manifest 按此隔离 */
+export function setSessionId(sid: string) {
+	if (sid && sid !== currentSessionId) {
+		const oldId = currentSessionId;
+		currentSessionId = sid;
+		if (oldId) {
+			// 会话切换时清空内存中的持久化集合，从新 manifest 恢复
+			manuallyDeletedIds.clear();
+			agingDeletedIds.clear();
+			loadManifest();
+		}
+	}
+}
+
+function getManifestPath(): string {
+	return currentSessionId
+		? join(DISTILL_DIR, currentSessionId, "manifest.json")
+		: join(DISTILL_DIR, "manifest.json"); // fallback：无 sessionId 时用旧路径
+}
 
 export interface DistillEntry { tmpPath?: string; originalTokens: number; toolName: string; origLength: number; argsSignature?: string }
 export const distilledMap = new Map<string, DistillEntry>();
@@ -37,35 +59,40 @@ export function setAgingSnapshot(snapshot: Map<string, number>) {
 /** 手动删除的 toolCallId 集合（持久化到 manifest） */
 export const manuallyDeletedIds = new Set<string>();
 
-// 启动时从 manifest 恢复
-// 格式兼容：旧格式是纯数组 [k,v][]，新格式是 { distilled, manuallyDeleted, aging }
-if (existsSync(MANIFEST_PATH)) {
+/** aging 达到阈值后永久删除的 toolCallId 集合（持久化到 manifest） */
+export const agingDeletedIds = new Set<string>();
+
+// 从指定路径加载 manifest，首次调用时恢复 distill/manuallyDeleted/agingDeleted
+function loadManifest() {
+	const p = getManifestPath();
+	if (!existsSync(p)) return;
 	try {
-		const raw = JSON.parse(safeReadFileSync(MANIFEST_PATH));
+		const raw = JSON.parse(safeReadFileSync(p));
 		if (Array.isArray(raw)) {
-			// 旧格式：纯 distilled 条目数组
 			for (const [k, v] of raw as [string, DistillEntry][]) {
 				if (v.tmpPath) distilledMap.set(k, v);
 			}
 		} else if (raw && typeof raw === "object") {
-			// 新格式：{ distilled, manuallyDeleted, aging }
-			const entries = (raw.distilled || []) as [string, DistillEntry][];
-			for (const [k, v] of entries) {
+			for (const [k, v] of (raw.distilled || []) as [string, DistillEntry][]) {
 				if (v.tmpPath) distilledMap.set(k, v);
 			}
 			for (const id of (raw.manuallyDeleted || []) as string[]) {
 				manuallyDeletedIds.add(id);
 			}
-			// aging 不再持久化，不恢复
+			for (const id of (raw.agingDeleted || []) as string[]) {
+				agingDeletedIds.add(id);
+			}
 		}
 	} catch {}
 }
 
 export function saveManifest() {
-	mkdirSync(DISTILL_DIR, { recursive: true });
-	writeFileSync(MANIFEST_PATH, JSON.stringify({
+	const manifestDir = join(DISTILL_DIR, currentSessionId || ".");
+	mkdirSync(manifestDir, { recursive: true });
+	writeFileSync(getManifestPath(), JSON.stringify({
 		distilled: [...distilledMap.entries()],
 		manuallyDeleted: [...manuallyDeletedIds],
+		agingDeleted: [...agingDeletedIds],
 	}));
 }
 

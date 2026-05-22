@@ -3,7 +3,7 @@ import { appendFileSync } from "fs";
 const PID = process.pid;
 const DBG = (msg: string) => appendFileSync("/tmp/pi-context-debug.log", `[${PID}] ${msg}\n`);
 import registerContextCommand from "./context.js";
-import { setLastContextMessages, getContextConfig, manuallyDeletedIds, agingTracker, agingSnapshot, setAgingSnapshot } from "./shared.js";
+import { setLastContextMessages, getContextConfig, manuallyDeletedIds, agingDeletedIds, agingTracker, agingSnapshot, setAgingSnapshot, setSessionId, saveManifest } from "./shared.js";
 import {
 	buildToolCallMap,
 	estimateTokens,
@@ -41,6 +41,10 @@ export default function (pi: ExtensionAPI) {
 	pi.on("context", (event, _ctx) => {
 		setLastContextMessages(event.messages);
 
+		// 设置 sessionId 并加载对应的 manifest（会话级隔离）
+		const sid = (_ctx as any)?.sessionManager?.getSessionId?.();
+		if (sid) setSessionId(sid);
+
 		const messages = event.messages as any[];
 		const toolCallMap = buildToolCallMap(messages);
 		const { distillThreshold, agingThreshold } = getContextConfig();
@@ -58,12 +62,7 @@ export default function (pi: ExtensionAPI) {
 				for (const msg of messages) {
 					if (msg.role === "toolResult" && msg.toolCallId) {
 						seenArgs.add(msg.toolCallId);
-						if (agingThreshold > 0 && !agingTracker.has(msg.toolCallId)) {
-							// 预填 agingThreshold - 1：保留 1 轮缓冲，避免 reload 后立即全删
-							const initCount = agingThreshold - 1;
-							agingTracker.set(msg.toolCallId, initCount);
-							agingSnapshot.set(msg.toolCallId, initCount);
-						}
+						// aging 不预填：reload 后从 0 开始自然计数，避免旧结果被立即删除
 					}
 				}
 			}
@@ -121,15 +120,15 @@ export default function (pi: ExtensionAPI) {
 
 				const tcId = msg.toolCallId || "";
 				if (!tcId) continue;
-				const toolName = msg.toolName || "unknown";
 
-				// distill 优先：已被 distill 标记或大内容 → 跳过
+				// distill 优先：已被 distill 标记 → 跳过
 				if (distillRemovedIds.has(tcId)) continue;
-				const textParts = (msg.content as any[]).filter((p: any) => p.type === "text");
-				const origText = textParts.map((p: any) => p.text).join("");
-				const origTokens = estimateTokens(origText);
-				// aging 管所有 toolResult，不跳过大内容
-				// 旧代码 if (origTokens >= distillThreshold) continue 会导致大内容无机制清理
+
+				// 已被 aging 永久删除 → 直接移除，不计数
+				if (agingDeletedIds.has(tcId)) {
+					toRemove.push(i);
+					continue;
+				}
 
 				activeTcIds.add(tcId);
 
@@ -137,7 +136,6 @@ export default function (pi: ExtensionAPI) {
 				agingTracker.set(tcId, count);
 
 				if (count >= agingThreshold) {
-					// 静默移除（不发 hint，避免 AI 浪费 thinking tokens 决定是否保留）
 					toRemove.push(i);
 					agingRemovedTcIds.add(tcId);
 				}
@@ -148,8 +146,14 @@ export default function (pi: ExtensionAPI) {
 		const agingSamples = [...agingTracker.entries()].slice(0, 3);
 		for (const [k, v] of agingSamples) DBG(`  agingSample: ${k.slice(0, 8)}=${v}`);
 
-		// 清理 tracker：移除已达到 aging 阈值的 tcId，防止 manifest 值无限累积
-		for (const tcId of agingRemovedTcIds) agingTracker.delete(tcId);
+		// 清理 tracker：移除已达到 aging 阈值的 tcId，加入永久删除集合并持久化
+		if (agingRemovedTcIds.size > 0) {
+			for (const tcId of agingRemovedTcIds) {
+				agingTracker.delete(tcId);
+				agingDeletedIds.add(tcId);
+			}
+			saveManifest();
+		}
 
 		// 清理 tracker 中不在当前 messages 里的 tcId（防止无限增长）
 		for (const tcId of agingTracker.keys()) {

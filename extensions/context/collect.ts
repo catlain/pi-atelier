@@ -3,7 +3,9 @@ import { formatTokens } from "./utils.js";
 import { lastContextMessages, lastProviderPayload, manuallyDeletedIds, agingSnapshot } from "./shared.js";
 import type { ContextData, RecordItem, DetailItem, CategoryItem } from "./types.js";
 import { appendFileSync } from "fs";
-const DBG = (msg: string) => appendFileSync("/tmp/pi-context-debug.log", msg + "\n");
+const PID = process.pid;
+let DBG_COUNT = 0;
+const DBG = (msg: string) => appendFileSync("/tmp/pi-context-debug.log", `[${PID}] ${msg}\n`);
 
 const est = (s: string) => Math.ceil(s.length / 4);
 
@@ -134,6 +136,8 @@ export function collectData(
 			const isDistilled = rText.startsWith("[distilled");
 			const b = getBucket(toolName); b.resultT += rs;
 			const agingCount = tcId ? agingSnapshot.get(tcId) : undefined;
+			// DEBUG: 前 3 条打印 tcId 匹配情况
+			if (DBG_COUNT++ < 3) DBG(`[collect] tcId=${tcId?.slice(0, 12)} snapGet=${agingSnapshot.get(tcId ?? "")} agingCount=${agingCount} snapHas=${agingSnapshot.has(tcId ?? "")}`);
 			// 通过 tcId 关联到已有的 toolCall record
 			const linkedRecs = tcId ? tcIdToRecords.get(tcId) : undefined;
 			const matched = linkedRecs?.find(r => r.resultTokens === 0) || b.records.find(r => r.resultTokens === 0);
