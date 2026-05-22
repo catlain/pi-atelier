@@ -13,13 +13,29 @@ import { loadConfig, saveConfig } from "./config.js";
 import { createLLMCaller, extractCurrentTask } from "./llm-caller.js";
 
 export default async function (pi: ExtensionAPI) {
+	// 手动触发标志：/smart-compact 命令强制走 smart-compact，无视 enabled 设置
+	let forceRun = false;
+
+	// 注册命令：触发增强版 compaction
+	// 不直接调用 ctx.compact()，而是设标志后触发 compaction 事件
+	// 这样 session_before_compact 处理器能感知到是手动触发
+	// 但 fallback：如果 compact() 不可用就直接提示用户
+	const doSmartCompact = async (_args: string, ctx: ExtensionCommandContext) => {
+		forceRun = true;
+		console.log("[smart-compact] 触发增强压缩...");
+		try {
+			ctx.compact();
+		} catch {
+			// ctx.compact() 可能不可用
+			forceRun = false;
+			console.error("[smart-compact] ctx.compact() 不可用，请使用 pi 内置 /compact");
+		}
+	};
+
 	// 注册命令：触发增强版 compaction
 	pi.registerCommand("smart-compact", {
 		description: "分段精简 + 相关性筛选 + 合并压缩",
-		handler: async (_args: string, ctx: ExtensionCommandContext) => {
-			console.log("[smart-compact] 触发增强压缩...");
-			ctx.compact();
-		},
+		handler: doSmartCompact,
 	});
 
 	// 注册命令：查看/修改配置
@@ -45,10 +61,11 @@ export default async function (pi: ExtensionAPI) {
 	pi.on("session_before_compact", async (event: SessionBeforeCompactEvent, ctx: ExtensionCommandContext) => {
 		const config = await loadConfig();
 
-		if (!config.enabled) {
+		if (!config.enabled && !forceRun) {
 			console.log("[smart-compact] 已禁用，使用 pi 内置 compaction");
 			return {};
 		}
+		forceRun = false; // 重置标志
 
 		const { preparation, branchEntries, signal } = event;
 		console.log(`[smart-compact] 接管: ${(preparation as any).messagesToSummarize?.length ?? "?"} 条消息待摘要`);

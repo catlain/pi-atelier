@@ -19,8 +19,14 @@ function isTurnBoundary(msg: AgentMessage): boolean {
 	);
 }
 
-/** 每段最大 token 数（超过则递归二分） */
-const MAX_SEGMENT_TOKENS = 30000;
+/**
+ * 每段最大 token 数（超过则递归二分）。
+ * 保守取 12000：即使中文文本按 1.5 字符/token 算，
+ * 序列化后约 18000 字符 / 1.5 = 12000 token，
+ * 加上 prompt 模板（~500 token）+ response（4096 token），
+ * 总计 ~17000 token，远在模型窗口内。
+ */
+const MAX_SEGMENT_TOKENS = 12000;
 
 /**
  * 按 turn 边界将消息分段。
@@ -58,7 +64,9 @@ export function segmentMessages(
 		const chunk = turns.slice(i, i + turnsPerSegment);
 		const segMessages = chunk.flat();
 		const serialized = serializeConversationEnhanced(segMessages, fullConfig);
-		const estimatedTokens = Math.ceil(serialized.length / 4);
+		// 中文约 1.5 字符/token，英文约 4 字符/token，取中间值 2.5
+		// 这样中文高估一点（安全），英文低估一些但 segment 上限兜底
+		const estimatedTokens = Math.ceil(serialized.length / 2.5);
 
 		segments.push({
 			index: segIndex++,
