@@ -1,7 +1,7 @@
 /** index.ts — context 扩展入口：闭包持有运行时状态，创建 stateRef 传给子模块 */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import registerContextCommand from "./context.js";
-import { registerRecordCommand, registerDistillConfig, registerAgingConfig, registerProcessorConfig } from "./commands.js";
+import { registerRecordCommand, registerDistillConfigCommand, registerAgingConfigCommand, registerProcessorConfigCommand } from "./commands.js";
 import { handleContextEvent, type ContextState } from "./handle-context.js";
 import { loadManifest } from "./shared.js";
 
