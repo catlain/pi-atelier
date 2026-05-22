@@ -39,7 +39,7 @@ export default function (pi: ExtensionAPI) {
 	const truncatedToolCallIds = new Set<string>();
 
 	pi.on("context", (event, _ctx) => {
-		setLastContextMessages(event.messages);
+		// setLastContextMessages 移到事件末尾（aging/distill 后），和 agingSnapshot 同步
 
 		// 设置 sessionId 并加载对应的 manifest（会话级隔离）
 		const sid = (_ctx as any)?.sessionManager?.getSessionId?.();
@@ -197,5 +197,8 @@ export default function (pi: ExtensionAPI) {
 		if (processorThreshold > 0) {
 			truncateToolCallArgs(messages, processorThreshold, truncatedToolCallIds);
 		}
+
+		// ── 保存最终 messages（aging/distill/truncate 后），和 agingSnapshot 同步 ──
+		setLastContextMessages(messages);
 	});
 }
