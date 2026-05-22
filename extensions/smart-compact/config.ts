@@ -17,7 +17,7 @@ export interface SmartCompactConfig {
 	toolResultTruncateChars: number;
 	/** 并行 LLM 调用数（默认 3） */
 	maxParallelSegments: number;
-	/** 是否启用（默认 true） */
+	/** 是否启用（默认 false，需手动 /smart-compact 触发） */
 	enabled: boolean;
 }
 
@@ -30,7 +30,7 @@ export const DEFAULT_CONFIG: SmartCompactConfig = {
 	toolCallTruncateChars: 1000,
 	toolResultTruncateChars: 2000,
 	maxParallelSegments: 3,
-	enabled: true,
+	enabled: false,
 };
 
 /** 运行时加载配置（需要 pi 环境） */

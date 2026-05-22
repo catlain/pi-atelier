@@ -9,6 +9,6 @@ describe('config', () => {
 		expect(DEFAULT_CONFIG.thinkingTruncateChars).toBe(500);
 		expect(DEFAULT_CONFIG.toolCallTruncateChars).toBe(1000);
 		expect(DEFAULT_CONFIG.maxParallelSegments).toBe(3);
-		expect(DEFAULT_CONFIG.enabled).toBe(true);
+		expect(DEFAULT_CONFIG.enabled).toBe(false);
 	});
 });
