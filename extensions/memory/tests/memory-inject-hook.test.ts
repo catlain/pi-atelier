@@ -118,41 +118,34 @@ describe("before_agent_start hook 集成", () => {
 
 // ── env-and-status 回归检查 ───────────────────────────────
 
-describe("env-and-status 回归检查（Step 7 后）", () => {
+// env-and-status 有意保留了 before_agent_start hook 用于注入 memory-prompt.md 说明文本。
+// 回归检查验证：只注入 prompt 说明，不包含索引内容注入逻辑。
+
+describe("env-and-status 记忆注入范围检查", () => {
   const ENV_STATUS_PATH = path.resolve(
     __dirname,
     "../../env-and-status/index.ts",
   );
 
-  it("不应包含 before_agent_start hook 注册", () => {
-    const content = fs.readFileSync(ENV_STATUS_PATH, "utf-8");
-    // Step 7 完成后，before_agent_start 只应在 memory/index.ts 中
-    const hasHook = content.includes('pi.on("before_agent_start"');
-    expect(hasHook).toBe(false);
-  });
-
-  it("不应包含 readFileContent 函数", () => {
-    const content = fs.readFileSync(ENV_STATUS_PATH, "utf-8");
-    expect(content.includes("function readFileContent(")).toBe(false);
-  });
-
-  it("不应包含 truncateMemory 函数", () => {
+  it("不应包含 truncateMemory 函数（索引截断属于 memory 扩展）", () => {
     const content = fs.readFileSync(ENV_STATUS_PATH, "utf-8");
     expect(content.includes("function truncateMemory(")).toBe(false);
   });
 
-  it("不应包含 MEMORY_PROMPT_PATH 常量", () => {
-    const content = fs.readFileSync(ENV_STATUS_PATH, "utf-8");
-    expect(content.includes("MEMORY_PROMPT_PATH")).toBe(false);
-  });
-
-  it("不应包含 MAX_MEMORY_LINES 常量", () => {
+  it("不应包含 MAX_MEMORY_LINES 常量（索引行数限制属于 memory 扩展）", () => {
     const content = fs.readFileSync(ENV_STATUS_PATH, "utf-8");
     expect(content.includes("MAX_MEMORY_LINES")).toBe(false);
   });
 
-  it("不应包含 memory-prompt.md 引用", () => {
+  it("不应包含 ## 记忆 标题（索引内容注入属于 memory 扩展）", () => {
     const content = fs.readFileSync(ENV_STATUS_PATH, "utf-8");
-    expect(content.includes("memory-prompt.md")).toBe(false);
+    expect(content.includes("## 记忆")).toBe(false);
+  });
+
+  it("不应拼接全局/项目记忆索引", () => {
+    const content = fs.readFileSync(ENV_STATUS_PATH, "utf-8");
+    // 不应包含 MEMORY.md 读取或 entries 拼接逻辑
+    expect(content.includes("MEMORY.md")).toBe(false);
+    expect(content.includes("entries.join")).toBe(false);
   });
 });

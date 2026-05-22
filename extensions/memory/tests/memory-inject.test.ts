@@ -99,7 +99,8 @@ describe("truncateMemory", () => {
   it("201 行截到 200 行加警告", () => {
     const c = Array.from({ length: 201 }, (_, i) => `line-${i}`).join("\n");
     const r = truncateMemory(c);
-    const lines = r.split("\n").filter((l) => !l.startsWith("> ⚠️"));
+    // 过滤掉截断警告行及其前面的空行
+    const lines = r.split("\n").filter((l) => l.trim() !== "" && !l.startsWith("> ⚠️"));
     expect(lines).toHaveLength(200);
     expect(r).toContain("⚠️");
   });
@@ -154,11 +155,8 @@ describe("buildMemoryPrompt", () => {
   });
 
   it("内容之间用双换行分隔", () => {
-    const r = buildMemoryPrompt("g", "p")!;
-    const idx1 = r.indexOf("g");
-    const idx2 = r.indexOf("p");
-    expect(idx1).toBeLessThan(idx2);
-    const between = r.slice(idx1 + 1, idx2).trim();
-    expect(between.length).toBeGreaterThan(0);
+    const r = buildMemoryPrompt("global-content", "project-content")!;
+    // 验证两个条目之间通过 \n\n 分隔（entries.join("\n\n")）
+    expect(r).toContain("global-content\n\nproject-content");
   });
 });
