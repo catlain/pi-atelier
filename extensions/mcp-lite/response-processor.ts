@@ -8,7 +8,6 @@
  * 当前路由表：
  *   glm-web-reader  / webReader         → 提取 title+url+content，去 metadata/external
  *   glm-web-search  / web_search_prime  → 格式化搜索结果
- *   cartog          / *                  → 注入索引时间
  *   其他            / 其他              → pass-through
  */
 
@@ -157,4 +156,3 @@ export function unwrapDoubleEncodedJson(rawText: string): string {
 		return rawText;
 	}
 }
-// cartog 索引时间注入已移除

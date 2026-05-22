@@ -55,8 +55,10 @@ export default function (pi: ExtensionAPI) {
 				for (const msg of messages) {
 					if (msg.role === "toolResult" && msg.toolCallId) {
 						seenArgs.add(msg.toolCallId);
-						if (agingThreshold > 0) {
-							agingTracker.set(msg.toolCallId, (agingTracker.get(msg.toolCallId) || 0) + agingThreshold);
+						if (agingThreshold > 0 && !agingTracker.has(msg.toolCallId)) {
+							// 只对 manifest 中未恢复的 tcId 预填 agingThreshold
+							// 已恢复的保留 manifest 值，避免叠加溢出
+							agingTracker.set(msg.toolCallId, agingThreshold);
 						}
 					}
 				}

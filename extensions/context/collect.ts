@@ -2,6 +2,8 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { formatTokens } from "./utils.js";
 import { lastContextMessages, lastProviderPayload, manuallyDeletedIds, agingSnapshot } from "./shared.js";
 import type { ContextData, RecordItem, DetailItem, CategoryItem } from "./types.js";
+import { appendFileSync } from "fs";
+const DBG = (msg: string) => appendFileSync("/tmp/pi-context-debug.log", msg + "\n");
 
 const est = (s: string) => Math.ceil(s.length / 4);
 
@@ -204,6 +206,11 @@ export function collectData(
 	];
 	const accounted = cats.reduce((s, c) => s + c.value, 0);
 	if (total - accounted > 10) cats.push({ label: "Available", value: Math.max(0, total - accounted), color: "dim", enterable: false, children: [] });
+
+	// DEBUG: aging snapshot 状态
+	const snapKeys = [...agingSnapshot.keys()];
+	const recordsWithAging = cats.flatMap(c => c.children?.flatMap(ch => ch.records?.filter(r => r.agingCount !== undefined) || []) || []);
+	DBG(`[collect] snapSize=${snapKeys.length} snapSamples=${snapKeys.slice(0, 5).join(",")} recordsWithAging=${recordsWithAging.length}`);
 
 	return { categories: cats, totalActual: total, limit, percent: usage.percent };
 }

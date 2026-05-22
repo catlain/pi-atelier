@@ -74,7 +74,7 @@ describe("阈值配置读取", () => {
 		expect(text).not.toContain("[processed]");
 	});
 
-	it("低阈值使 cartog 小结果也触发大结果路径", () => {
+	it("低阈值使小结果也触发大结果路径", () => {
 		const { pi, triggerToolResult } = createMockPi();
 		registerToolResultProcessor(pi as any, { distillThreshold: 50 });
 
@@ -85,7 +85,7 @@ describe("阈值配置读取", () => {
 		const rawText = JSON.stringify(items);
 
 		const result = triggerToolResult({
-			toolName: "cartog_search",
+			toolName: "code_search",
 			content: [{ type: "text", text: rawText }],
 			input: { query: "tiny" },
 			isError: false,
@@ -93,7 +93,7 @@ describe("阈值配置读取", () => {
 
 		const text = result.content[0].text;
 		expect(text).toContain("[processed]");
-		expect(text).toContain("cartog_search");
+		expect(text).toContain("code_search");
 	});
 
 	it("显式阈值 = 4000 时正常工作", () => {
@@ -157,7 +157,7 @@ describe("临时文件写入失败降级", () => {
 		const rawText = JSON.stringify([{ name: "bigFunc", kind: "function", startLine: 1, endLine: 500 }]);
 
 		const result = triggerToolResult({
-			toolName: "cartog_search",
+			toolName: "code_search",
 			content: [{ type: "text", text: rawText }],
 			input: { query: "bigFunc" },
 			isError: false,

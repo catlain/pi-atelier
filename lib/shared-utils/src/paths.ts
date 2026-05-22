@@ -19,6 +19,5 @@ export const MEMORY_MD_PATH = join(AGENT_DIR, "MEMORY.md");
 export const MEMORY_DIR = join(AGENT_DIR, "memory");
 export const MCP_CONFIG_PATH = join(AGENT_DIR, "mcp.json");
 export const MCP_CACHE_PATH = join(AGENT_DIR, "mcp-cache.json");
-export const CARTOG_INDEX_CONFIG = join(AGENT_DIR, "cartog-index.json");
 export const AGENTS_DIR = join(AGENT_DIR, "agents");
 export const GLOBAL_RULES_PATH = join(AGENT_DIR, "extensions/shepherd/rules.json");

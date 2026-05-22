@@ -1,26 +1,7 @@
 /**
- * 审计规则检测器 — 8 个独立的规则检查函数
+ * 审计规则检测器 — 7 个独立的规则检查函数
  */
 import { type Entry, type AuditIssue, type AgentRules, extractText } from "./audit-types";
-
-export function checkCartogIndexUsage(entries: Entry[]): AuditIssue[] {
-  const issues: AuditIssue[] = [];
-  for (const entry of entries) {
-    if (entry.type !== "message" || !entry.message) continue;
-    const content = entry.message.content;
-    if (!Array.isArray(content)) continue;
-    for (const part of content) {
-      if (part.type === "toolCall" && part.name === "cartog_index") {
-        issues.push({
-          rule: "Cartog 索引规则", severity: "error",
-          detail: "禁止调用 cartog_index！它会用 cwd 重建空索引，覆盖聚合 DB",
-          evidence: "条目中发现 cartog_index 调用", fixScope: "none",
-        });
-      }
-    }
-  }
-  return issues;
-}
 
 export function checkBashFileWrite(entries: Entry[]): AuditIssue[] {
   const issues: AuditIssue[] = [];

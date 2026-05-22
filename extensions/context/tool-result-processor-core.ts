@@ -10,12 +10,10 @@ import { tmpdir } from "node:os";
 import { estimateTokens } from "./distill-helpers.js";
 import { formatTokens } from "./utils.js";
 import {
-	formatCartogResult,
 	formatWebReadResult,
 	formatWebSearchResult,
 	formatGhResult,
 } from "./formatters.js";
-// getCartogIndexTime 已移除（cartog 索引时间不再注入）
 
 // ── 类型 ──────────────────────────────────────────
 
@@ -76,8 +74,7 @@ export function processToolResult(
 
 	// 内容嗅探格式化：依次尝试所有格式化器，第一个有变化的生效
 	// 不再依赖工具名前缀，新增工具无需修改路由表
-	// 注意：web_search 在 cartog 之前，因为两者都返回数组，web_search 的字段更具体
-	const formatters = [formatWebSearchResult, formatGhResult, formatWebReadResult, formatCartogResult] as const;
+	const formatters = [formatWebSearchResult, formatGhResult, formatWebReadResult] as const;
 	let formatted = rawText;
 	for (const fn of formatters) {
 		const result = fn(rawText);

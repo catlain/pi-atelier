@@ -6,14 +6,13 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 import { type Entry, type AgentRules } from "./audit-types";
 import {
-  checkCartogIndexUsage,
-  checkBashFileWrite,
-  checkSearchBeforeEdit,
-  checkFileOver500Lines,
-  checkSearchOnly,
-  checkRepeatedErrors,
-  checkEditWriteRatio,
-  checkRulesCoverage,
+	checkBashFileWrite,
+	checkSearchBeforeEdit,
+	checkFileOver500Lines,
+	checkSearchOnly,
+	checkRepeatedErrors,
+	checkEditWriteRatio,
+	checkRulesCoverage,
 } from "./audit-rules";
 
 async function loadRules(sessionCwd?: string): Promise<AgentRules[]> {
@@ -44,9 +43,8 @@ async function loadRules(sessionCwd?: string): Promise<AgentRules[]> {
 
 export async function doAudit(entries: Entry[], sessionCwd?: string) {
   const rules = await loadRules(sessionCwd);
-  const allIssues = [
-    ...checkCartogIndexUsage(entries),
-    ...checkBashFileWrite(entries),
+	const allIssues = [
+		...checkBashFileWrite(entries),
     ...checkSearchBeforeEdit(entries),
     ...checkFileOver500Lines(entries),
     ...checkSearchOnly(entries),

@@ -1,5 +1,5 @@
 /**
- * 全局 grep→cartog 规则测试 + has_edits 检查 + rtk 可用性
+ * 全局规则测试：has_edits 检查 + rtk 可用性 + grep scope 过滤
  */
 
 import { describe, it } from "vitest";
@@ -20,61 +20,6 @@ function loadRules(): any[] {
 }
 
 // ================================================================
-// 全局规则：grep→cartog 和 bash grep block
-// ================================================================
-
-describe("global grep→cartog rules", () => {
-	const rules = loadRules();
-	const grepRule = rules.find((r: any) => r.comment.includes("enforce-cartog-over-grep"));
-	const bashGrepRule = rules.find((r: any) => r.comment.includes("enforce-cartog-over-bash-grep"));
-
-	it("should find enforce-cartog-over-grep rule in global rules.json", () => {
-		assert.ok(grepRule);
-		assert.equal(grepRule.tool, "grep");
-		assert.equal(grepRule.action, "notify");
-		assert.equal(grepRule.hook, "tool_result");
-		assert.deepEqual(grepRule.requiresTools, ["cartog_rag_search"]);
-	});
-
-	it("should find enforce-cartog-over-bash-grep rule in global rules.json", () => {
-		assert.ok(bashGrepRule);
-		assert.equal(bashGrepRule.tool, "bash");
-		assert.equal(bashGrepRule.action, "block");
-		assert.equal(bashGrepRule.hook, "tool_call");
-	});
-
-	it("should block bash grep with .ts file extension", () => {
-		assert.ok(bashGrepRule);
-		const re = new RegExp(bashGrepRule.pattern, bashGrepRule.flags);
-		assert.ok(re.test('grep -n "OverlayOptions" /path/to/file.d.ts'));
-	});
-
-	it("should block bash grep with .py file extension", () => {
-		assert.ok(bashGrepRule);
-		const re = new RegExp(bashGrepRule.pattern, bashGrepRule.flags);
-		assert.ok(re.test('grep -rn "myFunction" src/module.py'));
-	});
-
-	it("should block bash grep with .rs file extension", () => {
-		assert.ok(bashGrepRule);
-		const re = new RegExp(bashGrepRule.pattern, bashGrepRule.flags);
-		assert.ok(re.test('rg "impl" quant_rust/src/lib.rs'));
-	});
-
-	it("should NOT block bash grep searching .md files", () => {
-		assert.ok(bashGrepRule);
-		const re = new RegExp(bashGrepRule.pattern, bashGrepRule.flags);
-		assert.ok(!re.test('grep -rn "TODO" docs/ --include="*.md"'));
-	});
-
-	it("should NOT block bash grep on .jsonl", () => {
-		assert.ok(bashGrepRule);
-		const re = new RegExp(bashGrepRule.pattern, bashGrepRule.flags);
-		assert.ok(!re.test('grep "key" session.jsonl'));
-	});
-});
-
-// ================================================================
 // grep scope 过滤集成测试
 // ================================================================
 
@@ -85,10 +30,10 @@ describe("grep scope filtering", () => {
 		assert.ok(Object.keys(result).length > 0);
 	});
 
-	it("out-of-scope path → empty targets", () => {
+	it("any path + code glob → non-empty targets (path filtering removed with cartog)", () => {
 		const event = { input: { path: "/tmp/some/dir", pattern: "myFunction", glob: "*.py" } };
 		const result = getMatchTargets("grep", event);
-		assert.ok(Object.keys(result).length === 0);
+		assert.ok(Object.keys(result).length > 0);
 	});
 
 	it("non-code glob (.md) → empty targets", () => {
@@ -113,7 +58,7 @@ describe("has_edits check logic", () => {
 
 	it("should detect edit/write tools correctly", () => {
 		const editTools = ["edit", "write"];
-		const otherTools = ["bash", "grep", "read", "cartog_rag_search"];
+		const otherTools = ["bash", "grep", "read"];
 		for (const t of editTools) {
 			assert.ok(editTools.includes(t));
 		}

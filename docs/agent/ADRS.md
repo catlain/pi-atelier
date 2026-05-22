@@ -3,7 +3,7 @@
 ## ADR-001: Formatter Chain for Tool Result Processing
 
 **Status**: Accepted (2025-05)
-**Context**: Tool results from MCP servers (web search, cartog, GitHub) vary widely in format. The context extension needs to compress/format these results to save context tokens.
+**Context**: Tool results from MCP servers (web search, GitHub) vary widely in format. The context extension needs to compress/format these results to save context tokens.
 **Decision**: Use a sequential formatter chain where each formatter sniffs the input and either formats it or passes it to the next. First match wins.
 **Consequences**:
 - ✅ Easy to add new formatters without modifying existing ones

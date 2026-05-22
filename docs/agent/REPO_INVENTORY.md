@@ -33,7 +33,7 @@ Each extension has `index.ts` exporting a default `function(pi: ExtensionAPI)`.
 | Extension | Entry | Registers |
 |-----------|-------|-----------|
 | context | `extensions/context/index.ts` | Commands: `/context`, `/record`, `/distill-config`, `/processor-config`, `/aging-config`; Event handlers: `tool_result`, `context` |
-| env-and-status | `extensions/env-and-status/index.ts` | Commands: `/cartog-reindex`, `/cartog-config`, `/cartog-autoindex`; Events: `session_start`, `turn_start`, `tool_call`, `before_agent_start` |
+| env-and-status | `extensions/env-and-status/index.ts` | Commands: (none registered); Events: `session_start`, `turn_start`, `tool_call`, `before_agent_start` |
 | journal | `extensions/journal/index.ts` | Factory export (WIP) |
 | mcp-lite | `extensions/mcp-lite/index.ts` | Tools: vision/web tools (dynamic); Commands: `/mcp-refresh`, `/mcp-status`; Event: `session_shutdown` |
 | memory | `extensions/memory/index.ts` | Tools: `memory_index`, `memory_update` |
@@ -52,7 +52,7 @@ Each extension has `index.ts` exporting a default `function(pi: ExtensionAPI)`.
 pi-atelier/
 ├── extensions/          # 13 pi extensions (each is a workspace package)
 │   ├── context/         # Context management (processor/distill/aging)
-│   ├── env-and-status/  # Environment injection + Cartog index
+│   ├── env-and-status/  # Environment injection + status management
 │   ├── journal/         # Work journal (WIP)
 │   ├── mcp-lite/        # MCP tool bridge
 │   ├── memory/          # Persistent memory
@@ -68,7 +68,6 @@ pi-atelier/
 │   ├── shared-utils/    # Paths, types, helpers (8 consumers)
 │   ├── workflow-core/   # State machine, Gate, subagent dispatch
 │   ├── shepherd/        # Rule engine core (shared by shepherd ext)
-│   └── cartog-manager/  # Cartog index management
 ├── docs/agent/          # Architecture docs (this recon)
 ├── tsconfig.base.json   # Shared TS config + path aliases
 ├── vitest.config.ts     # Root test config (excludes subagent tests)
@@ -82,7 +81,6 @@ pi-atelier/
 | `@earendil-works/pi-coding-agent` | Host platform | All extensions (ExtensionAPI) |
 | `@modelcontextprotocol/sdk` | MCP protocol | mcp-lite |
 | `@sinclair/typebox` | Schema validation | memory, session-analyzer, journal, payload-analyzer |
-| `cartog` CLI | External tool (optional) | env-and-status, mcp-lite |
 | GLM API | External API (optional) | mcp-lite (vision, web search) |
 | `~/.pi/agent/` | Config/data directory | All extensions |
 | `~/.pi/agent/sessions/` | Session JSONL files | session-analyzer |

@@ -155,7 +155,7 @@ describe("formatWebSearchResult", () => {
 
 	// ── 交叉匹配防护（回归测试） ───────────────────────
 
-	it("cartog outline 数据不应被 formatWebSearchResult 匹配", () => {
+	it("outline 数据（无 link/title）不应被 formatWebSearchResult 匹配", () => {
 		const raw = JSON.stringify([
 			{ name: "hello", kind: "function", startLine: 1, endLine: 42 },
 			{ name: "main", kind: "class", startLine: 50, endLine: 120 },
@@ -165,7 +165,7 @@ describe("formatWebSearchResult", () => {
 		expect(result).toBe(raw);
 	});
 
-	it("cartog refs/callees 数据不应被 formatWebSearchResult 匹配", () => {
+	it("refs/callees 数据（无 link/title）不应被 formatWebSearchResult 匹配", () => {
 		const raw = JSON.stringify([
 			{ target_name: "fnA", kind: "function", file_path: "src/a.ts", line: 10 },
 			{ target_name: "fnB", kind: "method", file_path: "src/b.ts", line: 20 },

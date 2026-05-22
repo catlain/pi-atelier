@@ -28,13 +28,15 @@ export let agingSnapshot = new Map<string, number>();
 
 export function setAgingSnapshot(snapshot: Map<string, number>) {
 	agingSnapshot = new Map(snapshot);
+	// 持久化到 manifest，reload 后可恢复
+	try { saveManifest(); } catch {}
 }
 
 /** 手动删除的 toolCallId 集合（持久化到 manifest） */
 export const manuallyDeletedIds = new Set<string>();
 
 // 启动时从 manifest 恢复
-// 格式兼容：旧格式是纯数组 [k,v][]，新格式是 { distilled: [k,v][], manuallyDeleted: string[] }
+// 格式兼容：旧格式是纯数组 [k,v][]，新格式是 { distilled, manuallyDeleted, aging }
 if (existsSync(MANIFEST_PATH)) {
 	try {
 		const raw = JSON.parse(safeReadFileSync(MANIFEST_PATH));
@@ -44,13 +46,19 @@ if (existsSync(MANIFEST_PATH)) {
 				if (v.tmpPath) distilledMap.set(k, v);
 			}
 		} else if (raw && typeof raw === "object") {
-			// 新格式：{ distilled, manuallyDeleted }
+			// 新格式：{ distilled, manuallyDeleted, aging }
 			const entries = (raw.distilled || []) as [string, DistillEntry][];
 			for (const [k, v] of entries) {
 				if (v.tmpPath) distilledMap.set(k, v);
 			}
 			for (const id of (raw.manuallyDeleted || []) as string[]) {
 				manuallyDeletedIds.add(id);
+			}
+			// 恢复 aging 快照
+			const aging = (raw.aging || []) as [string, number][];
+			for (const [k, v] of aging) {
+				agingTracker.set(k, v);
+				agingSnapshot.set(k, v);
 			}
 		}
 	} catch {}
@@ -61,6 +69,7 @@ export function saveManifest() {
 	writeFileSync(MANIFEST_PATH, JSON.stringify({
 		distilled: [...distilledMap.entries()],
 		manuallyDeleted: [...manuallyDeletedIds],
+		aging: [...agingSnapshot.entries()],
 	}));
 }
 

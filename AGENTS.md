@@ -26,7 +26,7 @@ pi-atelier/
 │   ├── shared-utils/    # Memory parser, settings, paths, tool output truncation
 │   ├── workflow-core/   # Subagent spawn, research workflow, output capture
 │   ├── shepherd/        # Shepherd rules engine (line count, pattern matching)
-│   └── [legacy]        # cartog-manager (unused, pending cleanup)
+│   └── [legacy]        # (cleaned up)
 ├── docs/agent/          # Architecture documentation (you are here)
 └── vitest.config.ts     # Monorepo test config
 ```

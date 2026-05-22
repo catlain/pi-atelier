@@ -41,9 +41,6 @@ Last validated: 2025-05-22
 │  │ (paths,types)│  │ (state machine)│  │ (rule engine)│   │
 │  └──────────────┘  └────────────────┘  └──────────────┘   │
 │  ┌──────────────┐                                           │
-│  │cartog-manager│                                           │
-│  │(index mgmt)  │                                           │
-│  └──────────────┘                                           │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -55,12 +52,7 @@ Last validated: 2025-05-22
 |-----------|------|-------|----------|--------|
 | context | Context window management (3-layer: processor → distill → aging) | — | `/context`, `/record`, `/distill-config`, `/processor-config`, `/aging-config` | `tool_result`, `context` |
 | shepherd | Rule-based hook engine (block/rewrite/notify/steer) | — | — | `before_provider_request`, `session_start`, `agent_start`, `agent_end`, `session_shutdown`, `input` |
-| mcp-lite | MCP tool bridge (vision, web search, GitHub, cartog) | Dynamic (from MCP servers) | `/mcp-refresh`, `/mcp-status` | `session_shutdown` |
-| env-and-status | Environment injection + Cartog index management | — | `/cartog-reindex`, `/cartog-config`, `/cartog-autoindex` | `session_start`, `turn_start`, `tool_call`, `before_agent_start` |
-| memory | Persistent file-based memory (L1 global + L2 project) | `memory_index`, `memory_update` | — | — |
-| session-analyzer | Session search and analysis | `session_search`, `session_analyze` | — | — |
-| payload-analyzer | Token cost analysis | `payload_analyze` | — | — |
-| plan-verify | SDD+TDD workflow (10-step state machine) | `pv` | — | `before_agent_start`, `context`, `session_start` |
+| mcp-lite | MCP tool bridge (vision, web search, GitHub) | Dynamic (from MCP servers) | `/mcp-refresh`, `/mcp-status` | `session_shutdown` |
 | scheduler | In-session timers and reminders | `schedule` | `/loop`, `/remind`, `/tasks` | `session_start`, `session_shutdown`, `before_agent_start` |
 | subagent | Sub-agent execution (spawn pi child process) | `subagent` | `/subagent-model` | — |
 | notification | Completion sound/notification | — | — | `agent_end` |
@@ -74,7 +66,6 @@ Last validated: 2025-05-22
 | shared-utils | `getSettingsValue`, `scanMemoryDir`, `parseFileName`, `truncatedResult`, `discoverAgents`, `getAgentDescription`, `getSettingsSection`, `patchSettingsSection`, `setSettingsValue` | context, env-and-status, memory, shepherd, session-analyzer, plan-verify, subagent, journal |
 | workflow-core | `runSubagent`, `registerWorkflowTool`, `createStateManager`, `createUIUpdater`, `createSubagentWidget`, `saveSubagentOutput`, `loadAgentDef`, `setSessionFileResolver` | plan-verify, subagent |
 | shepherd (lib) | `getMatchTargets`, `ruleMatches`, `pushWarning`, `notifySummary`, `hasWarnings`, `StateTracker`, `checkLineCount`, `registerToolCall`, `registerToolResult`, `drainHints`, `peekHints` | shepherd (ext) |
-| cartog-manager | `syncSymlinksOnly`, `cleanupLegacyMergeDir`, `CARTOG_EXT_DIR` | env-and-status |
 
 ## Dependency Direction
 
@@ -99,7 +90,7 @@ LLM calls tool → pi emits tool_result event
   → context/index.ts: registerToolResultProcessor()
     → tool-result-processor.ts: processToolResult()
       → unwrapDoubleEncodedJson()
-      → formatter chain: [webSearch, gh, webRead, cartog, bash, mcpError]
+      → formatter chain: [webSearch, gh, webRead, bash, mcpError]
       → truncate if exceeds token threshold
       → return formatted+truncated text
   → context/index.ts: context event handler
@@ -151,7 +142,7 @@ pi session_start event
 | File I/O (write) | memory | Writes to `~/.pi/agent/memory/`, `<project>/.pi/memory/` |
 | Network (LLM API) | mcp-lite | GLM API calls (vision, web search) |
 | Network (MCP) | mcp-lite | MCP server connections |
-| Shell/CLI | env-and-status | Executes `cartog` CLI |
+| Shell/CLI | env-and-status | Executes external CLI tools |
 | Child process | subagent, plan-verify | Spawns pi child processes |
 | System notification | notification | OS desktop notification |
 | Config mutation | context, env-and-status, shepherd | `patchSettingsSection()`, `setSettingsValue()` |

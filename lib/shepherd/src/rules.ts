@@ -1,10 +1,9 @@
 /**
- * Guard 规则类型定义 + 规则加载/编译/匹配 + cartog 范围判断 + git 辅助函数
+ * Guard 规则类型定义 + 规则加载/编译/匹配 + git 辅助函数
  */
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { homedir } from "node:os";
 import { execSync } from "node:child_process";
 import type { StateCondition, ResettableRule } from "./state-tracker.js";
 import { pushRuleError } from "./ephemeral.js";
@@ -89,51 +88,7 @@ export function isInWorktree(): boolean {
 /** 当前是否在子代理环境中 */
 export const isSubagent = () => !!(process.env.PI_SUBAGENT_AGENT || process.env.PI_SUBAGENT_SESSION);
 
-// ── Cartog 范围判断 ───────────────────────────────────────────
-
-/** 缓存 cartog 覆盖的目录列表（cwd + extraDirs） */
-let _cachedCartogDirs: string[] | null = null;
-
-/** 读取全局+项目级 cartog-index.json，合并得到 cartog 索引覆盖的所有目录 */
-function getCartogDirs(): string[] {
-	if (_cachedCartogDirs) return _cachedCartogDirs;
-	const cwd = process.cwd();
-	const dirs = [cwd];
-	for (const cfgPath of [
-		path.join(homedir(), ".pi/agent/cartog-index.json"),
-		path.join(cwd, ".pi/cartog-index.json"),
-	]) {
-		try {
-			if (fs.existsSync(cfgPath)) {
-				const raw = fs.readFileSync(cfgPath, "utf-8");
-				const parsed = JSON.parse(raw);
-				for (const d of (parsed.extraDirs || [])) {
-					const expanded = d.startsWith("~") ? path.join(homedir(), d.slice(1)) : d;
-					if (fs.existsSync(expanded)) dirs.push(expanded);
-				}
-			}
-		} catch { /* ignore */ }
-	}
-	_cachedCartogDirs = dirs;
-	return dirs;
-}
-
-/** 返回 targetPath 匹配到的 cartog 索引目录（含 ~ 展开），未匹配返回 null */
-export function getCartogMatchedDir(targetPath: string): string | null {
-	if (!targetPath) return null;
-	const resolved = path.resolve(targetPath);
-	for (const d of getCartogDirs()) {
-		if (resolved.startsWith(d + "/") || resolved === d || d.startsWith(resolved + "/")) {
-			return d;
-		}
-	}
-	return null;
-}
-
-/** 判断目标路径是否在 cartog 索引范围内 */
-export function isInCartogScope(targetPath: string): boolean {
-	return getCartogMatchedDir(targetPath) !== null;
-}
+// ── 代码文件扩展名 ─────────────────────────────────────────
 
 /** 代码文件扩展名正则（glob 或文件名末尾） */
 export const CODE_EXT_RE = /\.(py|rs|ts|js|toml|json)(\*|"|')?$/;

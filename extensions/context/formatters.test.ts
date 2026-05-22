@@ -1,14 +1,13 @@
 /**
- * formatters.ts 单元测试（基础格式化 + cartog）
+ * formatters.ts 单元测试（基础格式化）
  *
- * 覆盖：unwrapDoubleEncodedJson, truncateAtParagraph, formatCartogResult, formatBashResult
+ * 覆盖：unwrapDoubleEncodedJson, truncateAtParagraph, formatBashResult
  */
 
 import { describe, it, expect } from "vitest";
 import {
 	unwrapDoubleEncodedJson,
 	truncateAtParagraph,
-	formatCartogResult,
 	formatBashResult,
 } from "./formatters.js";
 
@@ -77,58 +76,6 @@ describe("truncateAtParagraph", () => {
 		const text = part1 + "\n\n" + "B".repeat(500);
 		const result = truncateAtParagraph(text, 5100);
 		expect(result).toBe(text);
-	});
-});
-
-// ── formatCartogResult ─────────────────────────────
-
-describe("formatCartogResult", () => {
-	it("正常 JSON 数组格式化为紧凑表格", () => {
-		const input = JSON.stringify([
-			{ name: "hello", kind: "function", startLine: 1, endLine: 42 },
-			{ name: "main", kind: "class", startLine: 50, endLine: 120 },
-		]);
-		const result = formatCartogResult(input);
-		expect(result).toContain("hello");
-		expect(result).toContain("function");
-		expect(result).toContain("L1-L42");
-		expect(result).toContain("main");
-		expect(result).toContain("class");
-		expect(result).toContain("L50-L120");
-	});
-
-	it("空数组返回'无结果'提示", () => {
-		const result = formatCartogResult("[]");
-		expect(result).toContain("无结果");
-	});
-
-	it("非 JSON 输入返回原始文本", () => {
-		const raw = "this is not json";
-		expect(formatCartogResult(raw)).toBe(raw);
-	});
-
-	it("单个条目正确格式化", () => {
-		const input = JSON.stringify([{ name: "testFunc", kind: "method", startLine: 10, endLine: 25 }]);
-		const result = formatCartogResult(input);
-		expect(result).toContain("testFunc");
-		expect(result).toContain("method");
-		expect(result).toContain("L10-L25");
-	});
-
-	it("大量条目全部显示", () => {
-		const items = Array.from({ length: 50 }, (_, i) => ({
-			name: `fn${i}`, kind: "function", startLine: i * 10 + 1, endLine: (i + 1) * 10,
-		}));
-		const result = formatCartogResult(JSON.stringify(items));
-		expect(result).toContain("fn0");
-		expect(result).toContain("fn49");
-		expect(result.split("\n").length).toBeGreaterThanOrEqual(50);
-	});
-
-	it("缺失字段不崩溃", () => {
-		const input = JSON.stringify([{ name: "x" }]);
-		const result = formatCartogResult(input);
-		expect(result).toContain("x");
 	});
 });
 

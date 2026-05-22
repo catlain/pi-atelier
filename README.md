@@ -36,15 +36,9 @@ pi uninstall pi-atelier
 
 #### env-and-status — 环境注入 + 索引管理
 
-**做什么：** 每轮对话自动注入环境信息（Session ID、当前目录、日期）、加载记忆文件、管理 Cartog 代码图索引。
+**做什么：** 每轮对话自动注入环境信息（Session ID、当前目录、日期）、加载记忆文件。
 
-**实现逻辑：** 监听 `before_provider_request` 事件，将环境信息注入到 LLM 请求的 system 区。Cartog 索引管理通过 `cartog-manager` 库扫描项目目录，构建代码图供其他工具（rag_search 等）使用。
-
-**外部依赖：** 需要 [cartog](https://github.com/nicholasgasior/cartog) CLI（可选，用于代码图搜索功能）。
-
-**配置文件：**
-- `~/.pi/agent/cartog-index.json` — 全局 Cartog 外部索引目录
-- `<project>/.pi/cartog-index.json` — 项目级索引覆盖
+**实现逻辑：** 监听 `before_provider_request` 事件，将环境信息注入到 LLM 请求的 system 区。
 
 ---
 
@@ -59,7 +53,6 @@ pi uninstall pi-atelier
   ```json
   { "providers": { "glm": { "apiKey": "your-key" } } }
   ```
-- **Cartog CLI** — 代码图搜索（rag_search、refs、callees 等）
 - **GitHub** — 仓库文档/代码/结构搜索（无需配置，公开仓库直接可用）
 
 **配置文件：** `~/.pi/agent/extensions/mcp-lite/config.json`
@@ -269,7 +262,6 @@ pi uninstall pi-atelier
 |----|------|
 | **shared-utils** | 路径常量、类型定义、工具函数（被 8 个扩展使用） |
 | **workflow-core** | 工作流核心引擎——状态机、Gate 机制、子代理调度 |
-| **cartog-manager** | Cartog 索引管理——外部目录软链接、聚合索引、项目级覆盖 |
 | **shepherd** | Shepherd 规则引擎核心——规则解析、匹配、动作执行 |
 
 ---
@@ -281,8 +273,6 @@ pi uninstall pi-atelier
 | MCP 服务器 | `~/.pi/agent/extensions/mcp-lite/config.json` | 配置外部 MCP 工具服务器 |
 | Shepherd 规则 | `~/.pi/agent/extensions/shepherd/rules.json` | 全局 Hook 规则 |
 | Shepherd 规则（项目） | `<project>/.pi/extensions/shepherd-rules-*.json` | 项目级规则叠加 |
-| Cartog 索引 | `~/.pi/agent/cartog-index.json` | 全局外部索引目录 |
-| Cartog 索引（项目） | `<project>/.pi/cartog-index.json` | 项目级索引覆盖 |
 | 记忆（全局） | `~/.pi/agent/memory/*.md` | L1 跨项目知识 |
 | 记忆（项目） | `<project>/.pi/memory/*.md` | L2 项目知识 |
 | 子代理定义 | `~/.pi/agent/agents/*.md` | 自定义子代理角色 |
@@ -307,9 +297,7 @@ pi uninstall pi-atelier
 | `/processor-config [threshold]` | context | 查看或设置 processor token 阈值。如 `/processor-config 2000` |
 | `/mcp-refresh` | mcp-lite | 强制刷新 MCP 工具缓存（重新发现所有 server 的工具） |
 | `/mcp-status` | mcp-lite | 查看 MCP 服务器连接状态 |
-| `/cartog-reindex` | env-and-status | 重建 Cartog 聚合索引（项目 + 外部目录） |
-| `/cartog-config` | env-and-status | 查看当前 Cartog 索引配置和状态 |
-| `/cartog-autoindex` | env-and-status | 切换 Cartog 自动索引（启动时是否自动索引） |
+
 
 ---
 

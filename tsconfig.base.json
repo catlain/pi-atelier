@@ -59,12 +59,7 @@
       "@pi-atelier/shepherd/*": [
         "lib/shepherd/src/*"
       ],
-      "@pi-atelier/cartog-manager": [
-        "lib/cartog-manager/src/index"
-      ],
-      "@pi-atelier/cartog-manager/*": [
-        "lib/cartog-manager/src/*"
-      ]
+
     }
   }
 }

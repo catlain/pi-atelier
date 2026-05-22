@@ -8,7 +8,7 @@ Last validated: 2025-05-22
 
 | ID | Severity | Area | Description | Mitigation |
 |----|----------|------|-------------|------------|
-| R1 | **High** | context/tool-result-processor | Formatter chain uses positional sniffing without semantic validation. Wrong formatter can match first, producing garbage output. **Already caused a bug** (cartog data matched web_search formatter). | Fixed in commit b889571 (added `results.some(r => r.link \|\| r.title)` check). Pattern should be applied to all formatters. |
+| R1 | **High** | context/tool-result-processor | Formatter chain uses positional sniffing without semantic validation. Wrong formatter can match first, producing garbage output. **Already caused a bug** (non-web_search data matched web_search formatter). | Fixed in commit b889571 (added `results.some(r => r.link \|\| r.title)` check). Pattern should be applied to all formatters. |
 | R2 | **High** | context/shared.ts | Distill manifest at `/tmp/pi-distill/manifest.json` is OS-session scoped. System reboot loses all distill state, causing re-processing of all tool results. | Accepted risk. Distill is a performance optimization, not correctness-critical. |
 | R3 | **Medium** | mcp-lite | MCP server connections are session-scoped with no reconnection logic. Network interruption kills tool availability until session restart. | Monitor; add reconnect if reports increase. |
 | R4 | **Medium** | mcp-lite/response-processor.ts | Double-encoded JSON (`"\"escaped\""` pattern) is unwrapped by heuristic (`startsWith('"')`). Could falsely unwrap legitimate strings. | Low probability; real-world MCP responses rarely start with `"`. |
@@ -30,7 +30,7 @@ Pattern: bare `catch {}` or `catch { /* ignore */ }` blocks.
 | payload-analyzer | 5 | JSON parsing of recordings. Safe — recordings may be incomplete. |
 | plan-verify | 4 | State file I/O. Acceptable — state is advisory. |
 | shepherd | 3 | Event processing. Safe — hooks must not crash the host. |
-| env-and-status | 5 | Cartog CLI execution. Acceptable — CLI may not be installed. |
+| env-and-status | 2 | Environment injection. Safe — read-only operations. |
 | workflow (subagent) | 15+ | tmux I/O, temp file cleanup. Acceptable — cleanup is best-effort. |
 | session-analyzer | 8 | Session file reads. Safe — sessions may be corrupted. |
 

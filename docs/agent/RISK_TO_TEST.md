@@ -17,7 +17,7 @@ These tests guard against the highest-impact risks.
 ```
 TEST-CASE: formatter-chain-integration
   FOR EACH pair (source, formatter):
-    GIVEN real output from source tool (cartog, web_search, gh, web_read)
+    GIVEN real output from source tool ((web_search, gh, web_read))
     WHEN passed through the complete formatter chain
     THEN only the correct formatter matches
     AND output is correctly formatted

@@ -4,9 +4,8 @@
  * 测试场景：
  * 1) loadRulesFromFile — 文件读取/JSON 解析/错误处理
  * 2) compileRules — 正则编译/默认值填充/禁用过滤
- * 3) isInCartogScope / getCartogMatchedDir — 范围判断
- * 4) hasGitUncommittedChanges / isInWorktree / isSubagent — 环境检测
- * 5) getMatchTargets — bash 短路逻辑
+ * 3) hasGitUncommittedChanges / isInWorktree / isSubagent — 环境检测
+ * 4) getMatchTargets — bash 短路逻辑
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
@@ -17,8 +16,6 @@ import * as os from "node:os";
 import {
   loadRulesFromFile,
   compileRules,
-  isInCartogScope,
-  getCartogMatchedDir,
   hasGitUncommittedChanges,
   isInWorktree,
   isSubagent,
@@ -140,32 +137,6 @@ describe("compileRules", () => {
     ];
     const compiled = compileRules(rules);
     expect(compiled[0].action).toBe("steer");
-  });
-});
-
-// ── isInCartogScope / getCartogMatchedDir ─────────────────
-
-describe("isInCartogScope / getCartogMatchedDir", () => {
-  // 当前工作目录通常会被 cartog 索引（由 getCartogDirs 自动包含 cwd）
-  const cwd = process.cwd();
-
-  it("cwd 应在 cartog 范围内（当前目录）", () => {
-    const result = getCartogMatchedDir(cwd);
-    expect(result).toBeTruthy();
-    expect(result).toBe(cwd);
-  });
-
-  it("不是 cwd 的子路径时可能不在范围内", () => {
-    // /tmp 一般不在 cartog 索引中
-    const result = isInCartogScope("/tmp/some/dir");
-    // 结果取决于 cartog-index.json 配置，可能是 false
-    expect(typeof result).toBe("boolean");
-  });
-
-  it("空路径返回 null", () => {
-    expect(getCartogMatchedDir("")).toBeNull();
-    expect(getCartogMatchedDir(null as unknown as string)).toBeNull();
-    expect(getCartogMatchedDir(undefined as unknown as string)).toBeNull();
   });
 });
 

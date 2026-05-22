@@ -66,7 +66,7 @@ interface SearchResult {
  * 输出编号列表（标题 + URL + 摘要）。
  *
  * 语义验证：至少一个条目必须有 link 或 title 字段，
- * 防止 cartog 等工具返回的 JSON 数组被误匹配。
+ * 防止其他工具返回的 JSON 数组被误匹配。
  */
 export function formatWebSearchResult(text: string): string {
 	const unwrapped = unwrapDoubleEncodedJson(text);
@@ -82,7 +82,7 @@ export function formatWebSearchResult(text: string): string {
 	}
 
 	// 语义验证：至少一个条目必须有 link 或 title（web_search 特征字段）
-	// 防止 cartog 等工具返回的 JSON 数组被误匹配
+	// 防止其他工具返回的 JSON 数组被误匹配
 	if (!results.some(r => r.link || r.title)) return text;
 
 	const total = results.length;

@@ -4,8 +4,8 @@
 export {
 	loadRules, loadRulesFromFile, compileRules,
 	getMatchTargets, ruleMatches,
-	isInCartogScope, isInWorktree,
-	isSubagent, hasGitUncommittedChanges, getCartogMatchedDir,
+	isInWorktree,
+	isSubagent, hasGitUncommittedChanges,
 	type Rule, type Condition,
 } from "./rules";
 export { StateTracker, type StateCondition, type ResettableRule } from "./state-tracker";

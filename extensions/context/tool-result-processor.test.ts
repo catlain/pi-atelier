@@ -64,26 +64,6 @@ describe("小结果（< 阈值）", () => {
 		expect(result.content[0].text).toContain("标题: 简短标题");
 	});
 
-	it("cartog 小结果返回格式化表格", () => {
-		const { pi, triggerToolResult } = createMockPi();
-		registerToolResultProcessor(pi as any, { distillThreshold: 4000 });
-
-		const rawText = JSON.stringify([
-			{ name: "hello", kind: "function", startLine: 1, endLine: 42 },
-		]);
-
-		const result = triggerToolResult({
-			toolName: "cartog_search",
-			content: [{ type: "text", text: rawText }],
-			input: { query: "hello" },
-			isError: false,
-		});
-
-		expect(result).not.toBeUndefined();
-		expect(result.content[0].text).toContain("hello");
-		expect(result.content[0].text).toContain("L1-L42");
-	});
-
 	it("web_search 小结果格式化", () => {
 		const { pi, triggerToolResult } = createMockPi();
 		registerToolResultProcessor(pi as any, { distillThreshold: 4000 });
@@ -135,22 +115,20 @@ describe("大结果（≥ 阈值）", () => {
 		const { pi, triggerToolResult } = createMockPi();
 		registerToolResultProcessor(pi as any, { distillThreshold: 4000 });
 
-		// 生成足够大的 cartog 数据（需要 >= 4000 tokens = 16000 chars）
-		const items = Array.from({ length: 200 }, (_, i) => ({
-			name: `function_${i}_${"x".repeat(40)}`, kind: "function", startLine: i * 10, endLine: i * 10 + 9,
-		}));
-		const rawText = JSON.stringify(items);
+		// 生成足够大的数据（需要 >= 4000 tokens = 16000 chars）
+		const bigText = "B".repeat(20000);
+		const rawText = JSON.stringify({ title: "超长文档", url: "https://example.com/big", content: bigText });
 
 		const result = triggerToolResult({
-			toolName: "cartog_search",
+			toolName: "web_read",
 			content: [{ type: "text", text: rawText }],
-			input: { query: "bigFunc" },
+			input: { url: "https://example.com/big" },
 			isError: false,
 		});
 
 		const text = result.content[0].text;
 		expect(text).toMatch(/\[processed\]/);
-		expect(text).toMatch(/cartog_search/);
+		expect(text).toMatch(/web_read/);
 		expect(text).toMatch(/\/tmp\/pi-distill\/processor\//);
 		expect(text).toMatch(/\d+k? tokens/);
 	});

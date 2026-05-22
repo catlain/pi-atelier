@@ -100,7 +100,7 @@ interface DistillEntry {
 ```
 
 **Invariants**:
-- Formatter chain order: [webSearch → gh → webRead → cartog → bash → mcpError]
+- Formatter chain order: [webSearch → gh → webRead → bash → mcpError]
 - First matching formatter wins (must return !== input to indicate success)
 - `unwrapDoubleEncodedJson` runs before formatter chain
 - Fallback: return original text if no formatter matches
@@ -193,4 +193,3 @@ Tool result formatters always return a string. If no formatter matches, return o
 | Last provider payload | `/tmp/pi-distill/last-payload.json` | JSON | Session-scoped |
 | Session JSONL | `~/.pi/agent/sessions/<id>.jsonl` | JSONL | Persistent, pi manages lifecycle |
 | Recordings | `/tmp/pi-distill/recordings/` | JSON | Session-scoped, opt-in |
-| Cartog index | `.cartog.db` (project root) | SQLite | Persistent, managed by cartog CLI |

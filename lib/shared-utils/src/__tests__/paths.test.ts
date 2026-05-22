@@ -19,7 +19,6 @@ import {
 	MEMORY_DIR,
 	MCP_CONFIG_PATH,
 	MCP_CACHE_PATH,
-	CARTOG_INDEX_CONFIG,
 	AGENTS_DIR,
 	GLOBAL_RULES_PATH,
 	SETTINGS_PATH,
@@ -103,10 +102,6 @@ describe("路径常量拼接", () => {
 		expect(MCP_CACHE_PATH).toBe(defaultAgentDir + "/mcp-cache.json");
 	});
 
-	it("CARTOG_INDEX_CONFIG = AGENT_DIR/cartog-index.json", () => {
-		expect(CARTOG_INDEX_CONFIG).toBe(defaultAgentDir + "/cartog-index.json");
-	});
-
 	it("AGENTS_DIR = AGENT_DIR/agents", () => {
 		expect(AGENTS_DIR).toBe(defaultAgentDir + "/agents");
 	});
@@ -126,7 +121,6 @@ describe("路径一致性", () => {
 		expect(MEMORY_DIR.startsWith(based)).toBe(true);
 		expect(MCP_CONFIG_PATH.startsWith(based)).toBe(true);
 		expect(MCP_CACHE_PATH.startsWith(based)).toBe(true);
-		expect(CARTOG_INDEX_CONFIG.startsWith(based)).toBe(true);
 		expect(AGENTS_DIR.startsWith(based)).toBe(true);
 		expect(GLOBAL_RULES_PATH.startsWith(based)).toBe(true);
 	});

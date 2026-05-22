@@ -19,7 +19,7 @@
 ## env-and-status 不再负责记忆注入
 
 之前 env-and-status 有 `before_agent_start` hook 注入 prompt，已迁移。
-env-and-status 只保留环境检测（cartog、session 等）。
+env-and-status 只保留环境检测（session 等）。
 
 ## 参数化常量（lib/types.ts）
 

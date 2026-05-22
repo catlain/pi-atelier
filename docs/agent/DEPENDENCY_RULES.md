@@ -28,7 +28,7 @@ Last validated: 2025-05-22
 | Target | Examples | ✅ Allowed |
 |--------|----------|-----------|
 | pi host | `@earendil-works/pi-coding-agent` | ✅ ExtensionAPI type only |
-| Shared libs | `@pi-atelier/shared-utils`, `@pi-atelier/workflow-core`, `@pi-atelier/shepherd`, `@pi-atelier/cartog-manager` | ✅ |
+| Shared libs | `@pi-atelier/shared-utils`, `@pi-atelier/workflow-core`, `@pi-atelier/shepherd` | ✅ |
 | Node stdlib | `fs`, `path`, `os`, `child_process`, `crypto` | ✅ |
 | External | `typebox`, `@modelcontextprotocol/sdk` | ✅ |
 | Same-extension | `./shared`, `./commands`, etc. | ✅ |
@@ -63,7 +63,6 @@ Last validated: 2025-05-22
 | `@pi-atelier/shared-utils` | context, env-and-status, memory, shepherd, session-analyzer, plan-verify, subagent, journal |
 | `@pi-atelier/workflow-core` | plan-verify, subagent |
 | `@pi-atelier/shepherd` | shepherd (ext) |
-| `@pi-atelier/cartog-manager` | env-and-status |
 
 ## Cross-Extension Communication
 

@@ -5,7 +5,6 @@
  * - 后处理器输出的短摘要不被 context distill 二次蒸馏
  * - 临时文件目录共存
  * - 格式化函数抛异常时 handler 不中断
- * - Cartog 结果后处理验证
  */
 
 import { describe, it, expect, vi } from "vitest";
@@ -89,18 +88,6 @@ describe("格式化函数异常时 handler 不中断", () => {
 		expect(result.content[0].text).toContain("原文：");
 	});
 
-	it("cartog 格式化失败返回原始文本", () => {
-		const handler = createHandler();
-		const result = handler({
-			toolName: "cartog_search", content: [{ type: "text", text: "broken json" }],
-			input: {}, isError: false,
-		}, {});
-
-		expect(result).not.toBeUndefined();
-		expect(result.content[0].text).toContain("broken json");
-		expect(result.content[0].text).toContain("原文：");
-	});
-
 	it("web_search 格式化失败返回原始文本", () => {
 		const handler = createHandler();
 		const result = handler({
@@ -111,42 +98,5 @@ describe("格式化函数异常时 handler 不中断", () => {
 		expect(result).not.toBeUndefined();
 		expect(result.content[0].text).toContain("not an array");
 		expect(result.content[0].text).toContain("原文：");
-	});
-});
-
-// ── Cartog 结果后处理 ──────────────────────────────
-
-describe("Cartog 结果后处理", () => {
-	it("cartog_search 结果格式化为紧凑表格", () => {
-		const handler = createHandler();
-		const rawText = JSON.stringify([
-			{ name: "readFile", kind: "function", startLine: 10, endLine: 55 },
-		]);
-
-		const result = handler({
-			toolName: "cartog_search", content: [{ type: "text", text: rawText }],
-			input: { query: "readFile" }, isError: false,
-		}, {});
-
-		expect(result).not.toBeUndefined();
-		expect(result.content[0].text).toContain("readFile");
-		expect(result.content[0].text).toContain("function");
-		expect(result.content[0].text).toContain("L10-L55");
-	});
-
-	it("cartog_outline 结果也格式化", () => {
-		const handler = createHandler();
-		const rawText = JSON.stringify([
-			{ name: "main", kind: "class", startLine: 1, endLine: 200 },
-		]);
-
-		const result = handler({
-			toolName: "cartog_outline", content: [{ type: "text", text: rawText }],
-			input: { path: "file.ts" }, isError: false,
-		}, {});
-
-		expect(result).not.toBeUndefined();
-		expect(result.content[0].text).toContain("main");
-		expect(result.content[0].text).toContain("class");
 	});
 });

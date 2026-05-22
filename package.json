@@ -18,6 +18,7 @@
 			"extensions/payload-analyzer",
 			"extensions/plan-verify",
 			"extensions/scheduler",
+		"extensions/smart-compact",
 			"extensions/session-analyzer",
 			"extensions/shepherd",
 			"extensions/subagent",
