@@ -1,18 +1,13 @@
+/** collect.ts — 纯计算函数：从 messages + payload 构建面板数据 */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { formatTokens } from "./utils.js";
-import { lastContextMessages, lastProviderPayload, manuallyDeletedIds, agingSnapshot, setSessionId } from "./shared.js";
-import type { ContextData, RecordItem, DetailItem, CategoryItem } from "./types.js";
-import { appendFileSync } from "fs";
-const PID = process.pid;
-let DBG_COUNT = 0;
-const DBG = (msg: string) => appendFileSync("/tmp/pi-context-debug.log", `[${PID}] ${msg}\n`);
+import type { ContextData, RecordItem, DetailItem, CategoryItem, CollectOpts } from "./types.js";
 
 const est = (s: string) => Math.ceil(s.length / 4);
 
 /** 从 provider payload 中提取 system prompt 文本 */
 function extractSystemFromPayload(payload: any): string {
 	if (!payload) return "";
-	// Anthropic: { system: string | [{type: "text", text: "..."}] }
 	if (payload.system != null) {
 		if (typeof payload.system === "string") return payload.system;
 		if (Array.isArray(payload.system)) {
@@ -22,9 +17,7 @@ function extractSystemFromPayload(payload: any): string {
 				.join("\n");
 		}
 	}
-	// OpenAI Responses API: { instructions: "..." }
 	if (typeof payload.instructions === "string") return payload.instructions;
-	// OpenAI Chat Completions: messages[0].role === "system" | "developer"
 	if (Array.isArray(payload.messages)) {
 		const sysMsg = payload.messages.find((m: any) => m.role === "system" || m.role === "developer");
 		if (sysMsg?.content) {
@@ -48,28 +41,24 @@ function extractToolsFromPayload(payload: any): any[] {
 
 export function collectData(
 	pi: ExtensionAPI,
-	ctx: { getContextUsage(): any; getSystemPrompt(): string; sessionManager?: { getSessionId?(): string } },
+	ctx: { getContextUsage(): any; getSystemPrompt(): string },
+	opts: CollectOpts,
 ): ContextData | null {
-	// 确保 sessionId 已设置（collect 可能在 context 事件之前执行）
-	const sid = ctx?.sessionManager?.getSessionId?.();
-	if (sid) setSessionId(sid);
 	const usage = ctx.getContextUsage() as { tokens: number; contextWindow: number; percent: number } | undefined;
 	if (!usage || usage.tokens == null || usage.contextWindow == null) return null;
 
-	// 没有 provider payload 时数据不可靠，回退到简单显示
-	const payload = lastProviderPayload;
+	const { messages: msgs, payload, agingSnapshot, manuallyDeletedIds } = opts;
 	const hasPayload = !!payload;
-	const msgs = lastContextMessages;
 
 	const sysPrompt = extractSystemFromPayload(payload) || ctx.getSystemPrompt();
 	const payloadTools = extractToolsFromPayload(payload);
 	const fallbackTools = pi.getAllTools().filter((t: any) => pi.getActiveTools().includes(t.name));
 	const toolsSource = payloadTools.length > 0 ? payloadTools : fallbackTools;
 
-	// System Prompt — 来自 payload 的 = AI 实际收到的
+	// System Prompt
 	const sysLines = sysPrompt.split("\n");
 
-	// System Tools — 优先使用 payload 中的 provider 序列化格式
+	// System Tools
 	const toolChildren: DetailItem[] = toolsSource.map((t: any) => {
 		const defText = JSON.stringify(t, null, 2);
 		const tName = t.name || t.function?.name || "unknown";
@@ -80,7 +69,7 @@ export function collectData(
 		};
 	}).sort((a, b) => b.value - a.value);
 
-	// 从 lastContextMessages 收集（AI 实际看到的内容）
+	// 从 messages 收集
 	let msgRaw = 0, callRaw = 0, resultRaw = 0;
 	const userMsgs: RecordItem[] = [], asstMsgs: RecordItem[] = [], sumMsgs: RecordItem[] = [];
 
@@ -91,7 +80,6 @@ export function collectData(
 		return buckets.get(n)!;
 	};
 
-	// toolCallId → records 的映射，用于关联 toolCall 和 toolResult
 	const tcIdToRecords = new Map<string, RecordItem[]>();
 
 	for (const m of msgs) {
@@ -139,8 +127,6 @@ export function collectData(
 			const isDistilled = rText.startsWith("[distilled");
 			const b = getBucket(toolName); b.resultT += rs;
 			const agingCount = tcId ? agingSnapshot.get(tcId) : undefined;
-			// DEBUG: 前 3 条打印 tcId 匹配情况
-			if (DBG_COUNT++ < 3) DBG(`[collect] tcId=${tcId?.slice(0, 12)} snapGet=${agingSnapshot.get(tcId ?? "")} agingCount=${agingCount} snapHas=${agingSnapshot.has(tcId ?? "")}`);
 			// 通过 tcId 关联到已有的 toolCall record
 			const linkedRecs = tcId ? tcIdToRecords.get(tcId) : undefined;
 			const matched = linkedRecs?.find(r => r.resultTokens === 0) || b.records.find(r => r.resultTokens === 0);
@@ -164,7 +150,6 @@ export function collectData(
 	const sysRaw = est(sysPrompt);
 	const total = usage.tokens, limit = usage.contextWindow;
 
-	// 没有 provider payload 时，分项估算不可靠，只显示总览
 	if (!hasPayload) {
 		return { categories: [], totalActual: total, limit, percent: usage.percent };
 	}
@@ -197,7 +182,6 @@ export function collectData(
 			children: [...buckets.entries()]
 				.map(([n, v]) => {
 					v.records.reverse();
-					// 标记已手动删除的 records
 					if (manuallyDeletedIds.size > 0) {
 						for (const r of v.records) {
 							if (r.toolCallId && manuallyDeletedIds.has(r.toolCallId)) r.manuallyDeleted = true;
@@ -213,14 +197,6 @@ export function collectData(
 	];
 	const accounted = cats.reduce((s, c) => s + c.value, 0);
 	if (total - accounted > 10) cats.push({ label: "Available", value: Math.max(0, total - accounted), color: "dim", enterable: false, children: [] });
-
-	// DEBUG: aging snapshot 状态
-	const snapKeys = [...agingSnapshot.keys()];
-	const recordsWithAging = cats.flatMap(c => c.children?.flatMap(ch => ch.records?.filter(r => r.agingCount !== undefined) || []) || []);
-	const _g = globalThis as any;
-	const allSessionKeys = _g.__agingSnapshots ? Object.keys(_g.__agingSnapshots) : [];
-	const snapSizes = allSessionKeys.map((k: string) => `${k.slice(-6)}=${_g.__agingSnapshots[k].size}`);
-	DBG(`[collect] snapSize=${snapKeys.length} recordsWithAging=${recordsWithAging.length} allSessions=[${snapSizes.join(", ")}]`);
 
 	return { categories: cats, totalActual: total, limit, percent: usage.percent };
 }

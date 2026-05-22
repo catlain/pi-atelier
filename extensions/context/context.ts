@@ -1,25 +1,31 @@
+/** context.ts — 纯 UI 逻辑：context 面板命令注册 */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Container } from "@earendil-works/pi-tui";
 import { collectData } from "./collect.js";
 import { renderOverview, renderCategory, renderRecords, renderContent, getViewport } from "./render.js";
-import { markManuallyDeleted, manuallyDeletedIds } from "./shared.js";
-import type { ContextData, CategoryItem, DetailItem, RecordItem } from "./types.js";
+import { readCachedPayload } from "./shared.js";
+import type { ContextData, CategoryItem, DetailItem, RecordItem, ContextStateRef } from "./types.js";
 
 type Level = "overview" | "category" | "records" | "content";
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
-export default function (pi: ExtensionAPI) {
+export default function registerContextCommand(pi: ExtensionAPI, stateRef: ContextStateRef) {
 	pi.registerCommand("context", {
 		description: "Show context usage visualization.",
 		handler: async (_args, ctx) => {
-			let data = collectData(pi, ctx);
+			const data = collectData(pi, ctx, {
+				messages: stateRef.getLastContextMessages(),
+				payload: readCachedPayload(),
+				agingSnapshot: stateRef.agingSnapshot,
+				manuallyDeletedIds: stateRef.manuallyDeletedIds,
+			});
 			if (!data) { ctx.ui.notify("Context usage info not available.", "warning"); return; }
 
 			await ctx.ui.custom((tui, theme, kb, done) => {
 				const container = new Container();
 				let lvl: Level = "overview";
 				let oIdx = 0, dIdx = 0, rIdx = 0, scroll = 0, rScroll = 0;
-				let curCat: CategoryItem = data!.categories[0];
+				let curCat: CategoryItem = data.categories[0];
 				let curDetail: DetailItem | null = null;
 				let curRecord: RecordItem | null = null;
 				let confirmingDelete = false;
@@ -28,9 +34,9 @@ export default function (pi: ExtensionAPI) {
 
 				const render = () => {
 					switch (lvl) {
-						case "overview": renderOverview(container, data!, theme, oIdx); break;
-						case "category": renderCategory(container, data!, theme, curCat, dIdx); break;
-						case "records": renderRecords(container, data!, theme, `${curCat.label} › ${curDetail?.label}`, curDetail?.records || [], rIdx, curCat.label === "Tools", rScroll, viewport); break;
+						case "overview": renderOverview(container, data, theme, oIdx); break;
+						case "category": renderCategory(container, data, theme, curCat, dIdx); break;
+						case "records": renderRecords(container, data, theme, `${curCat.label} › ${curDetail?.label}`, curDetail?.records || [], rIdx, curCat.label === "Tools", rScroll, viewport); break;
 						case "content": if (curRecord) renderContent(container, theme, `${curCat.label} › ${curDetail?.label} › #${rIdx + 1} ${curRecord.summary.slice(0, 30)}`, curRecord, scroll, viewport, confirmingDelete); break;
 					}
 					tui.requestRender();
@@ -60,7 +66,7 @@ export default function (pi: ExtensionAPI) {
 						// 删除确认状态
 						if (confirmingDelete) {
 							if (keyY && curRecord?.toolCallId) {
-								markManuallyDeleted(curRecord.toolCallId);
+								stateRef.markManuallyDeleted(curRecord.toolCallId);
 								curRecord.manuallyDeleted = true;
 								confirmingDelete = false;
 								ctx.ui.notify(`已标记删除: ${curRecord.summary.slice(0, 40)}`, "info");
@@ -91,11 +97,10 @@ export default function (pi: ExtensionAPI) {
 						// Level 0-2: 选择/导航
 						if (up || dn) {
 							const dir = up ? -1 : 1;
-							if (lvl === "overview") oIdx = clamp(oIdx + dir, 0, data!.categories.length - 1);
+							if (lvl === "overview") oIdx = clamp(oIdx + dir, 0, data.categories.length - 1);
 							else if (lvl === "category") dIdx = clamp(dIdx + dir, 0, (curCat.children?.length ?? 1) - 1);
 							else if (lvl === "records") {
 								rIdx = clamp(rIdx + dir, 0, (curDetail?.records?.length ?? 1) - 1);
-								// 跟随选中项滚动
 								const recCount = curDetail?.records?.length ?? 1;
 								const reserved = 7;
 								const visible = Math.max(1, viewport - reserved);
@@ -118,7 +123,7 @@ export default function (pi: ExtensionAPI) {
 						}
 						if (ok) {
 							if (lvl === "overview") {
-								const cat = data!.categories[oIdx];
+								const cat = data.categories[oIdx];
 								if (cat?.enterable && cat.children?.length) { curCat = cat; dIdx = 0; lvl = "category"; }
 							} else if (lvl === "category") {
 								const ch = curCat.children?.[dIdx];
