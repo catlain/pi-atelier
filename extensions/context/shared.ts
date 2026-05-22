@@ -48,14 +48,32 @@ export const agingTracker = new Map<string, number>();
 /** aging 快照：在每次 context 事件结束时保存，供 collect 展示用 */
 // jiti/CJS 可能给不同导入方创建多个 shared.ts 模块实例，
 // 导致 export 的 Map 在各实例间不同步。
-// 用 globalThis 保证单例，所有模块操作同一个 Map 对象。
+// 用 globalThis 保证单例，但需要按会话隔离（多会话共享同一进程）。
 const _g = globalThis as any;
-if (!_g.__agingSnapshot) _g.__agingSnapshot = new Map<string, number>();
-export const agingSnapshot: Map<string, number> = _g.__agingSnapshot;
+if (!_g.__agingSnapshots) _g.__agingSnapshots = {};
+
+/** 获取当前会话的 agingSnapshot Map */
+function getSnapshotMap(): Map<string, number> {
+	if (!_g.__agingSnapshots[currentSessionId]) {
+		_g.__agingSnapshots[currentSessionId] = new Map<string, number>();
+	}
+	return _g.__agingSnapshots[currentSessionId];
+}
+
+/** agingSnapshot 代理：始终指向当前会话的 Map */
+export const agingSnapshot: Map<string, number> = new Proxy({} as Map<string, number>, {
+	get(_, prop) {
+		const map = getSnapshotMap();
+		const val = (map as any)[prop];
+		if (typeof val === "function") return val.bind(map);
+		return val;
+	},
+});
 
 export function setAgingSnapshot(snapshot: Map<string, number>) {
-	agingSnapshot.clear();
-	for (const [k, v] of snapshot) agingSnapshot.set(k, v);
+	const map = getSnapshotMap();
+	map.clear();
+	for (const [k, v] of snapshot) map.set(k, v);
 }
 
 /** 手动删除的 toolCallId 集合（持久化到 manifest） */

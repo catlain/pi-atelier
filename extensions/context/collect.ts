@@ -214,7 +214,7 @@ export function collectData(
 	// DEBUG: aging snapshot 状态
 	const snapKeys = [...agingSnapshot.keys()];
 	const recordsWithAging = cats.flatMap(c => c.children?.flatMap(ch => ch.records?.filter(r => r.agingCount !== undefined) || []) || []);
-	DBG(`[collect] snapSize=${snapKeys.length} snapSamples=${snapKeys.slice(0, 5).join(",")} recordsWithAging=${recordsWithAging.length}`);
+	DBG(`[collect] snapSize=${snapKeys.length} snapSamples=${snapKeys.slice(0, 5).join(",")} recordsWithAging=${recordsWithAging.length} globalThis_ref=${(globalThis as any).__agingSnapshot ? 'exists' : 'MISSING'}`);
 
 	return { categories: cats, totalActual: total, limit, percent: usage.percent };
 }
