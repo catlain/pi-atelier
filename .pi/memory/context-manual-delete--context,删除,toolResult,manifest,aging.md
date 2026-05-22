@@ -62,6 +62,12 @@ registerContextCommand(pi, stateRef);
 - 删除后统一加入 agingDeletedIds 持久集合
 - `seenArgs` 仅用于
 
+### 踩坑：toRemove index 排序（2025-05-22）
+- 多个删除通道（agingDeletedIds、manuallyDeletedIds、aging 达到阈值）收集 index 到同一个 `toRemove` 数组
+- **必须降序排序后再 splice**：否则 splice 较小 index 后，后续较大 index 指向错误位置
+- 例：toRemove=[3,1] → 先 splice(1) → index 3 变成 2 → splice(3) 删错元素
+- 修复：`toRemove.sort((a, b) => b - a)` 后再逐个 splice
+
 ### 关键约束
 - **运行时状态必须在入口闭包中**：jiti `moduleCache:false` 导致模块级状态不可靠
 - **所有删除标记必须持久化**：manuallyDeletedIds、agingDeletedIds 持久化到会话级 manifest
