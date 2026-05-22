@@ -23,6 +23,13 @@ export const distilledMap = new Map<string, DistillEntry>();
 /** aging 计数器：toolCallId → 已发送给 LLM 的次数 */
 export const agingTracker = new Map<string, number>();
 
+/** aging 快照：在每次 context 事件结束时保存，供 collect 展示用 */
+export let agingSnapshot = new Map<string, number>();
+
+export function setAgingSnapshot(snapshot: Map<string, number>) {
+	agingSnapshot = new Map(snapshot);
+}
+
 /** 手动删除的 toolCallId 集合（持久化到 manifest） */
 export const manuallyDeletedIds = new Set<string>();
 

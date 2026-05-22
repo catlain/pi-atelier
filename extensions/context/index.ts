@@ -1,6 +1,6 @@
 import { type ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import registerContextCommand from "./context.js";
-import { setLastContextMessages, getContextConfig, manuallyDeletedIds, agingTracker } from "./shared.js";
+import { setLastContextMessages, getContextConfig, manuallyDeletedIds, agingTracker, setAgingSnapshot } from "./shared.js";
 import {
 	buildToolCallMap,
 	estimateTokens,
@@ -134,6 +134,9 @@ export default function (pi: ExtensionAPI) {
 				}
 			}
 		}
+
+		// 保存 aging 快照（在清理之前，供 collect 展示用）
+		setAgingSnapshot(agingTracker);
 
 		// 清理 tracker 中不在当前 messages 里的 tcId（防止无限增长）
 		for (const tcId of agingTracker.keys()) {

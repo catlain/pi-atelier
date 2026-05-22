@@ -1,6 +1,6 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { formatTokens } from "./utils.js";
-import { lastContextMessages, lastProviderPayload, manuallyDeletedIds, agingTracker } from "./shared.js";
+import { lastContextMessages, lastProviderPayload, manuallyDeletedIds, agingSnapshot } from "./shared.js";
 import type { ContextData, RecordItem, DetailItem, CategoryItem } from "./types.js";
 
 const est = (s: string) => Math.ceil(s.length / 4);
@@ -131,7 +131,7 @@ export function collectData(
 			const rLines = rText.split("\n");
 			const isDistilled = rText.startsWith("[distilled");
 			const b = getBucket(toolName); b.resultT += rs;
-			const agingCount = tcId ? agingTracker.get(tcId) : undefined;
+			const agingCount = tcId ? agingSnapshot.get(tcId) : undefined;
 			// 通过 tcId 关联到已有的 toolCall record
 			const linkedRecs = tcId ? tcIdToRecords.get(tcId) : undefined;
 			const matched = linkedRecs?.find(r => r.resultTokens === 0) || b.records.find(r => r.resultTokens === 0);
