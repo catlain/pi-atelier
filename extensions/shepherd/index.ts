@@ -25,7 +25,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const RULES_DIR = __dirname;
 
 import {
-	loadRules, isSubagent, hasGitUncommittedChanges, getCartogMatchedDir,
+	loadRules, isSubagent, hasGitUncommittedChanges,
 	StateTracker, checkWorktrees,
 	pushWarning, hasWarnings, notifySummary,
 	drainHints,
@@ -50,7 +50,6 @@ const _toolState: ToolState = {
 	hasEdits: false,
 	tracker: new StateTracker(),
 	cachedTools: null,
-	cartogRemindedFiles: new Set(),
 };
 
 export default function shepherdExtension(pi: ExtensionAPI) {

@@ -40,20 +40,7 @@ export function registerCartogHooks(pi: ExtensionAPI, currentCwdRef: { value: st
 			updateSessionSizeStatus(ctx);
 			updateMemoryStatus(ctx);
 
-			if (ctx.hasUI) {
-				const msgs: string[] = [];
-				if (result.indexed) {
-					msgs.push(`[cartog] 已索引 ${result.fileCount} 文件 / ${result.symbolCount} 符号 (+${extraDirs.length} 外部目录)`);
-				} else if (existsSync(join(cwd, ".cartog.db"))) {
-					msgs.push(`[cartog] 索引就绪 (${result.fileCount} 文件 / ${result.symbolCount} 符号, +${extraDirs.length} 外部目录)`);
-				} else {
-					msgs.push(`[cartog] 未索引，运行 /cartog-reindex`);
-				}
-				if (extraDirs.length > 0) {
-					msgs.push(`  外部目录: ${extraDirs.map(d => relative(homedir(), d) || d).join(", ")}`);
-				}
-				ctx.ui.setWidget("cartog-info", msgs);
-			}
+			// cartog 索引状态 widget — 仅 TUI 状态栏显示，不注入 AI 上下文
 		} catch (e: any) {
 			console.error("[env-and-status] session_start:", e.message);
 		}

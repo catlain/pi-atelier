@@ -41,9 +41,9 @@ export function checkBashFileWrite(entries: Entry[]): AuditIssue[] {
   return issues;
 }
 
-export function checkCartogBeforeEdit(entries: Entry[]): AuditIssue[] {
+export function checkSearchBeforeEdit(entries: Entry[]): AuditIssue[] {
   const editIdx: number[] = [];
-  const cartogIdx: number[] = [];
+  const searchIdx: number[] = [];
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i];
     if (entry.type !== "message" || !entry.message) continue;
@@ -52,14 +52,14 @@ export function checkCartogBeforeEdit(entries: Entry[]): AuditIssue[] {
     for (const part of content) {
       if (part.type !== "toolCall") continue;
       if (part.name === "edit" || part.name === "write") editIdx.push(i);
-      if (part.name === "cartog_rag_search" || part.name === "cartog_search") cartogIdx.push(i);
+      if (part.name === "grep" || part.name === "find" || part.name === "search") searchIdx.push(i);
     }
   }
-  if (editIdx.length > 2 && !cartogIdx.some((ci) => ci < editIdx[0])) {
+  if (editIdx.length > 2 && !searchIdx.some((si) => si < editIdx[0])) {
     return [{
       rule: "抽象优先原则", severity: "warning",
-      detail: `执行了 ${editIdx.length} 次 edit/write 但未先使用 cartog 搜索重复模式`,
-      evidence: `首次 edit 在条目 ${editIdx[0]}，之前无 cartog 搜索`, fixScope: "none",
+      detail: `执行了 ${editIdx.length} 次 edit/write 但未先搜索重复模式`,
+      evidence: `首次 edit 在条目 ${editIdx[0]}，之前无搜索`, fixScope: "none",
     }];
   }
   return [];

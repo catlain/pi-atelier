@@ -4,8 +4,6 @@
 
 import { readFileSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
-import { getDbMtime } from "@pi-atelier/cartog-manager";
-
 export function formatBytes(bytes: number): string {
 	if (bytes < 1024) return `${bytes}B`;
 	if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)}KB`;
@@ -47,18 +45,3 @@ export function updateMemoryStatus(ctx: any) {
 	}
 }
 
-export function updateCartogStatus(ctx: any, cwd: string, extraDirs: string[]) {
-	const dbPath = join(cwd, ".cartog.db");
-	const theme = ctx.ui.theme;
-
-	if (!existsSync(dbPath)) {
-		ctx.ui.setStatus("cartog", theme.fg("warning", "cartog:未索引"));
-		return;
-	}
-
-	let label = getDbMtime(dbPath) || "已索引";
-	if (extraDirs.length > 0) {
-		label += ` +${extraDirs.length}dir`;
-	}
-	ctx.ui.setStatus("cartog", theme.fg("dim", `cartog:${label}`));
-}

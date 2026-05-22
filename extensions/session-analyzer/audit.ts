@@ -8,7 +8,7 @@ import { type Entry, type AgentRules } from "./audit-types";
 import {
   checkCartogIndexUsage,
   checkBashFileWrite,
-  checkCartogBeforeEdit,
+  checkSearchBeforeEdit,
   checkFileOver500Lines,
   checkSearchOnly,
   checkRepeatedErrors,
@@ -47,7 +47,7 @@ export async function doAudit(entries: Entry[], sessionCwd?: string) {
   const allIssues = [
     ...checkCartogIndexUsage(entries),
     ...checkBashFileWrite(entries),
-    ...checkCartogBeforeEdit(entries),
+    ...checkSearchBeforeEdit(entries),
     ...checkFileOver500Lines(entries),
     ...checkSearchOnly(entries),
     ...checkRepeatedErrors(entries),

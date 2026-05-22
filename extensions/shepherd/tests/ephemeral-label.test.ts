@@ -14,7 +14,6 @@ import { pushWarning, notifySummary } from "@pi-atelier/shepherd";
 import {
   pushHint,
   drainHints,
-  injectHints,
   peekLabels,
 } from "@pi-atelier/shepherd";
 
@@ -85,9 +84,9 @@ describe("labels 消费同步", () => {
     expect(peekLabels()).toEqual([]);
   });
 
-  it("injectHints 后 labels 也被清空", () => {
+  it("drainHints 后 labels 也被清空", () => {
     pushWarning("line too long", "line-count");
-    injectHints({ messages: [] });
+    drainHints();
     expect(peekLabels()).toEqual([]);
   });
 
@@ -98,12 +97,12 @@ describe("labels 消费同步", () => {
     expect(peekLabels()).toEqual([]);
   });
 
-  it("无 hints 时 injectHints 不产生 label 残留", () => {
-    // 先有 hints，注入清空
+  it("无 hints 时 drainHints 不产生 label 残留", () => {
+    // 先有 hints，drain 清空
     pushWarning("a", "r1");
-    injectHints({ messages: [] });
-    // 无 hints 再 inject
-    const result = injectHints({ messages: [] });
+    drainHints();
+    // 无 hints 再 drain
+    const result = drainHints();
     expect(peekLabels()).toEqual([]);
   });
 });

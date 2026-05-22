@@ -22,9 +22,7 @@ export default function (pi: ExtensionAPI) {
 
 	// ── 截断提示（按工具类型） ──
 	function getDistillHint(toolName: string): string {
-		const core = "此结果超过上下文阈值，下轮请求时会被自动移除。如需保留某些内容在上下文中，现在用 read + offset/limit 读取你需要的部分即可。";
-		if (toolName.startsWith("cartog_")) return `${core} 也可以用 grep 搜字段名。`;
-		return core;
+		return "此结果超过上下文阈值，下轮请求时会被自动移除。如需保留某些内容在上下文中，现在用 read + offset/limit 读取你需要的部分即可。";
 	}
 
 	// key: toolCallId

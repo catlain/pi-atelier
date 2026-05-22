@@ -17,7 +17,7 @@ pi-atelier/
 │   ├── session-analyzer/# Historical session search and analysis
 │   ├── scheduler/       # Timer/recurring task management
 │   ├── subagent/        # Sub-agent spawning and model management
-│   ├── env-and-status/  # Environment detection, cartog management
+│   ├── env-and-status/  # Environment detection, status management
 │   ├── payload-analyzer/# Provider payload token analysis
 │   ├── notification/    # Desktop notifications (notify-send)
 │   ├── journal/         # Session journaling
@@ -35,7 +35,7 @@ pi-atelier/
 
 1. **Extensions are isolated** — no cross-extension imports. Communication via events or settings only.
 2. **Libraries are pure** — no pi dependency. Extensions import from libs, never the reverse.
-3. **Tool result processing** is a formatter chain in context extension (web_search → gh → web_read → cartog → bash → mcp_error).
+3. **Tool result processing** is a formatter chain in context extension (web_search → gh → web_read → bash → mcp_error).
 4. **Subagent pattern** — plan-verify and workflow spawn child pi processes for isolated task execution.
 5. **MCP integration** via mcp-lite: connects to MCP servers, caches tool definitions, processes responses.
 

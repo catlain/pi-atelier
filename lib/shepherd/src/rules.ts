@@ -236,17 +236,11 @@ export function getMatchTargets(tool: string, event: any, phase?: string): Recor
 		};
 	}
 	// grep 工具：提取 glob（文件过滤）、path（搜索目录）、text（搜索模式）
-	// 只对 cartog 范围内的代码搜索返回非空 targets
 	if (tool === "grep") {
 		const pathVal = (event.input as any)?.path || "";
 		const globVal = (event.input as any)?.glob || "";
 		const patternVal = (event.input as any)?.pattern || "";
 
-		// path 为空时默认 cwd，必须在 cartog 范围内
-		const scopePath = pathVal || process.cwd();
-		if (!isInCartogScope(scopePath)) {
-			return {} as Record<string, string>;
-		}
 		// 有 glob 时必须是代码扩展名，无 glob 时默认全搜（也触发提醒）
 		if (globVal && !CODE_EXT_RE.test(globVal)) {
 			return {} as Record<string, string>;

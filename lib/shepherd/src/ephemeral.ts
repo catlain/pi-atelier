@@ -31,8 +31,8 @@ export function notifySummary(text: string, labels?: string[]): string {
 import { pushHint as _pushShared, hasHints } from "./ephemeral-shared.js";
 const SHEPHERD_PREFIX = "⚠️ shepherd: ";
 
-function pushShepherdHint(reason: string, _label?: string): void {
-	_pushShared(`${SHEPHERD_PREFIX}${reason}`);
+function pushShepherdHint(reason: string, label?: string): void {
+	_pushShared(`${SHEPHERD_PREFIX}${reason}`, label);
 }
 
 /** 推入规则格式错误提示（加 ❌ 前缀区别于普通 warning） */

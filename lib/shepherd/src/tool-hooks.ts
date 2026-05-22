@@ -9,8 +9,6 @@ import {
 	getMatchTargets,
 	isRtkAvailable,
 	isSubagent,
-	getCartogMatchedDir,
-	CODE_EXT_RE,
 	type Rule,
 } from "./rules.js";
 import { type ResettableRule, type StateTracker } from "./state-tracker.js";
@@ -22,8 +20,7 @@ export interface ToolState {
 	hasEdits: boolean;
 	tracker: StateTracker;
 	cachedTools: Set<string> | null;
-	/** 已提醒过需要更新 cartog 索引的文件（绝对路径），避免同一文件重复提醒 */
-	cartogRemindedFiles: Set<string>;
+
 }
 
 export function getAvailableTools(pi: ExtensionAPI, state: ToolState): Set<string> {
@@ -84,17 +81,6 @@ export function registerToolResult(pi: ExtensionAPI, state: ToolState, rulesDir?
 			const filePath = (event.input as any)?.path as string;
 			if (filePath) {
 				checkLineCount(filePath);
-				// cartog 索引过期提醒：代码文件在 cartog 范围内 && 本次会话未提醒过此文件
-				if (!event.isError && CODE_EXT_RE.test(filePath) && !state.cartogRemindedFiles.has(filePath)) {
-					const matched = getCartogMatchedDir(filePath);
-					if (matched) {
-						state.cartogRemindedFiles.add(filePath);
-						pushWarning(
-							`📄 编辑了 cartog 索引范围内的代码文件。后续使用 cartog 查询前，请调用 cartog_index 更新索引，否则可能搜到旧内容。`,
-							"[arch] cartog 索引过期提醒",
-						);
-					}
-				}
 			}
 		} else if (event.toolName === "memory_update") {
 			// memory_update 工具内部写文件，从 tool_result 文本中提取路径
@@ -151,20 +137,9 @@ export function registerToolResult(pi: ExtensionAPI, state: ToolState, rulesDir?
 				let reason = rule.reason
 					.replace("{count}", String(stats.count))
 					.replace("{chars}", String(Math.round(stats.chars / 1000)));
-				if (event.toolName === "grep") {
-					const grepPath = (event.input as any)?.path || process.cwd();
-					const matched = getCartogMatchedDir(grepPath);
-					if (matched) reason += `（此路径在 cartog 索引范围内：${matched}）`;
-				}
 				pushWarning(reason, rule.comment);
 			} else if (rule.action === "notify") {
-				let reason = rule.reason;
-				if (event.toolName === "grep") {
-					const grepPath = (event.input as any)?.path || process.cwd();
-					const matched = getCartogMatchedDir(grepPath);
-					if (matched) reason += `（此路径在 cartog 索引范围内：${matched}）`;
-				}
-				pushWarning(reason, rule.comment);
+				pushWarning(rule.reason, rule.comment);
 			}
 		}
 	});

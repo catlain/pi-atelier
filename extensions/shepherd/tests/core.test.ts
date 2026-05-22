@@ -80,16 +80,16 @@ describe("getMatchTargets", () => {
 		assert.ok(Object.keys(result).length === 0);
 	});
 
-	it("should return empty targets for grep with code glob but path outside cartog scope", () => {
+	it("should return non-empty targets for grep with code glob regardless of path", () => {
 		const event = { input: { path: "/tmp/some/dir", pattern: "myFunction", glob: "*.ts" } };
 		const result = getMatchTargets("grep", event);
-		assert.ok(Object.keys(result).length === 0);
+		assert.ok(Object.keys(result).length > 0);
 	});
 
-	it("should return empty targets for grep with path outside cartog scope and no glob", () => {
+	it("should return non-empty targets for grep with no glob regardless of path", () => {
 		const event = { input: { path: "/tmp/some/dir", pattern: "myFunction" } };
 		const result = getMatchTargets("grep", event);
-		assert.ok(Object.keys(result).length === 0);
+		assert.ok(Object.keys(result).length > 0);
 	});
 });
 
