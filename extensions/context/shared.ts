@@ -30,8 +30,8 @@ export function setAgingSnapshot(snapshot: Map<string, number>) {
 	// 操作同一个 Map 对象（不重新赋值），确保 jiti/CJS 下 export live binding 生效
 	agingSnapshot.clear();
 	for (const [k, v] of snapshot) agingSnapshot.set(k, v);
-	// 持久化到 manifest，reload 后可恢复
-	try { saveManifest(); } catch {}
+	// 不持久化 aging 到 manifest：aging 是短暂运行时状态，
+	// 持久化会导致多 pi 进程互相覆盖数据
 }
 
 /** 手动删除的 toolCallId 集合（持久化到 manifest） */
@@ -56,12 +56,7 @@ if (existsSync(MANIFEST_PATH)) {
 			for (const id of (raw.manuallyDeleted || []) as string[]) {
 				manuallyDeletedIds.add(id);
 			}
-			// 恢复 aging 快照
-			const aging = (raw.aging || []) as [string, number][];
-			for (const [k, v] of aging) {
-				agingTracker.set(k, v);
-				agingSnapshot.set(k, v);
-			}
+			// aging 不再持久化，不恢复
 		}
 	} catch {}
 }
@@ -71,7 +66,6 @@ export function saveManifest() {
 	writeFileSync(MANIFEST_PATH, JSON.stringify({
 		distilled: [...distilledMap.entries()],
 		manuallyDeleted: [...manuallyDeletedIds],
-		aging: [...agingSnapshot.entries()],
 	}));
 }
 
