@@ -84,17 +84,28 @@ export function handleContextEvent(
 		agingTracker.set(tcId, count);
 
 		if (count >= effectiveThreshold) {
-			// 达到阈值 → 删除
+			// 达到阈值 → 删除 + 提示
 			toRemove.push(i);
 			removedTcIds.add(tcId);
+			const meta = toolMeta(msg, toolCallMap);
+			const label = meta.meta || toolName;
+			if (effectiveThreshold === 2) {
+				// 大结果被 distill 删除 → 提示 AI 用精确查询获取
+				pi.events.emit("ephemeral:hint", {
+					text: `📋 [auto-distill] 「${label}」已被移除（${origTokens} tokens）。如需此数据，请用 grep/read 等精确查询重新获取。`,
+					short: `📋 已移除「${label}」`,
+				});
+			}
 		} else if (origTokens >= distillThreshold && count === 1) {
-			// 大结果首次出现 → 提示用户
+			// 大结果首次出现 → 保留全文 + 提示用户
 			if (!seenArgs.has(tcId)) {
 				seenArgs.add(tcId);
 				const meta = toolMeta(msg, toolCallMap);
 				const label = meta.meta || toolName;
-				const short = `📋 [auto-distill] 「${label}」~${origTokens} tokens`;
-				pi.events.emit("ephemeral:hint", { text: `${short}。此结果超过上下文阈值，下轮请求时会被自动移除。`, short });
+				pi.events.emit("ephemeral:hint", {
+					text: `📋 [auto-distill] 「${label}」~${origTokens} tokens。此结果超过上下文阈值，下轮请求时会被自动移除。如需保留请在 context 面板手动操作。`,
+					short: `📋 大结果「${label}」下轮自动移除`,
+				});
 			}
 		}
 	}
