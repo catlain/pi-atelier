@@ -50,26 +50,30 @@ describe("loadRulesFromFile", () => {
     const filePath = createTempRules(JSON.stringify([
       { comment: "test rule", pattern: "foo", action: "block" },
     ]));
-    const rules = loadRulesFromFile(filePath);
-    expect(rules).toHaveLength(1);
-    expect(rules[0].comment).toBe("test rule");
+    const result = loadRulesFromFile(filePath);
+    expect(result.rules).toHaveLength(1);
+    expect(result.rules[0].comment).toBe("test rule");
+    expect(result.error).toBeUndefined();
   });
 
   it("空数组不报错", () => {
     const filePath = createTempRules("[]");
-    const rules = loadRulesFromFile(filePath);
-    expect(rules).toEqual([]);
+    const result = loadRulesFromFile(filePath);
+    expect(result.rules).toEqual([]);
+    expect(result.error).toBeUndefined();
   });
 
-  it("文件不存在返回空数组", () => {
-    const rules = loadRulesFromFile("/nonexistent/path/rules.json");
-    expect(rules).toEqual([]);
+  it("文件不存在返回空数组（无 error）", () => {
+    const result = loadRulesFromFile("/nonexistent/path/rules.json");
+    expect(result.rules).toEqual([]);
+    expect(result.error).toBeUndefined();
   });
 
-  it("无效 JSON 返回空数组且不抛异常", () => {
+  it("无效 JSON 返回空 rules + error 字段", () => {
     const filePath = createTempRules("not valid json");
-    const rules = loadRulesFromFile(filePath);
-    expect(rules).toEqual([]);
+    const result = loadRulesFromFile(filePath);
+    expect(result.rules).toEqual([]);
+    expect(result.error).toBeTruthy();
   });
 });
 
