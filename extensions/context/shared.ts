@@ -2,6 +2,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, unlinkSync, rmSync, statSync, appendFileSync } from "fs";
 import { join } from "path";
 import { tmpdir } from "os";
+const DBG = (msg: string) => { try { appendFileSync("/tmp/pi-context-debug.log", `[${process.pid}] ${msg}\n`); } catch {} };
 import { getSettingsSection, patchSettingsSection, getSettingsValue, setSettingsValue } from "@pi-atelier/shared-utils";
 
 const MAX_READ_SIZE = 10 * 1024 * 1024; // 10MB

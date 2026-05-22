@@ -136,7 +136,7 @@ describe("阈值边界", () => {
 		const rawText = JSON.stringify(items);
 
 		const result = triggerToolResult({
-			toolName: "code_search",
+			toolName: "search_symbols",
 			content: [{ type: "text", text: rawText }],
 			input: { query: "f" },
 			isError: false,

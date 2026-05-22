@@ -30,7 +30,7 @@ describe("grep scope filtering", () => {
 		assert.ok(Object.keys(result).length > 0);
 	});
 
-	it("any path + code glob → non-empty targets (path filtering removed with cartog)", () => {
+	it("any path + code glob → non-empty targets (path filtering removed)", () => {
 		const event = { input: { path: "/tmp/some/dir", pattern: "myFunction", glob: "*.py" } };
 		const result = getMatchTargets("grep", event);
 		assert.ok(Object.keys(result).length > 0);

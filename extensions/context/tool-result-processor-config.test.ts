@@ -85,7 +85,7 @@ describe("阈值配置读取", () => {
 		const rawText = JSON.stringify(items);
 
 		const result = triggerToolResult({
-			toolName: "code_search",
+			toolName: "search_symbols",
 			content: [{ type: "text", text: rawText }],
 			input: { query: "tiny" },
 			isError: false,
@@ -93,7 +93,7 @@ describe("阈值配置读取", () => {
 
 		const text = result.content[0].text;
 		expect(text).toContain("[processed]");
-		expect(text).toContain("code_search");
+		expect(text).toContain("search_symbols");
 	});
 
 	it("显式阈值 = 4000 时正常工作", () => {
@@ -157,7 +157,7 @@ describe("临时文件写入失败降级", () => {
 		const rawText = JSON.stringify([{ name: "bigFunc", kind: "function", startLine: 1, endLine: 500 }]);
 
 		const result = triggerToolResult({
-			toolName: "code_search",
+			toolName: "search_symbols",
 			content: [{ type: "text", text: rawText }],
 			input: { query: "bigFunc" },
 			isError: false,

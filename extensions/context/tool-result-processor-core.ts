@@ -4,9 +4,6 @@
  * 被 tool-result-processor.ts 调用，分离以避免文件超 200 行。
  */
 
-import { writeFileSync, mkdirSync, existsSync } from "node:fs";
-import { join } from "node:path";
-import { tmpdir } from "node:os";
 import { estimateTokens } from "./distill-helpers.js";
 import { formatTokens } from "./utils.js";
 import {
@@ -14,6 +11,12 @@ import {
 	formatWebSearchResult,
 	formatGhResult,
 } from "./formatters.js";
+import { formatCodeGraphResult } from "./formatters-codegraph.js";
+import {
+	PROCESSOR_DIR,
+	extractBashSourcePath,
+	writeRawToFile,
+} from "./raw-writer.js";
 
 // ── 类型 ──────────────────────────────────────────
 
@@ -38,7 +41,6 @@ export interface ProcessorOptions {
 // ── 配置常量 ──────────────────────────────────────
 
 const DEFAULT_THRESHOLD = 4000;
-const PROCESSOR_DIR = join(tmpdir(), "pi-distill", "processor");
 
 // edit/write：结果极短（确认信息），无需处理
 // grep/find/ls：不再跳过——大结果需写临时文件以支持 distill 精读
@@ -74,7 +76,7 @@ export function processToolResult(
 
 	// 内容嗅探格式化：依次尝试所有格式化器，第一个有变化的生效
 	// 不再依赖工具名前缀，新增工具无需修改路由表
-	const formatters = [formatWebSearchResult, formatGhResult, formatWebReadResult] as const;
+	const formatters = [formatWebSearchResult, formatGhResult, formatWebReadResult, formatCodeGraphResult] as const;
 	let formatted = rawText;
 	for (const fn of formatters) {
 		const result = fn(rawText);
@@ -86,8 +88,6 @@ export function processToolResult(
 
 	// 用原始文本估算 tokens（格式化函数可能做了展示级截断，但原始内容才是真正占上下文的大小）
 	const tokens = estimateTokens(rawText);
-
-
 
 	// 所有结果都写原文临时文件（AI 可按需精读）
 	// bash 如果已被 pi 截断，从 pi 的临时文件复制原文
@@ -102,67 +102,6 @@ export function processToolResult(
 	}
 
 	return handleLargeResult(formatted, toolName, tokens, tmpPath);
-}
-
-// ── 写原文临时文件 ───────────────────────────────
-
-/** 从 bash details 中提取 pi 的原文临时文件路径 */
-function extractBashSourcePath(details: unknown): string | null {
-	if (!details || typeof details !== "object") return null;
-	const d = details as Record<string, unknown>;
-	// bash details: { fullOutputPath: string, truncation: { truncated: boolean, ... } }
-	const truncation = d.truncation as Record<string, unknown> | undefined;
-	if (truncation?.truncated && typeof d.fullOutputPath === "string") {
-		return d.fullOutputPath;
-	}
-	return null;
-}
-
-function formatTimestamp(ts: number): string {
-	const d = new Date(ts);
-	return d.toISOString().replace(/[-:T]/g, "").slice(0, 15); // 20260514T120000
-}
-
-function buildFileHeader(toolName: string, input: Record<string, unknown>, toolCallId?: string, sessionId?: string): string {
-	const lines: string[] = [
-		`=== ${toolName} ===`,
-		`时间: ${new Date().toISOString()}`,
-	];
-	if (sessionId) lines.push(`会话: ${sessionId}`);
-	if (toolCallId) lines.push(`调用ID: ${toolCallId}`);
-	// 参数摘要：截断到一行
-	const argsStr = JSON.stringify(input);
-	lines.push(`参数: ${argsStr.length > 200 ? argsStr.slice(0, 200) + "..." : argsStr}`);
-	lines.push("");
-	return lines.join("\n");
-}
-
-function writeRawToFile(
-	rawText: string,
-	toolName: string,
-	writeFallback: boolean,
-	sourcePath: string | null = null,
-	input: Record<string, unknown> = {},
-	toolCallId?: string,
-	sessionId?: string,
-): string | null {
-	const timestamp = Date.now();
-	const sidSuffix = sessionId ? sessionId.slice(-8) : "anon";
-	const tmpPath = join(PROCESSOR_DIR, `${toolName}-${sidSuffix}-${timestamp}.txt`);
-	try {
-		mkdirSync(PROCESSOR_DIR, { recursive: true });
-		if (writeFallback) throw new Error("simulated write failure");
-		const header = buildFileHeader(toolName, input, toolCallId, sessionId);
-		// bash 被截断时，从 pi 的临时文件读取完整原文
-		const body = (sourcePath && existsSync(sourcePath))
-			? (() => { const f = require("fs"); return f.readFileSync(sourcePath, "utf-8"); })()
-			: rawText;
-		writeFileSync(tmpPath, header + body, "utf-8");
-		return tmpPath;
-	} catch (err) {
-		console.error(`[tool-result-processor] 写入临时文件失败: ${tmpPath}`, err);
-		return null;
-	}
 }
 
 // ── 大结果处理 ────────────────────────────────────
