@@ -79,7 +79,6 @@ async function connectServer(name: string, s: ServerConfig, signal?: AbortSignal
 	let transport: { close: () => Promise<void> };
 
 	if (s.url) {
-		// HTTP: 先试 StreamableHTTP，失败 fallback SSE
 		const headers: Record<string, string> = {};
 		const token = resolveBearerToken(s);
 		if (token) headers["Authorization"] = `Bearer ${token}`;
@@ -87,11 +86,22 @@ async function connectServer(name: string, s: ServerConfig, signal?: AbortSignal
 		const url = new URL(s.url);
 
 		try {
+			// StreamableHTTP: 跳过初始化 GET SSE 流（GLM 返回 400 导致失败）
+			// 直接用 POST 发送 initialize，避免 GET SSE 握手
 			const httpTransport = new StreamableHTTPClientTransport(url, { requestInit });
+			// monkey-patch start()：原版会发 GET SSE 请求，GLM 不支持（返回 400）
+			// 替换为空操作，让 connect() 直接走 POST initialize
+			const origStart = httpTransport.start.bind(httpTransport);
+			httpTransport.start = async () => {
+				// 仅初始化 AbortController，不发 GET SSE
+				try { await origStart(); } catch {
+					// GET SSE 失败（400）可忽略，POST 仍然可用
+				}
+			};
 			await client.connect(httpTransport, timeout);
 			transport = httpTransport;
 		} catch {
-			// StreamableHTTP 失败，尝试 SSE fallback
+			// StreamableHTTP 完全失败，尝试 SSE fallback
 			const sseTransport = new SSEClientTransport(url, { requestInit });
 			await client.connect(sseTransport, timeout);
 			transport = sseTransport;
