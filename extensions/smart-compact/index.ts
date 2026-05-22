@@ -10,7 +10,7 @@ import { segmentMessages } from "./segmenter.js";
 import { summarizeSegments, type SegmentSummary } from "./summarizer.js";
 import { mergeAndCompact } from "./merger.js";
 import { loadConfig } from "./config.js";
-import { createLLMCaller } from "./llm-caller.js";
+import { createLLMCaller, extractCurrentTask } from "./llm-caller.js";
 
 export default async function (pi: ExtensionAPI) {
 	// 注册命令：触发增强版 compaction
@@ -66,10 +66,19 @@ export default async function (pi: ExtensionAPI) {
 				? createLLMCaller(ctx, config.segmentModel)
 				: callLLM;
 
+			// Phase 0.5: 从尾部消息提取当前任务描述（供相关性判断使用）
+			let currentTask = "";
+			try {
+				currentTask = await extractCurrentTask(messagesToSummarize, callLLM, config, signal);
+				console.log(`[smart-compact] 当前任务: ${currentTask.slice(0, 100)}`);
+			} catch {
+				console.log("[smart-compact] 任务提取失败，使用空任务描述");
+			}
+
 			// Phase 1: 分段摘要 + 相关性判断
 			const summaries = await summarizeSegments(
 				segments,
-				/* currentTask */ "",
+				currentTask,
 				config,
 				segmentCallLLM,
 				signal,
@@ -83,7 +92,7 @@ export default async function (pi: ExtensionAPI) {
 					relevantSummaries,
 					turnPrefixMessages,
 					previousSummary,
-					currentTask: "",
+					currentTask,
 				},
 				config,
 				callLLM,
