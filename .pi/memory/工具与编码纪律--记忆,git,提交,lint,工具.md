@@ -41,6 +41,7 @@
 - 卸载了 pi-subagents（~3500 tokens），PV 通过 runSubagent() 自己 spawn pi
 - 卸载了 pi-package-search、pi-resource-center
 - 卸载了 mempalace 扩展（2026-05-08），改用纯文件 3 级记忆
+- pi-atelier 内置 memory 扩展改为独立 pi-memory 包（2026-05-25），settings.json 中 `-extensions/memory/index.ts` 排除内置版避免工具名冲突
 
 ## pi 扩展 reload vs restart
 
