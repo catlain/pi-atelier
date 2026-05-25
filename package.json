@@ -22,7 +22,8 @@
 			"extensions/session-analyzer",
 			"extensions/shepherd",
 			"extensions/subagent",
-			"extensions/workflow"
+			"extensions/workflow",
+		"extensions/roadmap"
 		],
 		"skills": [],
 		"agents": []

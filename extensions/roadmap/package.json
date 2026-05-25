@@ -1,18 +1,1 @@
-{
-  "name": "@pi-atelier/roadmap",
-  "version": "0.1.0",
-  "description": "Epic→Story→Task 三层路线图管理",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsup index.ts lib/*.ts --format esm,cjs --dts",
-    "test": "vitest run"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "typescript": "^5.7.0"
-  },
-  "peerDependencies": {
-    "@earendil-works/pi-coding-agent": ">=0.5.0"
-  }
-}
+{"name":"roadmap","type":"commonjs","devDependencies":{"@types/node":"^25.6.2","typescript":"^6.0.3","vitest":"^4.1.5"},"dependencies":{"@sinclair/typebox":"^0.34.49"}}

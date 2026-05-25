@@ -4,6 +4,7 @@
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
+import { existsSync } from "node:fs";
 
 import type { RoadmapFile } from "./types";
 import { GLOBAL_ROADMAP_DIR } from "./types";
@@ -98,7 +99,7 @@ export function registerDoneTool(pi: ExtensionAPI) {
 			_ctx: unknown,
 		) {
 			const filePath = getRoadmapFilePath(params.roadmapId);
-			if (!fs.existsSync(filePath)) {
+			if (!existsSync(filePath)) {
 				return { content: [{ type: "text" as const, text: `路线图 "${params.roadmapId}" 不存在。` }], details: {} };
 			}
 
