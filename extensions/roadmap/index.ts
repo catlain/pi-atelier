@@ -116,8 +116,7 @@ function loadAllRoadmaps(): RoadmapFile[] {
 
 /** 构造渲染器需要的 details 对象 */
 function buildDetails(roadmaps: RoadmapFile[], projectStories: any[]): any {
-	const { calculateProgress } = require("./lib/progress");
-	const { getNextTasks } = require("./lib/progress");
+	const { calcProgress, getNextTasks } = require("./lib/progress");
 
 	return {
 		roadmaps: roadmaps.map((rm) => {
