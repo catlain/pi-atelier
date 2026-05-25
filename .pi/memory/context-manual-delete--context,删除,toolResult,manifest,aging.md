@@ -71,5 +71,6 @@ registerContextCommand(pi, stateRef);
 ### 关键约束
 - **运行时状态必须在入口闭包中**：jiti `moduleCache:false` 导致模块级状态不可靠
 - **所有删除标记必须持久化**：manuallyDeletedIds、agingDeletedIds 持久化到会话级 manifest
-- **agingTracker/agingSnapshot 不持久化**：reload 后从 0 开始计数
+- **agingCounts 持久化到 manifest**：每轮都保存 agingTracker（cleanup 后），reload 后恢复计数
+- **saveManifest 必须每轮执行**：不能只在 removedTcIds.size > 0 时调用，否则 agingCounts 只在有删除时才写入
 - **distill 删除 = agingDeletedIds 删除**：两个删除通道都要写入同一个持久集合
