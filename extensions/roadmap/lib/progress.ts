@@ -2,7 +2,8 @@
  * Roadmap 进度计算与任务提取
  */
 
-import type { RoadmapFile, Epic, Story, Task, ItemStatus } from "./types";
+import type { RoadmapFile, Epic, Story, Task, Priority } from "./types";
+import { getEffectivePriority, comparePriority } from "./types";
 
 // ── 进度计算 ──
 
@@ -69,8 +70,6 @@ export interface NextTask extends Task {
 export function getNextTasks(roadmap: RoadmapFile, limit = 5): NextTask[] {
 	const candidates: NextTask[] = [];
 
-	const priorityOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
-
 	for (const epic of roadmap.epics) {
 		// 跳过已完成/已丢弃的 epic
 		if (epic.status === "done" || epic.status === "dropped") continue;
@@ -78,8 +77,12 @@ export function getNextTasks(roadmap: RoadmapFile, limit = 5): NextTask[] {
 		for (const story of epic.stories) {
 			if (story.status === "done" || story.status === "dropped") continue;
 
+			// 计算有效优先级：task > story > epic
+			const storyPrio = getEffectivePriority(story.priority, epic.priority);
+
 			for (const task of story.tasks) {
 				if (task.status === "todo" || task.status === "doing") {
+					const taskPrio = getEffectivePriority(task.priority, storyPrio);
 					candidates.push({
 						...task,
 						epicId: epic.id,
@@ -94,12 +97,14 @@ export function getNextTasks(roadmap: RoadmapFile, limit = 5): NextTask[] {
 		}
 	}
 
-	// doing 优先，然后按 epic priority 排序
+	// doing 优先，然后按有效优先级排序（使用存储的 task.priority 作为 effective priority）
 	candidates.sort((a, b) => {
-		// doing 排前面
 		if (a.status === "doing" && b.status !== "doing") return -1;
 		if (a.status !== "doing" && b.status === "doing") return 1;
-		return 0;
+		return comparePriority(
+			a.priority ?? "medium",
+			b.priority ?? "medium",
+		);
 	});
 
 	return candidates.slice(0, limit);
@@ -112,11 +117,14 @@ export function getAllNextTasks(roadmaps: RoadmapFile[], limit = 5): NextTask[] 
 		if (rm.meta.status !== "active") continue;
 		all.push(...getNextTasks(rm, limit));
 	}
-	// doing 优先
+	// doing 优先，然后按有效优先级排序
 	all.sort((a, b) => {
 		if (a.status === "doing" && b.status !== "doing") return -1;
 		if (a.status !== "doing" && b.status === "doing") return 1;
-		return 0;
+		return comparePriority(
+			getEffectivePriority(a.priority),
+			getEffectivePriority(b.priority),
+		);
 	});
 	return all.slice(0, limit);
 }

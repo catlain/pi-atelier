@@ -47,6 +47,8 @@ export interface Task {
 	title: string;
 	/** 当前状态 */
 	status: ItemStatus;
+	/** 优先级（可选，默认继承 Story/Epic 的优先级） */
+	priority?: Priority;
 	/** 完成日期，仅 done 时有值 */
 	doneDate?: string;
 	/** 完成备注/产出链接 */
@@ -63,6 +65,8 @@ export interface Story {
 	description: string;
 	/** 当前状态 */
 	status: ItemStatus;
+	/** 优先级（可选，默认继承 Epic 的优先级） */
+	priority?: Priority;
 	/** 任务列表 */
 	tasks: Task[];
 }
@@ -109,6 +113,24 @@ export const PROJECT_ROADMAP_FILE = "roadmap.json";
 
 /** 项目级路线图目录 */
 export const PROJECT_ROADMAP_DIR = ".pi/roadmap";
+
+// ── 优先级工具 ──
+
+/** 优先级排序权重 */
+const PRIORITY_WEIGHT: Record<Priority, number> = { high: 0, medium: 1, low: 2 };
+
+/** 获取有效优先级：自身 > 父级 > medium */
+export function getEffectivePriority(
+	own?: Priority,
+	parent?: Priority,
+): Priority {
+	return own ?? parent ?? "medium";
+}
+
+/** 比较两个优先级，返回可传给 sort() 的比较函数 */
+export function comparePriority(a: Priority, b: Priority): number {
+	return PRIORITY_WEIGHT[a] - PRIORITY_WEIGHT[b];
+}
 
 // ── 辅助类型 ──
 

@@ -4,68 +4,91 @@
   "stories": [
     {
       "id": "E1.S1",
-      "title": "文档与发布准备",
-      "description": "补齐 README、安装指南、npm 发布流程",
+      "title": "代码拆分与独立化",
+      "description": "从 extensions/memory 提取为独立目录，能独立安装运行",
       "status": "todo",
-      "project": "/home/lain/.pi/agent/git/github.com/catlain/pi-atelier",
       "tasks": [
         {
           "id": "E1.S1.T1",
-          "title": "写 pi-memory 整体 README",
+          "title": "创建独立目录结构和 package.json",
           "status": "todo"
         },
         {
           "id": "E1.S1.T2",
-          "title": "写安装指南",
+          "title": "处理 shared-utils 依赖（内联或提取公共模块）",
           "status": "todo"
         },
         {
           "id": "E1.S1.T3",
-          "title": "配置 npm publish 自动化",
-          "status": "todo"
-        },
-        {
-          "id": "E1.S1.T4",
-          "title": "发布到 npm 并验证安装",
-          "status": "todo"
-        }
-      ]
-    },
-    {
-      "id": "E1.S2",
-      "title": "代码拆分与独立化",
-      "description": "从 extensions/memory 提取为独立包",
-      "status": "todo",
-      "project": "/home/lain/.pi/agent/git/github.com/catlain/pi-atelier",
-      "tasks": [
-        {
-          "id": "E1.S2.T1",
-          "title": "创建独立 package.json 和 tsconfig.json",
-          "status": "todo"
-        },
-        {
-          "id": "E1.S2.T2",
-          "title": "处理 shared-utils 依赖",
-          "status": "todo"
-        },
-        {
-          "id": "E1.S2.T3",
           "title": "迁移扩展入口和工具注册代码",
           "status": "todo"
         },
         {
-          "id": "E1.S2.T4",
+          "id": "E1.S1.T4",
           "title": "独立测试套件通过",
           "status": "todo"
         }
       ]
     },
     {
+      "id": "E1.S2",
+      "title": "文档与发布",
+      "description": "补齐 README、安装指南，确保独立安装可用",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E1.S2.T1",
+          "title": "写 pi-memory 整体 README（功能介绍、截图）",
+          "status": "todo"
+        },
+        {
+          "id": "E1.S2.T2",
+          "title": "写安装指南（git install + 配置步骤）",
+          "status": "todo"
+        },
+        {
+          "id": "E1.S2.T3",
+          "title": "写 API 文档（工具列表 + 参数说明）",
+          "status": "todo"
+        },
+        {
+          "id": "E1.S2.T4",
+          "title": "验证独立 git 安装能正常工作",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E1.S3",
+      "title": "npm 发布（可选，推迟）",
+      "description": "将来注册 npm 账号后发布到 npm registry",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E1.S3.T1",
+          "title": "注册 npm 账号并配置 publish 权限",
+          "status": "todo",
+          "priority": "low"
+        },
+        {
+          "id": "E1.S3.T2",
+          "title": "配置 npm publish 自动化（CI）",
+          "status": "todo",
+          "priority": "low"
+        },
+        {
+          "id": "E1.S3.T3",
+          "title": "发布到 npm 并验证 npm install 安装",
+          "status": "todo",
+          "priority": "low"
+        }
+      ]
+    },
+    {
       "id": "E2.S1",
       "title": "架构设计与依赖梳理",
-      "description": "梳理三个扩展间的依赖关系",
+      "description": "梳理三个扩展间的依赖关系，设计独立包结构",
       "status": "todo",
-      "project": "/home/lain/.pi/agent/git/github.com/catlain/pi-atelier",
       "tasks": [
         {
           "id": "E2.S1.T1",
@@ -87,9 +110,8 @@
     {
       "id": "E2.S2",
       "title": "代码拆分与发布",
-      "description": "提取三个扩展为独立包并发布",
+      "description": "提取三个扩展为独立包并验证 git 安装",
       "status": "todo",
-      "project": "/home/lain/.pi/agent/git/github.com/catlain/pi-atelier",
       "tasks": [
         {
           "id": "E2.S2.T1",
@@ -108,7 +130,7 @@
         },
         {
           "id": "E2.S2.T4",
-          "title": "独立测试通过并发布",
+          "title": "独立测试通过并验证 git 安装",
           "status": "todo"
         }
       ]
@@ -118,7 +140,6 @@
       "title": "代码拆分",
       "description": "提取 workflow 相关扩展和 lib/workflow-core",
       "status": "todo",
-      "project": "/home/lain/.pi/agent/git/github.com/catlain/pi-atelier",
       "tasks": [
         {
           "id": "E3.S1.T1",
@@ -150,9 +171,8 @@
     {
       "id": "E3.S2",
       "title": "文档与发布",
-      "description": "补齐文档并发布",
+      "description": "补齐文档并验证 git 安装",
       "status": "todo",
-      "project": "/home/lain/.pi/agent/git/github.com/catlain/pi-atelier",
       "tasks": [
         {
           "id": "E3.S2.T1",
@@ -166,7 +186,7 @@
         },
         {
           "id": "E3.S2.T3",
-          "title": "发布到 npm",
+          "title": "验证独立 git 安装",
           "status": "todo"
         }
       ]
@@ -176,7 +196,6 @@
       "title": "代码拆分与发布",
       "description": "提取 shepherd 扩展和 lib/shepherd",
       "status": "todo",
-      "project": "/home/lain/.pi/agent/git/github.com/catlain/pi-atelier",
       "tasks": [
         {
           "id": "E4.S1.T1",
@@ -200,7 +219,7 @@
         },
         {
           "id": "E4.S1.T5",
-          "title": "独立测试通过并发布",
+          "title": "独立测试通过并验证 git 安装",
           "status": "todo"
         }
       ]
@@ -210,7 +229,6 @@
       "title": "技术文章输出",
       "description": "写 2-3 篇技术文章",
       "status": "todo",
-      "project": "/home/lain/.pi/agent/git/github.com/catlain/pi-atelier",
       "tasks": [
         {
           "id": "E5.S1.T1",
@@ -234,7 +252,6 @@
       "title": "社区贡献",
       "description": "给 pi-mono 提 PR",
       "status": "todo",
-      "project": "/home/lain/.pi/agent/git/github.com/catlain/pi-atelier",
       "tasks": [
         {
           "id": "E5.S2.T1",
