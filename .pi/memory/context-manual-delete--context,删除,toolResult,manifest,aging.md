@@ -12,7 +12,7 @@
 | `handle-context.ts` (162行) | context 事件处理逻辑 | 从 index.ts 接收闭包变量 |
 | `context.ts` (151行) | 纯 UI（面板渲染+交互） | 通过 stateRef 参数 |
 | `collect.ts` (202行) | 纯计算 collectData(pi, ctx, opts) | 通过 opts 参数 |
-| `shared.ts` (122行) | 配置/常量/工具函数 | 无运行时状态 |
+| `shared.ts` (~150行) | 配置/常量/工具函数 + hints 配置 | 无运行时状态 |
 | `types.ts` | 类型定义（含 CollectOpts, ContextStateRef） | - |
 | `render.ts` | 纯渲染 | - |
 
@@ -67,6 +67,13 @@ registerContextCommand(pi, stateRef);
 - **必须降序排序后再 splice**：否则 splice 较小 index 后，后续较大 index 指向错误位置
 - 例：toRemove=[3,1] → 先 splice(1) → index 3 变成 2 → splice(3) 删错元素
 - 修复：`toRemove.sort((a, b) => b - a)` 后再逐个 splice
+
+### 提示文案配置化（hints-default.json）
+- **默认模板**：`extensions/context/hints-default.json`
+- **用户覆盖**：`~/.pi/agent/extensions/context/hints.json`（只需写要改的字段，自动合并）
+- **模板占位符**：`{label}` `{tokens}` `{toolName}` `{tmpPath}` `{preview}` `{more}` `{formatted}`
+- **可配置项**：distillWarning、distillWarningShort、processorSummary、processorSmallResult
+- **加载逻辑**：`shared.ts` → `loadHintsConfig()` + `fillTemplate()`
 
 ### 关键约束
 - **运行时状态必须在入口闭包中**：jiti `moduleCache:false` 导致模块级状态不可靠
