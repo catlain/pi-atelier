@@ -12,6 +12,13 @@ vi.mock("../shared.js", () => ({
 	writeCachedMessages: vi.fn(),
 	saveManifest: vi.fn(),
 	loadManifest: vi.fn(),
+	hintsConfig: {
+		distillWarning: "📋 [auto-distill] 「{label}」全文 ~{tokens} tokens，超过上下文阈值。请使用 read(offset,limit)/grep 等精确方法获取所需信息，下轮请求时此结果会被自动移除。",
+		distillWarningShort: "📋 大结果「{label}」下轮自动移除",
+		processorSummary: "[processed] {toolName} 结果（~{tokens} tokens）\n完整内容：{tmpPath}\n\n{preview}\n{more}",
+		processorSmallResult: "{formatted}\n\n原文：{tmpPath}",
+	},
+	fillTemplate: (t: string, vars: Record<string, string>) => t.replace(/\{(\w+)\}/g, (_: string, k: string) => vars[k] ?? `{${k}}`),
 }));
 
 vi.mock("../distill-helpers.js", () => ({

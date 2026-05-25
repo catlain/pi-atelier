@@ -1,6 +1,6 @@
 /** handle-context.ts — context 事件处理逻辑（纯操作，从 index.ts 闭包获取状态引用） */
 import { buildToolCallMap, estimateTokens, toolMeta, removeOrphanedToolCalls } from "./distill-helpers.js";
-import { getContextConfig, distilledMap, readCachedMessages, writeCachedMessages, saveManifest, loadManifest } from "./shared.js";
+import { getContextConfig, distilledMap, readCachedMessages, writeCachedMessages, saveManifest, loadManifest, hintsConfig, fillTemplate } from "./shared.js";
 import { truncateToolCallArgs } from "./toolcall-args-truncator.js";
 
 export interface ContextState {
@@ -91,8 +91,8 @@ export function handleContextEvent(
 				const meta = toolMeta(msg, toolCallMap);
 				const label = meta.meta || toolName;
 				pi.events.emit("ephemeral:hint", {
-					text: `📋 [auto-distill] 「${label}」全文 ~${origTokens} tokens，超过上下文阈值。请使用 read(offset,limit)/grep 等精确方法获取所需信息，下轮请求时此结果会被自动移除。`,
-					short: `📋 大结果「${label}」下轮自动移除`,
+					text: fillTemplate(hintsConfig.distillWarning, { label, tokens: String(origTokens) }),
+					short: fillTemplate(hintsConfig.distillWarningShort, { label }),
 				});
 			}
 		}

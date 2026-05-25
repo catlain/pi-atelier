@@ -17,6 +17,7 @@ import {
 	extractBashSourcePath,
 	writeRawToFile,
 } from "./raw-writer.js";
+import { hintsConfig, fillTemplate } from "./shared.js";
 
 // ── 类型 ──────────────────────────────────────────
 
@@ -94,10 +95,13 @@ export function processToolResult(
 	const bashSourcePath = (toolName === "bash") ? extractBashSourcePath(event.details) : null;
 	const tmpPath = writeRawToFile(rawText, toolName, writeFallback, bashSourcePath, event.input, event.toolCallId, sessionId);
 
+	// 小结果：格式化文本 + 原文路径
 	if (tokens < threshold) {
-		// 小结果：格式化文本 + 原文路径
-		let smallResult = formatted;
-		if (tmpPath) smallResult += `\n\n原文：${tmpPath}`;
+		let smallResult = fillTemplate(hintsConfig.processorSmallResult, {
+			formatted,
+			tmpPath: tmpPath ?? "",
+		});
+		if (!tmpPath) smallResult = formatted; // 无 tmpPath 时不显示原文路径
 		return { content: [{ type: "text", text: smallResult }] };
 	}
 
@@ -136,12 +140,11 @@ function buildSummary(
 		? `\n... (${lines.length - PREVIEW_LINES} more lines)`
 		: "";
 
-	const parts = [
-		`[processed] ${toolName} 结果（~${formatTokens(tokens)} tokens）`,
-		`完整内容：${tmpPath}`,
-		"",
+	return fillTemplate(hintsConfig.processorSummary, {
+		toolName,
+		tokens: formatTokens(tokens),
+		tmpPath,
 		preview,
 		more,
-	];
-	return parts.join("\n");
+	});
 }

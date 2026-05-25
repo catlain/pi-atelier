@@ -1,8 +1,43 @@
 /** shared.ts — 配置、常量、持久化工具函数。不持有运行时可变状态。 */
-import { join } from "path";
+import { join, dirname } from "path";
 import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync } from "fs";
+import { fileURLToPath } from "url";
 
 export const DISTILL_DIR = "/tmp/pi-distill";
+
+// ── Hints 模板配置 ──
+export interface HintsConfig {
+	distillWarning: string;
+	distillWarningShort: string;
+	processorSummary: string;
+	processorSmallResult: string;
+}
+
+const DEFAULT_HINTS: HintsConfig = {
+	distillWarning: "📋 [auto-distill] 「{label}」全文 ~{tokens} tokens，超过上下文阈值。请使用 read(offset,limit)/grep 等精确方法获取所需信息，下轮请求时此结果会被自动移除。",
+	distillWarningShort: "📋 大结果「{label}」下轮自动移除",
+	processorSummary: "[processed] {toolName} 结果（~{tokens} tokens）\n完整内容：{tmpPath}\n\n{preview}\n{more}",
+	processorSmallResult: "{formatted}\n\n原文：{tmpPath}",
+};
+
+const USER_HINTS_PATH = join(process.env.HOME || "/root", ".pi/agent/extensions/context/hints.json");
+
+function loadHintsConfig(): HintsConfig {
+	try {
+		if (existsSync(USER_HINTS_PATH)) {
+			const userHints = JSON.parse(readFileSync(USER_HINTS_PATH, "utf-8"));
+			return { ...DEFAULT_HINTS, ...userHints };
+		}
+	} catch { /* ignore */ }
+	return { ...DEFAULT_HINTS };
+}
+
+export const hintsConfig = loadHintsConfig();
+
+/** 替换模板占位符 */
+export function fillTemplate(template: string, vars: Record<string, string>): string {
+	return template.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? `{${key}}`);
+}
 export const RECORDINGS_DIR = join(DISTILL_DIR, "recordings");
 export const MSG_CACHE = join(DISTILL_DIR, "last-messages.json");
 export const PAYLOAD_CACHE = join(DISTILL_DIR, "last-payload.json");
