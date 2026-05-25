@@ -1,0 +1,15 @@
+{
+  "name": "pi-roadmap",
+  "version": "1.0.0",
+  "description": "Roadmap management extension for pi-coding-agent — Epic/Story/Task planning with 5 tools",
+  "main": "index.ts",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": ">=0.9.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
+  }
+}
