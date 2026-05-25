@@ -163,8 +163,8 @@ function buildWidgetLines(roadmaps: RoadmapFile[]): string[] {
 
 	for (const rm of roadmaps) {
 		if (rm.meta.status !== "active") continue;
-		const progress = calcProgress(rm);
-		const bar = renderProgressBar(progress);
+		const { percent } = calcProgress(rm);
+		const bar = renderProgressBar(percent);
 		lines.push(`${rm.meta.title} ${bar} ${progress}%`);
 
 		for (const epic of rm.epics) {
