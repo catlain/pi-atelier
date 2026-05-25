@@ -194,12 +194,14 @@
         {
           "id": "E10.S1.T1",
           "title": "创建独立目录 + 迁移代码",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-25"
         },
         {
           "id": "E10.S1.T2",
           "title": "测试通过 + 推 GitHub + pi install 验证",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-25"
         }
       ]
     },
