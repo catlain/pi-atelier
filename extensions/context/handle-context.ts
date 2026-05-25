@@ -104,12 +104,13 @@ export function handleContextEvent(
 			agingTracker.delete(tcId);
 			agingDeletedIds.add(tcId);
 		}
-		saveManifest(state.sessionId, { manuallyDeleted: manuallyDeletedIds, agingDeleted: agingDeletedIds, agingCounts: agingTracker });
 	}
 
 	for (const tcId of agingTracker.keys()) {
 		if (!activeTcIds.has(tcId)) agingTracker.delete(tcId);
 	}
+	// 每轮保存 manifest（含 agingCounts），确保 reload 后恢复计数
+	saveManifest(state.sessionId, { manuallyDeleted: manuallyDeletedIds, agingDeleted: agingDeletedIds, agingCounts: agingTracker });
 
 	// 更新 aging 快照
 	agingSnapshot.clear();
