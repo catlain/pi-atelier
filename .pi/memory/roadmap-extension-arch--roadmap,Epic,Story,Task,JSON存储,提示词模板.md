@@ -17,7 +17,7 @@ extensions/roadmap/
 ├── lib/
 │   ├── types.ts          # 类型 + 常量（GLOBAL_ROADMAP_DIR 等）
 │   ├── validator.ts      # JSON 验证 + 修复（独立于 store）
-│   ├── store.ts          # 读写 + 归档（≤200行）
+│   ├── store.ts          # 读写 + 归档
 │   ├── progress.ts       # 进度计算 + next 提取
 │   ├── parser.ts         # 查询/过滤
 │   ├── planner.ts        # 提示词加载 + {{变量}} 替换
@@ -35,10 +35,24 @@ extensions/roadmap/
 - 工具注册：必须 `label` 字段，`execute(id, params, signal, onUpdate, ctx)` 5 参数
 - 返回格式：`{ content: [{ type: "text", text }], details: {} }`
 - Hook：`pi.on("before_agent_start", ...) → { systemPrompt: "..." }`
-- 提示词加载：`planner.ts` 的 `loadPrompt()` + `buildPrompt(template, vars)` 参考 plan-verify 的 `loadTaskTemplate`
+- 提示词加载：`planner.ts` 的 `loadPrompt()` + `buildPrompt(template, vars)`
 
-## 待完成
+## 构建与加载
 
-- [ ] Step 4: arch-code-review
-- [ ] Step 5: 更新 docs/agent/ 文档
-- [ ] 实际使用验证（创建第一个 roadmap）
+- **不需要 build**：pi 用 jiti 直接加载 TypeScript 源码
+- **package.json 格式**：`"type": "commonjs"` + `"main": "dist/index.js"`（占位，实际不走 dist）
+- **tsconfig**：继承 `tsconfig.base.json`
+- **注册方式**：`settings.json` 的 packages 中加 `+extensions/roadmap/index.ts`
+- **pi.extensions**：`package.json` 中 `pi.extensions` 数组自动发现，但 settings 显式列表优先
+
+## 开发流程记录
+
+- 按 safe-change feature workflow 走完全部 5 步（Preflight → Design → TDD → Code Review → Docs Update）
+- arch-code-review 发现 6 个问题，修复 5 个，1 个 workaround（`pi.on as any` 跟 memory 扩展一致）
+- 5 个架构文档已更新（REPO_INVENTORY, ARCHITECTURE, DATA_MODEL, CHANGE_GUIDE, RISK_REGISTER）
+
+## 待验证
+
+- [ ] pi 启动加载验证（工具是否注册成功）
+- [ ] 创建第一个 roadmap（pi-atelier 拆分 / 量化三线）
+- [ ] before_agent_start 注入效果

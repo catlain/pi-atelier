@@ -49,7 +49,13 @@ export function registerPlanTool(pi: ExtensionAPI) {
 			_onUpdate: unknown,
 			_ctx: unknown,
 		) {
-			const { roadmapId, content, action } = params;
+			const { roadmapId, action } = params;
+			let { content } = params;
+
+			// 兼容 LLM 传字符串的情况
+			if (typeof content === "string") {
+				try { content = JSON.parse(content); } catch { /* fallback below */ }
+			}
 
 			if (!content || typeof content !== "object") {
 				return { content: [{ type: "text" as const, text: "错误：content 必须是有效的 JSON 对象。" }], details: {} };
