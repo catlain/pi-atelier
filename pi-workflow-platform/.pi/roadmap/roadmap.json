@@ -1,0 +1,82 @@
+{
+  "source": "pi-atelier-split",
+  "syncedAt": "2026-05-25",
+  "stories": [
+    {
+      "id": "E14.S1",
+      "title": "架构设计",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E14.S1.T1",
+          "title": "设计工作流平台整体架构（subagent + pv/fr/fo 示例 + 用户自定义工作流指南）",
+          "status": "todo"
+        },
+        {
+          "id": "E14.S1.T2",
+          "title": "设计统一配置格式（mcp.json 兼容 vision 配置）",
+          "status": "todo"
+        },
+        {
+          "id": "E14.S1.T3",
+          "title": "设计开发者文档结构（如何构建自定义工作流）",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E14.S2",
+      "title": "代码实施",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E14.S2.T1",
+          "title": "创建 pi-workflow-platform 仓库（subagent + plan-verify 合并）",
+          "status": "todo"
+        },
+        {
+          "id": "E14.S2.T2",
+          "title": "内联 workflow-core + shared-utils 依赖",
+          "status": "todo"
+        },
+        {
+          "id": "E14.S2.T3",
+          "title": "集成 pv/fr/fo 作为内置示例工作流",
+          "status": "todo"
+        },
+        {
+          "id": "E14.S2.T4",
+          "title": "统一子代理定义文件（agents/*.md）",
+          "status": "todo"
+        },
+        {
+          "id": "E14.S2.T5",
+          "title": "完善可视化 + 可干预 + 失败检测机制",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E14.S3",
+      "title": "文档与发布",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E14.S3.T1",
+          "title": "写开发者指南：如何构建自定义工作流",
+          "status": "todo"
+        },
+        {
+          "id": "E14.S3.T2",
+          "title": "写 README（功能 + 用法 + 示例 + 自定义工作流教程）",
+          "status": "todo"
+        },
+        {
+          "id": "E14.S3.T3",
+          "title": "推 GitHub + pi install 验证",
+          "status": "todo"
+        }
+      ]
+    }
+  ]
+}
