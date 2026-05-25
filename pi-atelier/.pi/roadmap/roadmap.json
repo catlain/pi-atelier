@@ -164,7 +164,9 @@
         {
           "id": "E8.S1.T2",
           "title": "测试通过 + 推 GitHub + pi install 验证",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-25",
+          "note": "53 测试通过 + 推 GitHub + pi install 验证"
         }
       ]
     },
@@ -182,7 +184,9 @@
         {
           "id": "E9.S1.T2",
           "title": "测试通过 + 推 GitHub + pi install 验证",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-25",
+          "note": "23 测试通过 + 推 GitHub + pi install 验证"
         }
       ]
     },
@@ -213,22 +217,30 @@
         {
           "id": "E11.S1.T1",
           "title": "复制 mcp-lite 到 ~/.pi/agent/extensions/mcp-lite/",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-25",
+          "note": "mcp-lite, env-and-status, notification 搬到 ~/.pi/agent/extensions/，settings.json 只保留 subagent"
         },
         {
           "id": "E11.S1.T2",
           "title": "复制 env-and-status 到 ~/.pi/agent/extensions/env-and-status/",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-25",
+          "note": "全部搬到 ~/.pi/agent/extensions/"
         },
         {
           "id": "E11.S1.T3",
           "title": "复制 notification 到 ~/.pi/agent/extensions/notification/",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-25",
+          "note": "全部搬到 ~/.pi/agent/extensions/"
         },
         {
           "id": "E11.S1.T4",
           "title": "验证 pi 加载正常",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-25",
+          "note": "settings.json 已更新，pi-atelier 只保留 subagent"
         }
       ]
     },
