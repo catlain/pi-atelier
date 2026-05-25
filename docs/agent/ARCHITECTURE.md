@@ -42,8 +42,8 @@ Last validated: 2025-05-22
 ├───────┼────────────────────────┼────────────────────────────┤
 │  Shared Libraries              │                            │
 │  ┌──────────────┐  ┌──────────┴─────┐  ┌──────────────┐   │
-│  │ shared-utils │  │ workflow-core  │  │ shepherd lib │   │
-│  │ (paths,types)│  │ (state machine)│  │ (rule engine)│   │
+│  │shared-utils  │  │ workflow-core  │  │ shepherd lib │   │
+│  │(packages/)   │  │ (state machine)│  │ (rule engine)│   │
 │  └──────────────┘  └────────────────┘  └──────────────┘   │
 │  ┌──────────────┐                                           │
 └──────────────────────────────────────────────────────────────┘
@@ -89,14 +89,14 @@ Last validated: 2025-05-22
 
 | Library | Exports | Consumers |
 |---------|---------|-----------|
-| shared-utils | `getSettingsValue`, `scanMemoryDir`, `parseFileName`, `truncatedResult`, `discoverAgents`, `getAgentDescription`, `getSettingsSection`, `patchSettingsSection`, `setSettingsValue` | context, env-and-status, memory, shepherd, session-analyzer, plan-verify, subagent, journal |
+| shared-utils (`packages/`) | `getSettingsValue`, `scanMemoryDir`, `parseFileName`, `truncatedResult`, `discoverAgents`, `getAgentDescription`, `getSettingsSection`, `patchSettingsSection`, `setSettingsValue` | context, env-and-status, memory, shepherd, session-analyzer, plan-verify, subagent, journal |
 | workflow-core | `runSubagent`, `registerWorkflowTool`, `createStateManager`, `createUIUpdater`, `createSubagentWidget`, `saveSubagentOutput`, `loadAgentDef`, `setSessionFileResolver` | plan-verify, subagent |
 | shepherd (lib) | `getMatchTargets`, `ruleMatches`, `pushWarning`, `notifySummary`, `hasWarnings`, `StateTracker`, `checkLineCount`, `registerToolCall`, `registerToolResult`, `drainHints`, `peekHints` | shepherd (ext) |
 
 ## Dependency Direction
 
 ```
-Extensions → lib/* → pi-coding-agent (host)
+Extensions → lib/* + packages/* → pi-coding-agent (host)
 Extensions → @modelcontextprotocol/sdk (external)
 Extensions ∤ Extensions (no direct cross-extension imports)
 ```
@@ -104,7 +104,8 @@ Extensions ∤ Extensions (no direct cross-extension imports)
 Key rules:
 - Extensions never import from other extensions directly
 - Cross-extension communication only via `pi.events` event bus
-- Shared libraries (`lib/*`) have no extension dependencies
+- Shared libraries (`lib/*`, `packages/*`) have no extension dependencies
+- `packages/pi-shared-utils` moved from `lib/` in 2025-05 migration
 - `lib/shepherd` and `lib/workflow-core` are the heaviest shared libs
 
 ## Main Execution Flows

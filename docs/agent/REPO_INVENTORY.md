@@ -66,10 +66,11 @@ pi-atelier/
 │   ├── shepherd/        # Rule-based hook engine
 │   ├── subagent/        # Sub-agent management
 │   └── workflow/        # Workflow engine (barrel export)
-├── lib/                 # 4 shared libraries (workspace packages)
-│   ├── shared-utils/    # Paths, types, helpers (8 consumers)
+├── lib/                 # 2 shared libraries (workspace packages)
 │   ├── workflow-core/   # State machine, Gate, subagent dispatch
 │   ├── shepherd/        # Rule engine core (shared by shepherd ext)
+├── packages/            # 1 shared library (workspace package)
+│   └── pi-shared-utils/ # Paths, types, helpers (8 consumers)
 ├── docs/agent/          # Architecture docs (this recon)
 ├── tsconfig.base.json   # Shared TS config + path aliases
 ├── vitest.config.ts     # Root test config (excludes subagent tests)

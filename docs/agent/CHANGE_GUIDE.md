@@ -24,7 +24,7 @@ Last validated: 2025-05-22
 2. Create `index.ts` with default export: `(api: ExtensionAPI) => void`
 3. Register tools via `api.registerTool()`, commands via `api.registerCommand()`
 4. Add event listeners via `api.on()`
-5. If shared logic needed, create library in `lib/<name>/` (no pi dependency)
+5. If shared logic needed, create library in `lib/<name>/` or `packages/<name>/` (no pi dependency)
 6. If extension uses prompt templates, create `prompts/` directory with `.md` files; load via `fs.readFileSync(path.join(__dirname, "prompts", filename))`
 7. Add to root `package.json` workspaces if needed
 8. Test with `npx vitest run extensions/<name>/`
