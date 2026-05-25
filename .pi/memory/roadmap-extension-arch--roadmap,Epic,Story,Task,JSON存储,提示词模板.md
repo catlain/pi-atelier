@@ -53,6 +53,17 @@ extensions/roadmap/
 
 ## 待验证
 
-- [ ] pi 启动加载验证（工具是否注册成功）
-- [ ] 创建第一个 roadmap（pi-atelier 拆分 / 量化三线）
-- [ ] before_agent_start 注入效果
+- [x] pi 启动加载验证（工具注册成功）
+- [x] 创建两个 roadmap（pi-atelier 拆分 5E/9S/33T + 量化三线 3E/12S/43T）
+- [ ] before_agent_start 可见消息渲染（改用 message.display + registerMessageRenderer）
+
+## 踩坑记录
+
+### require() 绕过类型检查
+index.ts 中用 `require("./lib/progress")` 做动态导入，函数名写错（`calculateProgress` vs 实际导出名 `calcProgress`），TS 编译不报错，运行时才崩。**教训**：require() 的解构赋值一定先用 `code_graph_module_overview` 或 grep 确认实际导出名。
+
+### Type.Any() 参数陷阱
+`roadmap_plan` 的 `content` 参数用 `Type.Any()`，LLM 可能传字符串而非对象。需要在 execute 中加 `JSON.parse` 兜底。详见记忆 `mcp_tool_traps`。
+
+### 注入方式
+初始用 `systemPrompt` 注入（用户不可见），改为 `message.display: true` + `registerMessageRenderer` 后用户在 TUI 可看到路线图概览。
