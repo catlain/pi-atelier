@@ -1,6 +1,6 @@
 # Memory 注入架构
 
-`关键词`: 注入 memory before_agent_start 索引 prompt迁移
+`关键词`: 注入 memory before_agent_start 索引 prompt迁移 磁盘真相源
 
 ## 统一入口
 
@@ -30,3 +30,13 @@ env-and-status 只保留环境检测（session 等）。
 | HARD_FILE_LIMIT | 40 | 文件数硬拒绝 |
 | SOFT_FILE_LIMIT | 25 | 文件数软警告 |
 | HINT_FILE_LIMIT | 20 | 文件数轻提示 |
+
+## 索引重建策略（2026-05-25 重构）
+
+**核心决策：磁盘文件是唯一真相源，索引全量重建。**
+
+- 旧方式 `updateIndex`：增量追加条目到 MEMORY.md，手动删文件后索引不一致
+- 新方式 `rebuildIndex`：每次 write 后全量扫描目录，重建 表格+链接区
+- `memory_index` 调用时也触发 `rebuildIndex`，修复手动操作导致的不一致
+- 实现：`lib/writer.ts` 的 `rebuildIndex(targetDir, indexPath, scope)`
+- 调用点：`memory_update` 写文件后 + `memory_index` 读索引前
