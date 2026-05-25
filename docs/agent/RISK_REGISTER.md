@@ -18,6 +18,9 @@ Last validated: 2025-05-22
 | R8 | **Low** | context | `lastContextMessages` and `lastProviderPayload` cached in module globals. Multiple concurrent pi sessions would share state incorrectly. | pi runs one session per process, so safe in practice. |
 | R9 | **Low** | scheduler | Timer state is in-memory only. Session crash loses all active timers. | Accepted; timers are convenience features, not data-critical. |
 | R10 | **Low** | extensions/workflow | `subagent-spawn-visible.ts` uses tmux directly (50+ lines of tmux I/O). Fragile to tmux version changes. | Isolated in one file; tmux is stable. |
+| R11 | **Medium** | roadmap | AI-generated JSON may be malformed, corrupting roadmap files. | validator.ts validates all writes; repairRoadmap() attempts recovery; git version control as last resort. |
+| R12 | **Low** | roadmap | `before_agent_start` injection grows with roadmap count. Could exceed token budget. | injector.ts limits to overview mode (~200 tokens); archived roadmaps excluded; detail via on-demand `roadmap_show`. |
+| R13 | **Low** | roadmap | Project-level roadmap can diverge from global if edited independently. | sync.ts derives from global on every read; project-level is not a source of truth. |
 
 ## Swallowed Errors Audit
 
@@ -60,3 +63,4 @@ Pattern: bare `catch {}` or `catch { /* ignore */ }` blocks.
 | subagent | 0 test files | ❌ None |
 | payload-analyzer | 0 test files | ❌ None |
 | notification | 0 test files | ❌ None (trivial extension, acceptable) |
+| roadmap | 5 test files, 53 tests | ✅ Good (store, validator, parser, planner, sync, injector) |

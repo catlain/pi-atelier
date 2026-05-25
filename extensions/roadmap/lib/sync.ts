@@ -10,6 +10,7 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { homedir } from "node:os";
 import type { RoadmapFile, Story, Task } from "./types";
 import { PROJECT_ROADMAP_FILE, PROJECT_ROADMAP_DIR } from "./types";
 import { validateRoadmap } from "./validator";
@@ -89,7 +90,7 @@ export function markTaskDoneAndSyncBack(
 	note: string,
 	globalDir?: string,
 ): boolean {
-	const dir = globalDir ?? path.join(require("node:os").homedir(), ".pi", "roadmap");
+	const dir = globalDir ?? path.join(homedir(), ".pi", "roadmap");
 	const filePath = path.join(dir, `${roadmapId}.roadmap.json`);
 
 	if (!fs.existsSync(filePath)) return false;

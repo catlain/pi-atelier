@@ -30,9 +30,9 @@ Last validated: 2025-05-22
 │  └──────────┘ └──────────┘ └──────────┘ └──────────────┘   │
 │                                                              │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────────┐   │
-│  │plan-     │ │scheduler │ │subagent  │ │ journal(WIP) │   │
-│  │verify    │ │          │ │          │ │              │   │
-│  └────┬─────┘ └──────────┘ └────┬─────┘ └──────────────┘   │
+│  │roadmap   │ │scheduler │ │subagent  │ │ journal(WIP) │   │
+│  │(plans)   │ │          │ │          │ │              │   │
+│  └──────────┘ └──────────┘ └────┬─────┘ └──────────────┘   │
 │                                                              │
 │  ┌──────────────┐                                           │
 │  │smart-compact │ 事件接管 compaction                        │
@@ -81,6 +81,7 @@ Last validated: 2025-05-22
 | scheduler | In-session timers and reminders | `schedule` | `/loop`, `/remind`, `/tasks` | `session_start`, `session_shutdown`, `before_agent_start` |
 | subagent | Sub-agent execution (spawn pi child process) | `subagent` | `/subagent-model` | — |
 | notification | Completion sound/notification | — | — | `agent_end` |
+| roadmap | Epic→Story→Task plan management with global/project sync, auto-injection, decomposition prompts | `roadmap_list`, `roadmap_show`, `roadmap_plan`, `roadmap_next`, `roadmap_done` | — | `before_agent_start` |
 | workflow | Barrel re-export of workflow-core (not a real extension) | — | — | — |
 | journal | Work journal (WIP, no tools/commands yet) | — | — | — |
 
@@ -159,12 +160,32 @@ pi session_start event
   → session_shutdown: close connections
 ```
 
+### Flow 5: Roadmap Plan Management
+
+```
+pi emits before_agent_start event
+  → roadmap/index.ts: hook handler
+    → injector.ts: scan ~/.pi/roadmap/*.roadmap.json
+    → progress.ts: calculate progress per roadmap
+    → return { systemPrompt: overview + next-task suggestions }
+
+User calls roadmap_plan tool
+  → tools-plan.ts: validate + write JSON
+    → store.ts: writeRoadmap() to ~/.pi/roadmap/<id>.roadmap.json
+    → prompts loaded from prompts/*.md for decomposition guidance
+
+User calls roadmap_done tool
+  → tools-action.ts: markTaskDone()
+    → store.ts: read + update + write
+    → sync.ts: if project-level, sync back to global
+```
+
 ## Side-Effect Boundaries
 
 | Boundary | Extensions | Mechanism |
 |----------|-----------|-----------|
-| File I/O (read) | context, session-analyzer, payload-analyzer, memory | Direct fs reads from `~/.pi/agent/`, `/tmp/pi-distill/` |
-| File I/O (write) | memory | Writes to `~/.pi/agent/memory/`, `<project>/.pi/memory/` |
+| File I/O (read) | context, session-analyzer, payload-analyzer, memory, roadmap | Direct fs reads from `~/.pi/agent/`, `~/.pi/roadmap/`, `/tmp/pi-distill/` |
+| File I/O (write) | memory, roadmap | Writes to `~/.pi/agent/memory/`, `<project>/.pi/memory/`, `~/.pi/roadmap/`, `<project>/.pi/roadmap/` |
 | Network (LLM API) | mcp-lite | GLM API calls (vision, web search) |
 | Network (MCP) | mcp-lite | MCP server connections |
 | Shell/CLI | env-and-status | Executes external CLI tools |

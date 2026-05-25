@@ -4,7 +4,6 @@
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
-import * as fs from "node:fs";
 
 import type { RoadmapFile } from "./types";
 import { GLOBAL_ROADMAP_DIR } from "./types";

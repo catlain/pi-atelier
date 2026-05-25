@@ -59,9 +59,9 @@ export function readRoadmap(filePath: string): RoadmapFile | null {
 			}
 			return null;
 		}
-		// 即使验证通过，也跑一遍 repair 补全可选字段
-		const normalized = repairRoadmap(data);
-		return (normalized || data) as RoadmapFile;
+		// 验证通过，补全可选字段（tags 默认空数组）
+		if (!data.meta.tags) data.meta.tags = [];
+		return data as RoadmapFile;
 	} catch {
 		return null;
 	}

@@ -25,14 +25,16 @@ Last validated: 2025-05-22
 3. Register tools via `api.registerTool()`, commands via `api.registerCommand()`
 4. Add event listeners via `api.on()`
 5. If shared logic needed, create library in `lib/<name>/` (no pi dependency)
-6. Add to root `package.json` workspaces if needed
-7. Test with `npx vitest run extensions/<name>/`
+6. If extension uses prompt templates, create `prompts/` directory with `.md` files; load via `fs.readFileSync(path.join(__dirname, "prompts", filename))`
+7. Add to root `package.json` workspaces if needed
+8. Test with `npx vitest run extensions/<name>/`
 
-**Example: smart-compact** — Event-based compaction override:
-- Listens on `session_before_compact`, returns `CompactionResult` to take over
-- Commands: `/smart-compact`, `/smart-compact-config`
-- Multi-phase LLM calls via `completeSimple` from `@earendil-works/pi-ai`
-- Config via `loadConfig()` with `SmartCompactConfig` defaults
+**Example: roadmap** — Epic→Story→Task plan management:
+- Tools: `roadmap_list`, `roadmap_show`, `roadmap_plan`, `roadmap_next`, `roadmap_done`
+- Event: `before_agent_start` (injects active roadmap overview)
+- Prompt templates: `prompts/*.md` loaded at runtime for decomposition guidance
+- Data: JSON files in `~/.pi/roadmap/`, no settings dependency
+- Validator + repair: `validator.ts` ensures JSON integrity
 
 ### Adding a Shepherd Rule
 

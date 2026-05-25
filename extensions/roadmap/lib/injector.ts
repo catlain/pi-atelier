@@ -46,10 +46,11 @@ export function generateInjection(
 		lines.push("");
 
 		// 每个 epic 一行状态
+		const allNextTasks = getNextTasks(rm, maxNextPerRoadmap);
+
 		for (const epic of rm.epics) {
 			if (epic.status === "done" || epic.status === "dropped") continue;
-			const nextTasks = getNextTasks(rm, maxNextPerRoadmap);
-			const nextForEpic = nextTasks.filter((t) => t.epicId === epic.id);
+			const nextForEpic = allNextTasks.filter((t) => t.epicId === epic.id);
 			const statusLabel = epic.status === "doing" ? "doing" : "todo";
 			const nextHint =
 				nextForEpic.length > 0

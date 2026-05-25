@@ -48,7 +48,7 @@ export function validateRoadmap(data: unknown): ValidationResult {
 			else epicIds.add(epic.id as string);
 
 			if (!epic.title) errors.push(`epics[${i}].title 缺失`);
-			if (!epic.project || typeof epic.project !== "string") errors.push(`epics[${i}].project 缺失`);
+			if (epic.project !== undefined && typeof epic.project !== "string") errors.push(`epics[${i}].project 类型错误`);
 			if (!VALID_ITEM_STATUS.has(epic.status as string))
 				errors.push(`epics[${i}].status "${epic.status}" 不合法`);
 			if (!VALID_PRIORITY.has(epic.priority as string))

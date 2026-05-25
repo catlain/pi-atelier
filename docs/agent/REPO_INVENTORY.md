@@ -6,13 +6,13 @@ Last validated: 2025-05-22
 
 ## Project Summary
 
-**pi-atelier** — Extension forge for [pi-coding-agent](https://github.com/earendil-works/pi-coding-agent). TypeScript monorepo with 13 extensions + 4 shared libs, providing tools, workflows, and utilities for AI coding assistant.
+**pi-atelier** — Extension forge for [pi-coding-agent](https://github.com/earendil-works/pi-coding-agent). TypeScript monorepo with 14 extensions + 4 shared libs, providing tools, workflows, and utilities for AI coding agent.
 
 - **Language**: TypeScript (ES2022, strict)
 - **Package manager**: npm workspaces
 - **Test framework**: Vitest
 - **Runtime**: Node.js (loaded by pi as extensions)
-- **Total**: 151 source files, 80 test files, ~28K lines
+- **Total**: ~170 source files, ~85 test files, ~32K lines
 
 ## Build/Test Commands
 
@@ -40,6 +40,7 @@ Each extension has `index.ts` exporting a default `function(pi: ExtensionAPI)`.
 | notification | `extensions/notification/index.ts` | Event: `agent_end` |
 | payload-analyzer | `extensions/payload-analyzer/index.ts` | Tool: `payload_analyze` |
 | plan-verify | `extensions/plan-verify/index.ts` | Tool: `pv`; Events: `before_agent_start`, `context`, `session_start` |
+| roadmap | `extensions/roadmap/index.ts` | Tools: `roadmap_list`, `roadmap_show`, `roadmap_plan`, `roadmap_next`, `roadmap_done`; Event: `before_agent_start` |
 | scheduler | `extensions/scheduler/index.ts` | Tool: `schedule`; Commands: `/loop`, `/remind`, `/tasks`; Events: `session_start`, `session_shutdown`, `before_agent_start` |
 | session-analyzer | `extensions/session-analyzer/index.ts` | Tools: `session_search`, `session_analyze` |
 | shepherd | `extensions/shepherd/index.ts` | Events: `before_provider_request`, `session_start`, `agent_start`, `agent_end`, `session_shutdown`, `tool_call`, `tool_result` |
@@ -59,6 +60,7 @@ pi-atelier/
 │   ├── notification/    # Completion notifications
 │   ├── payload-analyzer/# Token cost analysis
 │   ├── plan-verify/     # SDD+TDD workflow (pv tool)
+│   ├── roadmap/         # Epic→Story→Task plan management
 │   ├── scheduler/       # In-session timers
 │   ├── session-analyzer/# Session search/analysis
 │   ├── shepherd/        # Rule-based hook engine
@@ -80,10 +82,12 @@ pi-atelier/
 |------------|------|---------|
 | `@earendil-works/pi-coding-agent` | Host platform | All extensions (ExtensionAPI) |
 | `@modelcontextprotocol/sdk` | MCP protocol | mcp-lite |
-| `@sinclair/typebox` | Schema validation | memory, session-analyzer, journal, payload-analyzer |
+| `@sinclair/typebox` | Schema validation | memory, session-analyzer, journal, payload-analyzer, roadmap |
 | GLM API | External API (optional) | mcp-lite (vision, web search) |
 | `~/.pi/agent/` | Config/data directory | All extensions |
 | `~/.pi/agent/sessions/` | Session JSONL files | session-analyzer |
+| `~/.pi/roadmap/` | Roadmap JSON files (global) | roadmap |
+| `<project>/.pi/roadmap/` | Roadmap JSON (project-level sync) | roadmap |
 | `/tmp/pi-distill/` | Temp files (recordings) | context, payload-analyzer |
 
 ## Unknowns

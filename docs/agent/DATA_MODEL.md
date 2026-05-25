@@ -159,6 +159,63 @@ interface SubagentResult {
 - output is stdout of child pi process
 - subSessionId links to child session's JSONL file
 
+### 8. Roadmap Plan
+
+```typescript
+type RoadmapStatus = 'active' | 'paused' | 'completed' | 'archived';
+type ItemStatus = 'todo' | 'doing' | 'done' | 'blocked' | 'dropped';
+type Priority = 'low' | 'medium' | 'high';
+
+interface RoadmapFile {
+  meta: RoadmapMeta;
+  epics: Epic[];
+}
+
+interface RoadmapMeta {
+  id: string;           // slug: "pi-atelier-split"
+  title: string;
+  status: RoadmapStatus;
+  created: string;      // ISO date
+  updated: string;
+  tags: string[];
+}
+
+interface Epic {
+  id: string;           // "E1"
+  title: string;
+  description: string;
+  status: ItemStatus;
+  priority: Priority;
+  stories: Story[];
+}
+
+interface Story {
+  id: string;           // "E1.S1"
+  title: string;
+  description: string;
+  status: ItemStatus;
+  project?: string;     // associated project path
+  tasks: Task[];
+}
+
+interface Task {
+  id: string;           // "E1.S1.T1"
+  title: string;
+  status: ItemStatus;
+  assignee?: string;
+  doneDate?: string;
+  note?: string;
+}
+```
+
+**Invariants**:
+- INV-R1: Roadmap files must be valid JSON; invalid files are repaired or rejected
+- INV-R2: IDs are unique: epic id globally unique, story id unique within epic, task id unique within story
+- INV-R3: Status transitions: todo → doing → done / blocked / dropped
+- INV-R4: Task is the leaf node — no nesting below Task
+- INV-R5: Project-level roadmap (`<project>/.pi/roadmap/roadmap.json`) is derived from global, cannot be created independently
+- INV-R6: Archived roadmaps are not injected and excluded from default `roadmap_list`
+
 ## Cross-Cutting Invariants
 
 ### INV-1: Settings Persistence
@@ -192,4 +249,7 @@ Tool result formatters always return a string. If no formatter matches, return o
 | Last context messages | `/tmp/pi-distill/last-messages.json` | JSON | Session-scoped |
 | Last provider payload | `/tmp/pi-distill/last-payload.json` | JSON | Session-scoped |
 | Session JSONL | `~/.pi/agent/sessions/<id>.jsonl` | JSONL | Persistent, pi manages lifecycle |
+| Roadmap (global) | `~/.pi/roadmap/*.roadmap.json` | JSON | Persistent, managed by roadmap extension |
+| Roadmap (project) | `<project>/.pi/roadmap/roadmap.json` | JSON | Derived from global, syncs on read/write |
+| Roadmap (archive) | `~/.pi/roadmap/archive/*.roadmap.json` | JSON | Completed/archived roadmaps |
 | Recordings | `/tmp/pi-distill/recordings/` | JSON | Session-scoped, opt-in |
