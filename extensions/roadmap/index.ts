@@ -70,13 +70,17 @@ export default function roadmapExtension(pi: ExtensionAPI) {
 		return new Text(lines.join("\n"), 0, 0);
 	});
 
-	// ── before_agent_start hook: 注入活跃路线图概览到可见消息 ──
-	(pi.on as any)("before_agent_start", async (event: any) => {
+	// ── before_agent_start hook: 注入活跃路线图概览到可见消息 + 设置 Widget ──
+	(pi.on as any)("before_agent_start", async (event: any, ctx: any) => {
 		const roadmaps = loadAllRoadmaps();
 		const activeRoadmaps = roadmaps.filter(
 			(r: RoadmapFile) => r.meta.status === "active",
 		);
 		if (activeRoadmaps.length === 0) return;
+
+		// 设置/刷新 Widget（防御 session_start 未触发的情况）
+		const widgetLines = buildWidgetLines(activeRoadmaps);
+		ctx.ui.setWidget("roadmap", widgetLines);
 
 		const injection = generateInjection(activeRoadmaps);
 		if (!injection) return;
@@ -165,7 +169,7 @@ function buildWidgetLines(roadmaps: RoadmapFile[]): string[] {
 		if (rm.meta.status !== "active") continue;
 		const { percent } = calcProgress(rm);
 		const bar = renderProgressBar(percent);
-		lines.push(`${rm.meta.title} ${bar} ${progress}%`);
+		lines.push(`${rm.meta.title} ${bar} ${percent}%`);
 
 		for (const epic of rm.epics) {
 			if (epic.status === "done" || epic.status === "dropped") continue;
