@@ -5,7 +5,8 @@
 	"private": true,
 	"workspaces": [
 		"extensions/*",
-		"lib/*"
+		"lib/*",
+		"packages/*"
 	],
 	"pi": {
 		"extensions": [

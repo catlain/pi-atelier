@@ -42,10 +42,13 @@
         "/home/lain/.local/share/fnm/node-versions/v22.22.2/installation/lib/node_modules/@earendil-works/pi-coding-agent/node_modules/@earendil-works/pi-ai/*"
       ],
       "@pi-atelier/shared-utils": [
-        "lib/shared-utils/src/index"
+        "packages/pi-shared-utils/src/index"
       ],
       "@pi-atelier/shared-utils/*": [
-        "lib/shared-utils/src/*"
+        "packages/pi-shared-utils/src/*"
+      ],
+      "pi-shared-utils": [
+        "packages/pi-shared-utils/src/index"
       ],
       "@pi-atelier/workflow-core": [
         "lib/workflow-core/src/index"
