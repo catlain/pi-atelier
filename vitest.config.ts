@@ -13,6 +13,7 @@ export default defineConfig({
 			"extensions/journal/tests/*.test.ts",
 			// shepherd state-tracker 测试未完成
 			"extensions/shepherd/tests/state-tracker.test.ts",
+			"packages/pi-shepherd/tests/state-tracker.test.ts",
 			// plan-verify 模板占位符已变更 + agent md 文件已重命名，测试未同步
 			"extensions/plan-verify/tests/migration-equivalence.test.ts",
 			"extensions/plan-verify/tests/agent-files.test.ts",
