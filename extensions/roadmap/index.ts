@@ -120,7 +120,7 @@ function buildDetails(roadmaps: RoadmapFile[], projectStories: any[]): any {
 
 	return {
 		roadmaps: roadmaps.map((rm) => {
-			const progress = calculateProgress(rm);
+			const progress = calcProgress(rm);
 			const nextTasks = getNextTasks(rm, 1);
 			return {
 				title: rm.meta.title,
