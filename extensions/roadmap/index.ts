@@ -22,6 +22,21 @@ import { registerPlanTool } from "./lib/tools-plan";
 import { registerNextTool, registerDoneTool } from "./lib/tools-action";
 
 export default function roadmapExtension(pi: ExtensionAPI) {
+	// ── session_start hook: reload 后立即显示路线图 Widget（用户说话前可见）──
+	(pi.on as any)("session_start", async (_event: any, ctx: any) => {
+		const roadmaps = loadAllRoadmaps();
+		const activeRoadmaps = roadmaps.filter(
+			(r: RoadmapFile) => r.meta.status === "active",
+		);
+		if (activeRoadmaps.length === 0) {
+			ctx.ui.setWidget("roadmap", undefined); // 无活跃路线图时清除
+			return;
+		}
+
+		const lines = buildWidgetLines(activeRoadmaps);
+		ctx.ui.setWidget("roadmap", lines);
+	});
+
 	// ── 注册自定义消息渲染器 ──
 	(pi.registerMessageRenderer as any)("roadmap-overview", (message: any, _expanded: boolean, theme: any) => {
 		const { Container, Text } = require("@earendil-works/pi-coding-agent");
@@ -141,9 +156,30 @@ function buildDetails(roadmaps: RoadmapFile[], projectStories: any[]): any {
 	};
 }
 
+/** 构建 Widget 文本行（session_start 时使用）*/
+function buildWidgetLines(roadmaps: RoadmapFile[]): string[] {
+	const { calcProgress } = require("./lib/progress");
+	const lines: string[] = [];
+
+	for (const rm of roadmaps) {
+		if (rm.meta.status !== "active") continue;
+		const progress = calcProgress(rm);
+		const bar = renderProgressBar(progress);
+		lines.push(`${rm.meta.title} ${bar} ${progress}%`);
+
+		for (const epic of rm.epics) {
+			if (epic.status === "done" || epic.status === "dropped") continue;
+			const icon = epic.status === "doing" ? "\u{1F504}" : "\u2B1C";
+			lines.push(`  ${icon} ${epic.id}: ${epic.title}`);
+		}
+	}
+
+	return lines;
+}
+
 /** 渲染进度条（10 格） */
 function renderProgressBar(percent: number): string {
 	const filled = Math.round(percent / 10);
 	const empty = 10 - filled;
-	return "■".repeat(filled) + "□".repeat(empty);
+	return "\u25A0".repeat(filled) + "\u25A1".repeat(empty);
 }
