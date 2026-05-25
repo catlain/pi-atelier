@@ -18,7 +18,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { AGENT_DIR, MAX_FILE_LINES, HARD_FILE_LIMIT, SOFT_FILE_LIMIT, HINT_FILE_LIMIT } from "./lib/types";
 import { scanMemoryDir, parseFileName, type MemoryEntry } from "@pi-atelier/shared-utils";
-import { updateIndex } from "./lib/writer";
+import { rebuildIndex } from "./lib/writer";
 import { registerMemoryHook } from "./lib/memory-hook";
 import { detectConflicts } from "./lib/conflict-detect";
 
@@ -51,9 +51,15 @@ export default function memoryToolsExtension(pi: ExtensionAPI) {
 
       if ((params.scope || "all") !== "L2") {
         entries.push(...scanMemoryDir(l1Dir, "L1"));
+        // 顺便重建索引，修复手动删文件后的不一致
+        const l1IndexPath = path.join(AGENT_DIR, "MEMORY.md");
+        if (fs.existsSync(l1Dir)) rebuildIndex(l1Dir, l1IndexPath, "L1");
       }
       if ((params.scope || "all") !== "L1") {
         entries.push(...scanMemoryDir(l2Dir, "L2"));
+        // 顺便重建索引，修复手动删文件后的不一致
+        const l2IndexPath = path.join(cwd, ".pi", "memory", "MEMORY.md");
+        if (fs.existsSync(l2Dir)) rebuildIndex(l2Dir, l2IndexPath, "L2");
       }
 
       if (entries.length === 0) {
@@ -172,7 +178,8 @@ export default function memoryToolsExtension(pi: ExtensionAPI) {
 
       // 所有检查通过，写入文件
       fs.writeFileSync(filePath, params.content, "utf-8");
-      updateIndex(indexPath, fileName, "", effectiveScope);
+      // 全量重建索引，保证索引 === 磁盘
+      rebuildIndex(targetDir, indexPath, effectiveScope);
 
       // 成功消息
       const action = isOverwrite ? "覆盖" : "新建";
