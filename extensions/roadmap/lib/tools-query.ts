@@ -60,15 +60,23 @@ export function registerListTool(pi: ExtensionAPI) {
 				.map((rm: RoadmapFile) => {
 					const overview = getOverview(rm);
 					const bar = formatProgress(overview.percent);
+					const epicLines = rm.epics.map((epic) => {
+						const storyCount = epic.stories.length;
+						const taskCount = epic.stories.reduce((sum, s) => sum + s.tasks.length, 0);
+						const doneTasks = epic.stories.reduce(
+							(sum, s) => sum + s.tasks.filter((t) => t.status === "done").length,
+							0,
+						);
+						return (
+							`  ${epic.id} [${epic.status}/${epic.priority}] ${epic.title}\n` +
+							`    Stories: ${storyCount} | Tasks: ${doneTasks}/${taskCount}`
+						);
+					}).join("\n");
+
 					return (
 						`### ${overview.title} (${overview.status}) ${bar} ${overview.percent}%\n` +
 						`ID: ${overview.id} | Tags: ${overview.tags.join(", ") || "无"}\n` +
-						overview.epics
-							.map(
-								(e) =>
-									`  ${e.id} [${e.status}/${e.priority}] ${e.title} — ${e.doneTasks}/${e.totalTasks} tasks`,
-							)
-							.join("\n")
+						epicLines
 					);
 				})
 				.join("\n\n");
