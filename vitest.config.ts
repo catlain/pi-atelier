@@ -11,6 +11,7 @@ export default defineConfig({
 			"extensions/mcp-lite/*.test.ts",
 			// journal 测试引用未实现的模块（WIP）
 			"extensions/journal/tests/*.test.ts",
+			"packages/pi-journal/tests/*.test.ts",
 			// shepherd state-tracker 测试未完成
 			"extensions/shepherd/tests/state-tracker.test.ts",
 			"packages/pi-shepherd/tests/state-tracker.test.ts",
