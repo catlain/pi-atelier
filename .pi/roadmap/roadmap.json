@@ -39,7 +39,9 @@
         {
           "id": "E1.S2.T1",
           "title": "写 pi-memory 整体 README（功能介绍、截图）",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-25",
+          "note": "写完 pi-memory 完整 README（231行），包含：工作原理、安装、工具参考、文件格式、两级存储、限制、最佳实践、架构。文件：extensions/memory/README.md"
         },
         {
           "id": "E1.S2.T2",
