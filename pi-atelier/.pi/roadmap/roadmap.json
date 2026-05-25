@@ -252,12 +252,16 @@
         {
           "id": "E12.S1.T1",
           "title": "确认所有扩展已拆分或搬回",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-25",
+          "note": "subagent 也搬到 ~/.pi/agent/extensions/subagent/，npm 依赖已安装，pi-atelier 从 settings.json 移除"
         },
         {
           "id": "E12.S1.T2",
           "title": "更新 settings.json 移除 pi-atelier 包引用",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-25",
+          "note": "pi-atelier 条目已从 settings.json 移除"
         },
         {
           "id": "E12.S1.T3",
