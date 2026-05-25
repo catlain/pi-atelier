@@ -1,71 +1,71 @@
-# Roadmap 扩展架构
+# roadmap 扩展架构决策
 
-`关键词` `roadmap` `Epic` `Story` `Task` `JSON存储` `提示词模板`
+关键词：`roadmap` `Epic` `Story` `Task` `JSON存储` `提示词模板`
 
-## 核心设计决策
+## 数据模型
 
-- **JSON 存储**（非 Markdown）：解析可靠，格式验证简单，修复容易
-- **三层严格不嵌套**：Epic → Story → Task，Task 是最底层
-- **全局 + 项目双级**：`~/.pi/roadmap/*.roadmap.json`（全局）+ `.pi/roadmap/roadmap.json`（项目级派生数据）
-- **提示词外置**：`prompts/*.md` 文件，方便修改拆解质量
+- **三层结构**：Epic → Story → Task，严格不嵌套（Task 无子节点）
+- **存储**：JSON 文件（`~/.pi/roadmap/<id>.roadmap.json`），唯一真相源
+- **项目级同步**：全局 roadmap 中 project 匹配当前项目的 Story → 同步到 `.pi/roadmap/roadmap.json`
+- **归档**：完成的 roadmap 移入 `archive/` 子目录
+- **Epic 必须有 project 字段**
 
-## 文件结构
+## 优先级继承机制
+
+- Epic：priority 必填（high/medium/low）
+- Story：priority 可选，缺省继承 Epic
+- Task：priority 可选，缺省继承 Story → Epic
+- **公共函数** `getEffectivePriority(own?, parent?) → Priority`：自身优先 → 父级 → medium
+- **公共函数** `comparePriority(a, b) → number`：用于 sort()
+- progress.ts 的排序统一使用这两个函数，不内联 priority 比较逻辑
+
+## 提示词体系
 
 ```
-extensions/roadmap/
-├── index.ts              # 入口：hook + 工具注册
-├── lib/
-│   ├── types.ts          # 类型 + 常量（GLOBAL_ROADMAP_DIR 等）
-│   ├── validator.ts      # JSON 验证 + 修复（独立于 store）
-│   ├── store.ts          # 读写 + 归档
-│   ├── progress.ts       # 进度计算 + next 提取
-│   ├── parser.ts         # 查询/过滤
-│   ├── planner.ts        # 提示词加载 + {{变量}} 替换
-│   ├── sync.ts           # 全局→项目同步
-│   ├── injector.ts       # before_agent_start 注入文本
-│   ├── tools-query.ts    # roadmap_list + roadmap_show
-│   ├── tools-plan.ts     # roadmap_plan
-│   └── tools-action.ts   # roadmap_next + roadmap_done
-├── prompts/              # 6 个拆解/分析提示词模板
-└── tests/                # 53 个单元测试
+prompts/
+├── plan-description.md    # roadmap_plan 工具描述（= AI 操作指南）
+├── plan-diff.md           # 差异分析（对比已有计划 vs 讨论内容）
+├── decompose-epic.md      # 大方向 → Epic 拆解规则
+├── decompose-story.md     # Epic → Story 拆解规则
+├── decompose-task.md      # Story → Task 拆解规则
+└── plan-output-format.md  # JSON 格式规范（AI 必须遵守）
 ```
 
-## 关键 API 模式
+- `plan-description.md` 作为 `registerTool` 的 `description` 字段，AI 每次调用前看到
+- 其他模板由 planner.ts 的 `loadPrompt` + `buildPrompt` 按需加载，用 `{{变量}}` 占位符
+- 参考 plan-verify 的 `loadTaskTemplate` 模式
 
-- 工具注册：必须 `label` 字段，`execute(id, params, signal, onUpdate, ctx)` 5 参数
-- 返回格式：`{ content: [{ type: "text", text }], details: {} }`
-- Hook：`pi.on("before_agent_start", ...) → { systemPrompt: "..." }`
-- 提示词加载：`planner.ts` 的 `loadPrompt()` + `buildPrompt(template, vars)`
+## 注入方式（已移除）
 
-## 构建与加载
-
-- **不需要 build**：pi 用 jiti 直接加载 TypeScript 源码
-- **package.json 格式**：`"type": "commonjs"` + `"main": "dist/index.js"`（占位，实际不走 dist）
-- **tsconfig**：继承 `tsconfig.base.json`
-- **注册方式**：`settings.json` 的 packages 中加 `+extensions/roadmap/index.ts`
-- **pi.extensions**：`package.json` 中 `pi.extensions` 数组自动发现，但 settings 显式列表优先
-
-## 开发流程记录
-
-- 按 safe-change feature workflow 走完全部 5 步（Preflight → Design → TDD → Code Review → Docs Update）
-- arch-code-review 发现 6 个问题，修复 5 个，1 个 workaround（`pi.on as any` 跟 memory 扩展一致）
-- 5 个架构文档已更新（REPO_INVENTORY, ARCHITECTURE, DATA_MODEL, CHANGE_GUIDE, RISK_REGISTER）
-
-## 待验证
-
-- [x] pi 启动加载验证（工具注册成功）
-- [x] 创建两个 roadmap（pi-atelier 拆分 5E/9S/33T + 量化三线 3E/12S/43T）
-- [ ] before_agent_start 可见消息渲染（改用 message.display + registerMessageRenderer）
+- ~~session_start + setWidget~~ → 移除（拖慢 reload）
+- ~~before_agent_start + message.display~~ → 移除（用户不需要自动弹出）
+- **改为纯按需查询**：用户说"有什么计划"时调 `roadmap_list`/`roadmap_next`
 
 ## 踩坑记录
 
-### require() 绕过类型检查
-index.ts 中用 `require("./lib/progress")` 做动态导入，函数名写错（`calculateProgress` vs 实际导出名 `calcProgress`），TS 编译不报错，运行时才崩。**教训**：require() 的解构赋值一定先用 `code_graph_module_overview` 或 grep 确认实际导出名。
+### require() 解构赋值不检查函数名
+
+`require("./lib/xxx")` 的解构赋值不受 TypeScript 类型检查，写错函数名编译不报错，运行时才炸。
+- `calcProgress` 错写成 `calculateProgress`（两处遗漏）
+- `progress` 错写成 `percent`（变量名不一致）
+- **教训**：require() 动态导入后，立即验证返回值类型，或改用 ESM import
 
 ### Type.Any() 参数陷阱
-`roadmap_plan` 的 `content` 参数用 `Type.Any()`，LLM 可能传字符串而非对象。需要在 execute 中加 `JSON.parse` 兜底。详见记忆 `mcp_tool_traps`。
 
-### 注入方式（已移除）
-曾经尝试过自动注入：`systemPrompt` → `message.display: true` + `registerMessageRenderer` → `session_start` + `setWidget`。最终决定**全部去掉**，改为纯按需查询：用户通过自然语言或工具命令查询路线图，不再自动弹出。原因：1) 自动注入拖慢 reload 1-2秒；2) 每次发消息都弹出路线图概览，信息噪音大；3) 用户更希望主动查询。
+LLM 可能把 JSON 对象作为字符串传递（而非对象）。`tools-plan.ts` 的 `execute` 中需要 `JSON.parse` 兜底：
+```ts
+const content = typeof params.content === 'string' ? JSON.parse(params.content) : params.content;
+```
 
-index.ts 最终只有 5 个 registerTool 调用，极简入口。injector.ts 保留但不在入口引用。
+### setWidget 的参数类型
+
+- `ctx.ui.setWidget(key, string[])` — 简单字符串数组
+- `ctx.ui.setWidget(key, renderFunction)` — 渲染函数（参考 scheduler 扩展）
+- 需要用 `ctx.ui` 而非 `pi`，且仅在 hook 回调中有 `ctx` 参数
+
+## 状态
+
+- ✅ 5 个工具全部可用（list/show/plan/next/done）
+- ✅ 53 个单元测试通过
+- ✅ 两个路线图已录入（pi-atelier 拆分 + 量化三线）
+- ✅ 自动注入已移除（纯按需查询）
