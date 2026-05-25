@@ -14,7 +14,7 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import * as fs from "node:fs";
 import * as path from "node:path";
 
-import { GLOBAL_ROADMAP_DIR, FILE_SUFFIX, type RoadmapFile } from "./lib/types";
+import { FILE_SUFFIX, type RoadmapFile } from "./lib/types";
 import { listRoadmapFiles, readRoadmap } from "./lib/store";
 import { generateInjection } from "./lib/injector";
 import { registerListTool, registerShowTool } from "./lib/tools-query";
@@ -22,7 +22,40 @@ import { registerPlanTool } from "./lib/tools-plan";
 import { registerNextTool, registerDoneTool } from "./lib/tools-action";
 
 export default function roadmapExtension(pi: ExtensionAPI) {
-	// ── before_agent_start hook: 注入活跃路线图概览 ──
+	// ── 注册自定义消息渲染器 ──
+	(pi.registerMessageRenderer as any)("roadmap-overview", (message: any, _expanded: boolean, theme: any) => {
+		const { Container, Text } = require("@earendil-works/pi-coding-agent");
+		const lines: string[] = [];
+
+		// 标题
+		lines.push(theme.bold(theme.fg("accent", "📋 项目路线图")));
+
+		// 路线图概览
+		if (message.details?.roadmaps) {
+			for (const rm of message.details.roadmaps) {
+				const bar = renderProgressBar(rm.progress);
+				lines.push(`\n${theme.fg("accent", rm.title)} ${bar} ${rm.progress}%`);
+				for (const epic of rm.epics) {
+					const statusIcon = epic.status === "doing" ? "🔄" : epic.status === "done" ? "✅" : "⬜";
+					lines.push(`  ${statusIcon} ${epic.id}: ${epic.title} [${epic.status}]${epic.nextTask ? ` — 下一步: ${epic.nextTask}` : ""}`);
+				}
+			}
+		}
+
+		// 项目级任务
+		if (message.details?.projectStories?.length) {
+			lines.push(theme.fg("dim", "\n项目级任务:"));
+			for (const s of message.details.projectStories) {
+				lines.push(`  ${s.id}: ${s.title} [${s.status}]`);
+			}
+		}
+
+		lines.push(theme.fg("dim", "调用 roadmap_next 查看可执行任务。"));
+
+		return new Text(lines.join("\n"), 0, 0);
+	});
+
+	// ── before_agent_start hook: 注入活跃路线图概览到可见消息 ──
 	(pi.on as any)("before_agent_start", async (event: any) => {
 		const roadmaps = loadAllRoadmaps();
 		const activeRoadmaps = roadmaps.filter(
@@ -36,23 +69,33 @@ export default function roadmapExtension(pi: ExtensionAPI) {
 		// 扫描项目级 roadmap
 		const cwd = event.systemPromptOptions?.cwd || process.cwd();
 		const projectRoadmapPath = path.join(cwd, ".pi", "roadmap", "roadmap.json");
-		let projectInjection = "";
+		let projectStories: any[] = [];
 		if (fs.existsSync(projectRoadmapPath)) {
 			try {
 				const projectData = JSON.parse(
 					fs.readFileSync(projectRoadmapPath, "utf-8"),
 				);
-				projectInjection = formatProjectOverview(projectData);
+				projectStories = (projectData.stories || [])
+					.filter((s: any) => s.status !== "done" && s.status !== "dropped");
 			} catch {
 				// 忽略损坏的项目级文件
 			}
 		}
 
-		const parts = [injection];
-		if (projectInjection) parts.push(`## 项目级任务\n\n${projectInjection}`);
+		// 构造 details 供渲染器使用
+		const details = buildDetails(activeRoadmaps, projectStories);
 
 		return {
-			systemPrompt: event.systemPrompt + "\n\n" + parts.join("\n\n"),
+			// 系统提示词里只留简短指引（不可见）
+			systemPrompt: event.systemPrompt + "\n\n# 项目路线图\n\n活跃路线图: " + activeRoadmaps.length + " 个\n\n调用 roadmap_next 查看可执行任务。",
+
+			// 可见消息（用户在 TUI 中能看到）
+			message: {
+				customType: "roadmap-overview",
+				content: injection,
+				display: true,
+				details,
+			},
 		};
 	});
 
@@ -71,26 +114,37 @@ function loadAllRoadmaps(): RoadmapFile[] {
 		.filter((r): r is RoadmapFile => r !== null);
 }
 
-/** 格式化项目级任务概要 */
-function formatProjectOverview(data: {
-	source?: string;
-	stories?: Array<{
-		id: string;
-		title: string;
-		status: string;
-		tasks?: Array<{ id: string; title: string; status: string }>;
-	}>;
-}): string {
-	if (!data.stories || data.stories.length === 0) return "";
+/** 构造渲染器需要的 details 对象 */
+function buildDetails(roadmaps: RoadmapFile[], projectStories: any[]): any {
+	const { calculateProgress } = require("./lib/progress");
+	const { getNextTasks } = require("./lib/progress");
 
-	return data.stories
-		.filter((s) => s.status !== "done" && s.status !== "dropped")
-		.map((s) => {
-			const taskList = (s.tasks || [])
-				.filter((t) => t.status !== "done" && t.status !== "dropped")
-				.map((t) => `  - [${t.status}] ${t.id}: ${t.title}`)
-				.join("\n");
-			return `Story ${s.id}: ${s.title} [${s.status}]\n${taskList}`;
-		})
-		.join("\n\n");
+	return {
+		roadmaps: roadmaps.map((rm) => {
+			const progress = calculateProgress(rm);
+			const nextTasks = getNextTasks(rm, 1);
+			return {
+				title: rm.meta.title,
+				progress,
+				epics: rm.epics.map((epic) => ({
+					id: epic.id,
+					title: epic.title,
+					status: epic.status,
+					nextTask: nextTasks.find((t) => t.id.startsWith(epic.id + "."))?.title,
+				})),
+			};
+		}),
+		projectStories: projectStories.map((s: any) => ({
+			id: s.id,
+			title: s.title,
+			status: s.status,
+		})),
+	};
+}
+
+/** 渲染进度条（10 格） */
+function renderProgressBar(percent: number): string {
+	const filled = Math.round(percent / 10);
+	const empty = 10 - filled;
+	return "■".repeat(filled) + "□".repeat(empty);
 }
