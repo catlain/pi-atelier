@@ -65,5 +65,7 @@ index.ts 中用 `require("./lib/progress")` 做动态导入，函数名写错（
 ### Type.Any() 参数陷阱
 `roadmap_plan` 的 `content` 参数用 `Type.Any()`，LLM 可能传字符串而非对象。需要在 execute 中加 `JSON.parse` 兜底。详见记忆 `mcp_tool_traps`。
 
-### 注入方式
-初始用 `systemPrompt` 注入（用户不可见），改为 `message.display: true` + `registerMessageRenderer` 后用户在 TUI 可看到路线图概览。
+### 注入方式（已移除）
+曾经尝试过自动注入：`systemPrompt` → `message.display: true` + `registerMessageRenderer` → `session_start` + `setWidget`。最终决定**全部去掉**，改为纯按需查询：用户通过自然语言或工具命令查询路线图，不再自动弹出。原因：1) 自动注入拖慢 reload 1-2秒；2) 每次发消息都弹出路线图概览，信息噪音大；3) 用户更希望主动查询。
+
+index.ts 最终只有 5 个 registerTool 调用，极简入口。injector.ts 保留但不在入口引用。
