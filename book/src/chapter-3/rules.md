@@ -46,17 +46,18 @@ AI 准备执行动作
 | `after_bash` | 命令执行后 | 自动格式化、lint 检查 |
 | `agent_end` | 会话结束前 | 提醒提交代码、更新文档 |
 
-### 第二道：pi-context — 信息质量
+### 第二道：pi-context-manager — 信息质量与诊断
 
-Context（上下文管家）控制 AI 能看到什么信息，相当于"图书馆管理员"。
+Context Manager（上下文管家）不但控制 AI 能看到什么信息，还能帮你诊断 token 消耗问题。
 
 AI 的"聪明程度"直接取决于它能看到的上下文质量。如果上下文里有噪音（过期的日志、无关的文件内容），AI 就会做出错误的判断。
 
-pi-context 的核心能力：
+pi-context-manager 的核心能力：
 
 - **Distill（蒸馏）**：对工具返回的大段内容做压缩，保留关键信息
 - **过滤**：按规则屏蔽不相关的内容
 - **优先级排序**：重要的信息排前面
+- **Token 诊断**：用数据说话——分析上下文里 token 都花在哪了
 
 ```
 工具返回大量内容（可能 50KB）
@@ -169,10 +170,11 @@ AI 在会话结束前会自动检查 git 状态，不会遗漏提交。
 
 ## Context 的配置方式
 
-pi-context 通过 `settings.json` 中的 `packages` 配置安装，默认提供：
+pi-context-manager 通过 `settings.json` 中的 `packages` 配置安装（包名为 `"pi-context-manager"`），默认提供：
 
 - 自动 distill 大型工具输出
 - 按优先级排序上下文
+- payload_analyze 工具——分析 token 预算、增长趋势、最贵的工具调用
 - 可通过 AGENTS.md 注入全局提示
 
 高级用户可以在 `.pi/config.json` 中自定义过滤规则。

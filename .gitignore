@@ -4,3 +4,4 @@ dist/
 package-lock.json
 .cartog.db
 .code-graph/
+book/book/

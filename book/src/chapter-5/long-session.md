@@ -72,9 +72,9 @@ Smart Compact 在上下文快满的时候自动"压缩"历史对话：
 | 第一阶段 | 提取关键信息（如决策、文件修改、结论） | 上下文使用率 > 60% |
 | 第二阶段 | 丢弃低价值信息（如重复的文件读取、中间调试输出） | 上下文使用率 > 80% |
 
-### pi-payload-analyzer — 诊断工具
+### pi-context-manager — 诊断工具
 
-Payload Analyzer 帮你看清 token 到底花在哪了：
+pi-context-manager 提供了 `payload_analyze` 工具，帮你看清 token 到底花在哪了：
 
 ```
 📊 Token 预算分析
@@ -99,7 +99,7 @@ Top 3 最贵的工具调用：
 
 有一次，一个会话在上下文使用率只有 **34.8%** 的时候就崩溃了。看起来不应该——才用了三分之一啊？
 
-用 payload-analyzer 的 `budget` 模式分析后发现：
+用 pi-context-manager 的 `budget` 模式分析后发现：
 
 ```
 问题根因：

@@ -309,9 +309,9 @@ context.injectPrompt({
 
 1. **记忆**（pi-memory）— 让 AI 记住知识
 2. **规划**（pi-roadmap）— 让 AI 管理任务
-3. **规矩**（pi-shepherd + pi-context）— 让 AI 遵守规则
+3. **规矩**（pi-shepherd + pi-context-manager）— 让 AI 遵守规则
 4. **复盘**（pi-journal + pi-session-analyzer）— 让 AI 记录工作
-5. **压缩**（pi-smart-compact + pi-payload-analyzer）— 让 AI 保持聪明
+5. **压缩与诊断**（pi-smart-compact + pi-context-manager）— 让 AI 保持聪明
 6. **自动化**（pi-scheduler + pi-workflow）— 让 AI 主动工作
 7. **扩展**（pi-shared-utils + 你自己的扩展）— 让 AI 无所不能
 

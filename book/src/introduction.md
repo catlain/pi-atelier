@@ -25,11 +25,10 @@ pi-atelier 的扩展补上了这些能力缺口：
 | 记忆 | pi-memory | 让 AI 记住跨会话的知识 |
 | 规划 | pi-roadmap | 让 AI 管理 Epic → Story → Task |
 | 守卫 | pi-shepherd | 给 AI 立规矩，防止犯错 |
-| 上下文 | pi-context | 控制 AI 看到的信息质量 |
+| 上下文与诊断 | pi-context-manager | 控制 AI 看到的信息质量 + token 消耗诊断 |
 | 日志 | pi-journal | 自动记录每个会话做了什么 |
 | 分析 | pi-session-analyzer | 搜索和回溯历史会话 |
 | 压缩 | pi-smart-compact | 长会话中保持 AI 的聪明 |
-| 诊断 | pi-payload-analyzer | 分析 token 消耗，诊断上下文问题 |
 | 定时 | pi-scheduler | 定时提醒和周期任务 |
 | 工作流 | pi-workflow | 子代理编排，并行执行 |
 | 工具库 | pi-shared-utils | 扩展开发的公共工具函数 |
@@ -64,11 +63,10 @@ pi-atelier 的扩展补上了这些能力缺口：
     "pi-memory",
     "pi-roadmap",
     "pi-shepherd",
-    "pi-context",
+    "pi-context-manager",
     "pi-journal",
     "pi-session-analyzer",
     "pi-smart-compact",
-    "pi-payload-analyzer",
     "pi-scheduler",
     "pi-workflow"
   ]
@@ -83,11 +81,10 @@ pi-atelier 的扩展补上了这些能力缺口：
     "pi-memory",
     "pi-roadmap",
     "pi-shepherd",
-    "pi-context",
+    "pi-context-manager",
     "pi-journal",
     "pi-session-analyzer",
     "pi-smart-compact",
-    "pi-payload-analyzer",
     "pi-scheduler",
     "pi-workflow",
     "pi-shared-utils"
