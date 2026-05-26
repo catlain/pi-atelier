@@ -6,57 +6,53 @@
       "id": "E0.S0",
       "title": "提炼 README 模板规范",
       "status": "done",
+      "doneDate": "2026-05-26",
       "tasks": [
         {
           "id": "E0.S0.T0",
           "title": "分析 pi-memory README 结构，提炼出通用模板",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "提炼了 pi-memory README 的结构，产出 TEMPLATE-README.md：10 个必选章节 + 4 个可选章节 + 行数参考"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E0.S0.T1",
           "title": "写模板文档 TEMPLATE-README.md 放到 pi-atelier 组织仓库",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "模板写入 pi-atelier/TEMPLATE-README.md，包含 10 个必选章节的完整格式规范和示例"
+          "doneDate": "2026-05-26"
         }
-      ],
-      "doneDate": "2026-05-26"
+      ]
     },
     {
       "id": "E0.S1",
       "title": "用模板重写 pi-roadmap README 并验证",
       "status": "done",
+      "doneDate": "2026-05-26",
       "tasks": [
         {
           "id": "E0.S1.T0",
           "title": "按模板重写 pi-roadmap README",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "278 行完整 README：工作原理 ASCII 图、5 个工具完整参数表+输出示例、存储说明、最佳实践、限制、架构目录树"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E0.S1.T1",
           "title": "对比模板和实际输出，调整模板不适用的部分",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "pi-roadmap README 已用模板重写，验证模板完整性"
+          "doneDate": "2026-05-26"
         }
-      ],
-      "doneDate": "2026-05-26"
+      ]
     },
     {
       "id": "E1.S0",
       "title": "第二批：核心扩展包（4个）",
       "status": "done",
+      "doneDate": "2026-05-26",
       "tasks": [
         {
           "id": "E1.S0.T0",
           "title": "重写 pi-smart-compact README",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "135 行完整 README"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E1.S0.T1",
@@ -76,13 +72,13 @@
           "status": "done",
           "doneDate": "2026-05-26"
         }
-      ],
-      "doneDate": "2026-05-26"
+      ]
     },
     {
       "id": "E1.S1",
       "title": "第三批：辅助扩展包（6个）",
       "status": "done",
+      "doneDate": "2026-05-26",
       "tasks": [
         {
           "id": "E1.S1.T0",
@@ -120,13 +116,13 @@
           "status": "done",
           "doneDate": "2026-05-26"
         }
-      ],
-      "doneDate": "2026-05-26"
+      ]
     },
     {
       "id": "E1.S2",
       "title": "为每个包补充基础文件",
       "status": "done",
+      "doneDate": "2026-05-26",
       "tasks": [
         {
           "id": "E1.S2.T0",
@@ -146,8 +142,7 @@
           "status": "done",
           "doneDate": "2026-05-26"
         }
-      ],
-      "doneDate": "2026-05-26"
+      ]
     },
     {
       "id": "E2.S0",
@@ -155,8 +150,25 @@
       "status": "todo",
       "tasks": [
         {
+          "id": "E2.S0.T0",
+          "title": "确定双语文件命名/目录方案（如 README.zh-CN.md / docs/en/ 等）",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S0.T1",
+          "title": "调研 GitHub 国际化最佳实践（i18n 文件夹结构、语言切换链接）",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E2.S1",
+      "title": "翻译所有 12 个包的 README 为英文版",
+      "status": "todo",
+      "tasks": [
+        {
           "id": "E2.S1.T0",
-          "title": "翻译 pi-memory README（中文基准版 → 英文版）",
+          "title": "翻译 pi-memory README",
           "status": "todo"
         },
         {
@@ -223,195 +235,334 @@
       "tasks": [
         {
           "id": "E2.S2.T0",
-          "title": "为所有 12 个包的 README 头部加上语言切换链接（中文 | English）",
+          "title": "为所有 12 个包的 README 头部加上语言切换链接",
           "status": "todo"
         }
       ]
     },
     {
       "id": "E3.S0",
-      "title": "规划开源书的整体结构和章节目录",
-      "status": "todo",
+      "title": "技术选型与项目初始化",
+      "status": "done",
+      "doneDate": "2026-05-26",
       "tasks": [
         {
           "id": "E3.S0.T0",
-          "title": "调研优秀开源书的章节结构（如 Rust Book, Vue.js Guide）",
-          "status": "todo"
+          "title": "选定技术栈（mdBook）并初始化 book/ 项目结构",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "选定 mdBook，已初始化并构建成功"
         },
         {
           "id": "E3.S0.T1",
-          "title": "设计书的 TOC：入门 → 核心概念 → 逐个扩展详解 → 组合实战 → 贡献指南",
-          "status": "todo"
-        },
-        {
-          "id": "E3.S0.T2",
-          "title": "确定技术栈：MkDocs Material / Docusaurus / mdBook，选定并初始化项目",
-          "status": "todo"
+          "title": "配置 GitHub Actions 自动部署到 GitHub Pages",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "SUMMARY.md + book.toml + GitHub Actions + 9 个章节占位文件"
         }
       ]
     },
     {
       "id": "E3.S1",
-      "title": "写第一章：入门与安装",
-      "status": "todo",
+      "title": "规划全书内容：为每章设计痛点、案例和教学路径",
+      "status": "done",
+      "doneDate": "2026-05-26",
       "tasks": [
         {
           "id": "E3.S1.T0",
-          "title": "什么是 pi-atelier：AI Agent 工具链生态的愿景",
-          "status": "todo"
+          "title": "规划第一章「一个 AI 的记忆」：痛点→案例→教学路径",
+          "status": "done",
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E3.S1.T1",
-          "title": "5 分钟快速上手：安装 pi + 第一个扩展",
-          "status": "todo"
+          "title": "规划第二章「从记忆到规划」：痛点→案例→教学路径",
+          "status": "done",
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E3.S1.T2",
-          "title": "扩展的安装和管理机制（packages 配置、git/npm 两种方式）",
-          "status": "todo"
+          "title": "规划第三章「给 AI 立规矩」：痛点→案例→教学路径",
+          "status": "done",
+          "doneDate": "2026-05-26"
+        },
+        {
+          "id": "E3.S1.T3",
+          "title": "规划第四章「让 AI 学会复盘」：痛点→案例→教学路径",
+          "status": "done",
+          "doneDate": "2026-05-26"
+        },
+        {
+          "id": "E3.S1.T4",
+          "title": "规划第五章「长会话生存指南」：痛点→案例→教学路径",
+          "status": "done",
+          "doneDate": "2026-05-26"
+        },
+        {
+          "id": "E3.S1.T5",
+          "title": "规划第六章「自动化与工作流」：痛点→案例→教学路径",
+          "status": "done",
+          "doneDate": "2026-05-26"
+        },
+        {
+          "id": "E3.S1.T6",
+          "title": "规划第七章「自己动手做扩展」：痛点→案例→教学路径",
+          "status": "done",
+          "doneDate": "2026-05-26"
         }
       ]
     },
     {
       "id": "E3.S2",
-      "title": "写第二章：核心概念",
+      "title": "写第一章：一个 AI 的记忆",
       "status": "todo",
       "tasks": [
         {
           "id": "E3.S2.T0",
-          "title": "pi 扩展架构：工具注册、生命周期钩子、配置系统",
-          "status": "todo"
+          "title": "写 1.1 为什么 AI 需要持久记忆（痛点叙事）",
+          "status": "done",
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E3.S2.T1",
-          "title": "数据流：AI 如何发现和调用扩展提供的工具",
+          "title": "写 1.2 pi-memory 原理：文件即记忆、索引即导航",
           "status": "todo"
         },
         {
           "id": "E3.S2.T2",
-          "title": "设计哲学：为什么每个包只做一件事",
+          "title": "写 1.3 动手装：5 分钟让 AI 拥有记忆（含完整示例）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S2.T3",
+          "title": "写 1.4 进阶：记忆的分类、索引规范和最佳实践",
           "status": "todo"
         }
       ]
     },
     {
       "id": "E3.S3",
-      "title": "写第三章：逐个扩展详解（含示例和设计思路）",
+      "title": "写第二章：从记忆到规划",
       "status": "todo",
       "tasks": [
         {
           "id": "E3.S3.T0",
-          "title": "pi-memory：持久记忆系统（原理 + 配置 + 完整示例）",
+          "title": "写 2.1 痛点：AI 面对 10 个文件的重构做到一半就忘了原计划",
           "status": "todo"
         },
         {
           "id": "E3.S3.T1",
-          "title": "pi-roadmap：路线图管理（原理 + JSON 结构 + 工具参数 + 示例）",
+          "title": "写 2.2 pi-roadmap 原理：Epic → Story → Task 三层拆解",
           "status": "todo"
         },
         {
           "id": "E3.S3.T2",
-          "title": "pi-smart-compact：智能上下文压缩（原理 + 配置 + 效果对比）",
+          "title": "写 2.3 动手：用 roadmap 管理一个真实项目（含 5 个工具使用示例）",
           "status": "todo"
         },
         {
           "id": "E3.S3.T3",
-          "title": "pi-session-analyzer：会话分析（原理 + 用例 + 输出解读）",
-          "status": "todo"
-        },
-        {
-          "id": "E3.S3.T4",
-          "title": "pi-payload-analyzer：Payload 调试（原理 + action 参考 + 实战）",
-          "status": "todo"
-        },
-        {
-          "id": "E3.S3.T5",
-          "title": "pi-scheduler：定时任务（原理 + cron 示例 + 最佳实践）",
-          "status": "todo"
-        },
-        {
-          "id": "E3.S3.T6",
-          "title": "pi-shepherd：会话守护（原理 + 钩子机制 + 配置）",
-          "status": "todo"
-        },
-        {
-          "id": "E3.S3.T7",
-          "title": "pi-context：上下文增强（原理 + 配置 + 效果）",
-          "status": "todo"
-        },
-        {
-          "id": "E3.S3.T8",
-          "title": "pi-journal：开发日志（原理 + 自动记录 + 查询）",
-          "status": "todo"
-        },
-        {
-          "id": "E3.S3.T9",
-          "title": "pi-workflow：工作流引擎（原理 + 定义 + 触发）",
-          "status": "todo"
-        },
-        {
-          "id": "E3.S3.T10",
-          "title": "pi-shared-utils：共享工具库（原理 + 模块参考）",
+          "title": "写 2.4 Roadmap 和 Memory 的关系：结构化记忆 vs 非结构化记忆",
           "status": "todo"
         }
       ]
     },
     {
       "id": "E3.S4",
-      "title": "写第四章：组合实战",
+      "title": "写第三章：给 AI 立规矩",
       "status": "todo",
       "tasks": [
         {
           "id": "E3.S4.T0",
-          "title": "场景一：用 memory + roadmap + shepherd 搭建项目管理体系",
+          "title": "写 3.1 痛点：AI 擅自删代码、提交格式混乱、改了不该改的文件",
           "status": "todo"
         },
         {
           "id": "E3.S4.T1",
-          "title": "场景二：用 smart-compact + session-analyzer + payload-analyzer 做上下文优化",
+          "title": "写 3.2 pi-shepherd 原理：钩子机制——在关键动作前检查规则",
           "status": "todo"
         },
         {
           "id": "E3.S4.T2",
-          "title": "场景三：用 scheduler + journal + workflow 做自动化开发流水线",
+          "title": "写 3.3 pi-context 原理：控制 AI 看到的信息质量（distill/aging）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S4.T3",
+          "title": "写 3.4 动手：配置 shepherd 规则 + context 过滤策略（含实际规则示例）",
           "status": "todo"
         }
       ]
     },
     {
       "id": "E3.S5",
-      "title": "写第五章：贡献指南与进阶",
+      "title": "写第四章：让 AI 学会复盘",
       "status": "todo",
       "tasks": [
         {
           "id": "E3.S5.T0",
-          "title": "如何开发自己的 pi 扩展（SDK 使用指南）",
+          "title": "写 4.1 痛点：开了 3 小时会话，不知道 AI 到底做了什么",
           "status": "todo"
         },
         {
           "id": "E3.S5.T1",
-          "title": "如何贡献到 pi-atelier 生态（PR 流程、代码规范）",
+          "title": "写 4.2 pi-journal 原理：自动记录每个会话的关键事件",
           "status": "todo"
         },
         {
           "id": "E3.S5.T2",
-          "title": "部署与发布：GitHub Pages + 自动化 CI",
+          "title": "写 4.3 pi-session-analyzer 原理：跨会话搜索、时间线回溯",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S5.T3",
+          "title": "写 4.4 动手：用 session-analyzer 找到「上周那个 bug 是怎么修的」（含实战案例）",
           "status": "todo"
         }
       ]
     },
     {
       "id": "E3.S6",
-      "title": "书的国际化（中英双语）",
+      "title": "写第五章：长会话生存指南",
       "status": "todo",
       "tasks": [
         {
           "id": "E3.S6.T0",
-          "title": "配置 i18n 插件支持中英切换",
+          "title": "写 5.1 痛点：会话超过 50 轮 AI 开始重复自己、忘记前面的约定",
           "status": "todo"
         },
         {
           "id": "E3.S6.T1",
+          "title": "写 5.2 pi-smart-compact 原理：两阶段压缩——意图总结 + 工具去留",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S6.T2",
+          "title": "写 5.3 pi-payload-analyzer 原理：用数据说话——token 去哪了",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S6.T3",
+          "title": "写 5.4 动手：诊断上下文膨胀→用 smart-compact 解决（含 token 数据对比图）",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S7",
+      "title": "写第六章：自动化与工作流",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S7.T0",
+          "title": "写 6.1 痛点：每次都要手动让 AI 做重复检查",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S7.T1",
+          "title": "写 6.2 pi-scheduler 原理：定时提醒、周期任务",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S7.T2",
+          "title": "写 6.3 pi-workflow 原理：子代理编排——让 AI 自己跑研究流程",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S7.T3",
+          "title": "写 6.4 动手：配一个每日自动检查 + 自动研究流程（含完整工作流定义）",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S8",
+      "title": "写第七章：自己动手做扩展",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S8.T0",
+          "title": "写 7.1 pi 扩展架构全解：registerTool、生命周期钩子、配置系统",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S8.T1",
+          "title": "写 7.2 pi-shared-utils 速查：日志、存储、路径、JSON 工具",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S8.T2",
+          "title": "写 7.3 从零写一个扩展：完整教程（含代码）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S8.T3",
+          "title": "写 7.4 发布到 npm：让别人也能用",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S9",
+      "title": "写附录与收尾",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S9.T0",
+          "title": "写附录 A：所有扩展速查表（一页看完每个扩展装了能用什么）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S9.T1",
+          "title": "写附录 B：推荐扩展组合（按场景：个人项目 / 团队项目 / 大型重构）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S9.T2",
+          "title": "写附录 C：pi 内部机制速览（compaction、distill、tool call 生命周期）",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S10",
+      "title": "读者视角审查：子代理模拟真实用户阅读全书并评价",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S10.T0",
+          "title": "子代理扮演「刚接触 pi 的前端开发者」：遇到会话太长 AI 变笨的问题，阅读第五章后能否自行诊断和解决",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S10.T1",
+          "title": "子代理扮演「团队技术负责人」：想给团队的 AI 立规矩防止误操作，阅读第三章后能否配置出有效的 shepherd 规则",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S10.T2",
+          "title": "子代理扮演「想开发自己扩展的贡献者」：阅读第七章后能否理解扩展架构并写出第一个工具",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S10.T3",
+          "title": "汇总审查报告：列出每章缺失的信息、不够清晰的解释、缺乏的示例，并给出改进建议",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S11",
+      "title": "书的国际化（中英双语）",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S11.T0",
+          "title": "配置 mdBook 双语结构（中文默认 + en/ 英文版）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S11.T1",
           "title": "翻译全书为英文版",
           "status": "todo"
         }

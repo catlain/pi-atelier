@@ -1,0 +1,20 @@
+[book]
+title = "pi-atelier: AI Agent 工具链实战指南"
+authors = ["pi-atelier contributors"]
+language = "zh-CN"
+description = "从零教会用户使用 pi-atelier 扩展生态，让 AI 编程助手从'会写代码'进化到'会管理项目'"
+src = "src"
+
+[build]
+build-dir = "book"
+
+[output.html]
+default-theme = "navy"
+git-repository-url = "https://github.com/catlain/pi-atelier"
+edit-url-template = "https://github.com/catlain/pi-atelier/edit/main/book/src/{path}"
+additional-css = ["theme/custom.css"]
+
+[output.html.search]
+enable = true
+limit-results = 30
+use-boolean-and = true
