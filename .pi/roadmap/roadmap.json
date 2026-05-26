@@ -1,0 +1,192 @@
+{
+  "source": "pi-atelier-docs",
+  "syncedAt": "2026-05-26",
+  "stories": [
+    {
+      "id": "E0.S0",
+      "title": "提炼 README 模板规范",
+      "status": "done",
+      "tasks": [
+        {
+          "id": "E0.S0.T0",
+          "title": "分析 pi-memory README 结构，提炼出通用模板",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "提炼了 pi-memory README 的结构，产出 TEMPLATE-README.md：10 个必选章节 + 4 个可选章节 + 行数参考"
+        },
+        {
+          "id": "E0.S0.T1",
+          "title": "写模板文档 TEMPLATE-README.md 放到 pi-atelier 组织仓库",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "模板写入 pi-atelier/TEMPLATE-README.md，包含 10 个必选章节的完整格式规范和示例"
+        }
+      ],
+      "doneDate": "2026-05-26"
+    },
+    {
+      "id": "E0.S1",
+      "title": "用模板重写 pi-roadmap README 并验证",
+      "status": "done",
+      "tasks": [
+        {
+          "id": "E0.S1.T0",
+          "title": "按模板重写 pi-roadmap README",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "278 行完整 README：工作原理 ASCII 图、5 个工具完整参数表+输出示例、存储说明、最佳实践、限制、架构目录树"
+        },
+        {
+          "id": "E0.S1.T1",
+          "title": "对比模板和实际输出，调整模板不适用的部分",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "pi-roadmap README 已用模板重写，验证模板完整性 — 所有 10 个必选章节都适用"
+        }
+      ],
+      "doneDate": "2026-05-26"
+    },
+    {
+      "id": "E1.S0",
+      "title": "第二批：核心扩展包（4个）",
+      "status": "done",
+      "tasks": [
+        {
+          "id": "E1.S0.T0",
+          "title": "重写 pi-smart-compact README",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "135 行完整 README：两阶段流程图、命令表、配置字段表（6项）、模型推荐、4 个使用场景"
+        },
+        {
+          "id": "E1.S0.T1",
+          "title": "重写 pi-session-analyzer README",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "完整 README：双工具 ASCII 流程图、参数表+action 参考表、存储说明、5 个用例、最佳实践、限制、架构树"
+        },
+        {
+          "id": "E1.S0.T2",
+          "title": "重写 pi-payload-analyzer README",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "完整 README：ASCII 流程图、10 个 action 参考表、6 个参数、5 个用例、存储说明、注意事项"
+        },
+        {
+          "id": "E1.S0.T3",
+          "title": "重写 pi-context README",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "补充用例表/最佳实践/限制/架构"
+        }
+      ],
+      "doneDate": "2026-05-26"
+    },
+    {
+      "id": "E1.S1",
+      "title": "第三批：辅助扩展包（6个）",
+      "status": "done",
+      "tasks": [
+        {
+          "id": "E1.S1.T0",
+          "title": "重写 pi-scheduler README",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "补充 Why/How/Best Practices/限制/架构，保留原有 6 模块完整代码示例"
+        },
+        {
+          "id": "E1.S1.T1",
+          "title": "重写 pi-shepherd README",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "补充 Why/How 流程图/用例表/最佳实践/限制/架构"
+        },
+        {
+          "id": "E1.S1.T2",
+          "title": "重写 pi-journal README",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "补充用例表/最佳实践/限制/架构"
+        },
+        {
+          "id": "E1.S1.T3",
+          "title": "重写 pi-workflow README",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "补充 Why/用例表/最佳实践/限制/架构"
+        },
+        {
+          "id": "E1.S1.T4",
+          "title": "重写 pi-atelier 组织仓库 README",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "全面重写：补充哲学/推荐组合/贡献指南/开发指南"
+        },
+        {
+          "id": "E1.S1.T5",
+          "title": "重写 pi-shared-utils README",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "README 已完整，包含所有模板章节（Why/How/6 模块代码示例/Best Practices/限制/架构）"
+        }
+      ],
+      "doneDate": "2026-05-26"
+    },
+    {
+      "id": "E1.S2",
+      "title": "为每个包补充基础文件",
+      "status": "done",
+      "tasks": [
+        {
+          "id": "E1.S2.T0",
+          "title": "检查并补全所有包的 LICENSE 文件",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "补充用例表/最佳实践/限制/架构"
+        },
+        {
+          "id": "E1.S2.T1",
+          "title": "为每个包创建 CHANGELOG.md",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "全面重写：补充 Why/How 流程图/用例表/最佳实践/限制/架构"
+        },
+        {
+          "id": "E1.S2.T2",
+          "title": "检查所有 package.json 的 keywords/repository/description 完整性",
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "note": "补充 Why/用例表/最佳实践/限制/架构"
+        }
+      ],
+      "doneDate": "2026-05-26"
+    },
+    {
+      "id": "E2.S0",
+      "title": "创建 docs 仓库并搭建 MkDocs 站点",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E2.S0.T0",
+          "title": "创建 pi-atelier/docs 仓库，初始化 MkDocs Material",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S0.T1",
+          "title": "写 Quick Start 指南：5 分钟搭建 AI Agent 工具链",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S0.T2",
+          "title": "配置 mkdocs-monorepo-plugin 聚合各包 README",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S0.T3",
+          "title": "配置 GitHub Actions 自动部署到 GitHub Pages",
+          "status": "todo"
+        }
+      ]
+    }
+  ]
+}

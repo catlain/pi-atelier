@@ -1,8 +1,17 @@
 # pi-atelier
 
-[pi-coding-agent](https://github.com/earendil-works/pi-coding-agent) 的扩展集合。每个扩展都是独立可安装的包，按需取用。
+[pi](https://github.com/earendil-works/pi-coding-agent) 的扩展集合 — 模块化的 AI 编程助手增强工具箱。
 
-> ⚠️ 本仓库已归档。所有扩展已拆分为独立包，不再需要安装整个 monorepo。
+> ⚠️ 本仓库已归档。所有扩展已拆分为独立包，按需取用。
+
+## 哲学
+
+pi-atelier 遵循 **Unix 哲学**：每个扩展做好一件事，通过组合构建强大的工作流。
+
+- **按需取用** — 只安装你需要的扩展，不捆绑不需要的功能
+- **独立演进** — 每个包独立版本、独立发布、独立更新
+- **零冲突** — 扩展之间松耦合，不会互相干扰
+- **可组合** — 多个扩展协同工作时效果更好（如 memory + shepherd + roadmap）
 
 ## 扩展列表
 
@@ -42,13 +51,46 @@
 ## 快速开始
 
 ```bash
-# 按需安装想要的扩展，例如：
+# 1. 基础增强（推荐所有项目）
 pi install git:github.com/catlain/pi-memory
-pi install git:github.com/catlain/pi-roadmap
 pi install git:github.com/catlain/pi-context
+
+# 2. 项目管理
+pi install git:github.com/catlain/pi-roadmap
+pi install git:github.com/catlain/pi-shepherd
+
+# 3. 分析调试（按需）
+pi install git:github.com/catlain/pi-payload-analyzer
+pi install git:github.com/catlain/pi-session-analyzer
 ```
 
 安装后重启 pi 即可使用。
+
+### 推荐组合
+
+| 组合 | 扩展 | 适合场景 |
+|------|------|----------|
+| **日常开发** | memory + context + shepherd | 记住上下文 + 防止越界 |
+| **项目管理** | roadmap + shepherd + scheduler | 规划 + 规则 + 定时提醒 |
+| **深度调试** | payload-analyzer + session-analyzer | token 分析 + 会话审计 |
+| **团队协作** | memory + shepherd + journal | 知识积累 + 规范 + 日志 |
+
+## 贡献
+
+每个扩展都是独立仓库。要贡献：
+
+1. Fork 对应的扩展仓库
+2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
+3. 提交改动 (`git commit -m 'Add amazing feature'`)
+4. 推送分支 (`git push origin feature/amazing-feature`)
+5. 创建 Pull Request
+
+### 开发指南
+
+- TypeScript 严格模式
+- 通过 `bundledDependencies` 管理共享依赖
+- 每个扩展遵循统一的入口模式（`index.ts` → `registerExtension`）
+- 测试用 `vitest`
 
 ## 卸载
 
