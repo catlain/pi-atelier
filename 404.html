@@ -1,64 +1,44 @@
 <!DOCTYPE HTML>
-<html lang="{{ language }}" class="{{ default_theme }}" dir="{{ text_direction }}">
+<html lang="zh-CN" class="rust" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>{{ title }}</title>
-        {{#if is_print }}
-        <meta name="robots" content="noindex">
-        {{/if}}
-        {{#if base_url}}
-        <base href="{{ base_url }}">
-        {{/if}}
+        <title>Page not found - pi-atelier: AI Agent 工具链实战指南</title>
+        <base href="/pi-atelier/">
 
 
         <!-- Custom HTML head -->
-        {{> head}}
+        <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
-        <meta name="description" content="{{ description }}">
+        <meta name="description" content="从零教会用户使用 pi-atelier 扩展生态，让 AI 编程助手从&#x27;会写代码&#x27;进化到&#x27;会管理项目&#x27;">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        {{#if favicon_svg}}
-        <link rel="icon" href="{{ path_to_root }}favicon.svg">
-        {{/if}}
-        {{#if favicon_png}}
-        <link rel="shortcut icon" href="{{ path_to_root }}favicon.png">
-        {{/if}}
-        <link rel="stylesheet" href="{{ path_to_root }}css/variables.css">
-        <link rel="stylesheet" href="{{ path_to_root }}css/general.css">
-        <link rel="stylesheet" href="{{ path_to_root }}css/chrome.css">
-        {{#if print_enable}}
-        <link rel="stylesheet" href="{{ path_to_root }}css/print.css" media="print">
-        {{/if}}
+        <link rel="icon" href="favicon.svg">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="{{ path_to_root }}FontAwesome/css/font-awesome.css">
-        {{#if copy_fonts}}
-        <link rel="stylesheet" href="{{ path_to_root }}fonts/fonts.css">
-        {{/if}}
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="{{ path_to_root }}highlight.css">
-        <link rel="stylesheet" href="{{ path_to_root }}tomorrow-night.css">
-        <link rel="stylesheet" href="{{ path_to_root }}ayu-highlight.css">
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        {{#each additional_css}}
-        <link rel="stylesheet" href="{{ ../path_to_root }}{{ this }}">
-        {{/each}}
+        <link rel="stylesheet" href="theme/custom.css">
 
-        {{#if mathjax_support}}
-        <!-- MathJax -->
-        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        {{/if}}
     </head>
     <body class="no-js">
     <div id="body-container">
         <!-- Provide site root to javascript -->
         <script>
-            var path_to_root = "{{ path_to_root }}";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "{{ preferred_dark_theme }}" : "{{ default_theme }}";
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "coal" : "rust";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -83,7 +63,7 @@
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
-            html.classList.remove('{{ default_theme }}')
+            html.classList.remove('rust')
             html.classList.add(theme);
             var body = document.querySelector('body');
             body.classList.remove('no-js')
@@ -110,7 +90,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                {{#toc}}{{/toc}}
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></li><li class="chapter-item expanded "><a href="chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></li><li class="chapter-item expanded "><a href="chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></li><li class="chapter-item expanded "><a href="chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></li><li class="chapter-item expanded "><a href="chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></li><li class="chapter-item expanded "><a href="chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></li><li class="chapter-item expanded "><a href="chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></li><li class="chapter-item expanded "><a href="chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></li><li class="chapter-item expanded "><a href="appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -142,8 +122,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                {{> header}}
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -159,36 +138,24 @@
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        {{#if search_enabled}}
                         <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
-                        {{/if}}
                     </div>
 
-                    <h1 class="menu-title">{{ book_title }}</h1>
+                    <h1 class="menu-title">pi-atelier: AI Agent 工具链实战指南</h1>
 
                     <div class="right-buttons">
-                        {{#if print_enable}}
-                        <a href="{{ path_to_root }}print.html" title="Print this book" aria-label="Print this book">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        {{/if}}
-                        {{#if git_repository_url}}
-                        <a href="{{git_repository_url}}" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa {{git_repository_icon}}"></i>
+                        <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        {{/if}}
-                        {{#if git_repository_edit_url}}
-                        <a href="{{git_repository_edit_url}}" title="Suggest an edit" aria-label="Suggest an edit">
-                            <i id="git-edit-button" class="fa fa-edit"></i>
-                        </a>
-                        {{/if}}
 
                     </div>
                 </div>
 
-                {{#if search_enabled}}
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
                         <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
@@ -199,28 +166,19 @@
                         </ul>
                     </div>
                 </div>
-                {{/if}}
 
                 <!-- ARIA sidebar script removed -->
 
                 <div id="content" class="content">
                     <main>
-                        {{{ content }}}
+                        <h1 id="document-not-found-404"><a class="header" href="#document-not-found-404">Document not found (404)</a></h1>
+<p>This URL is invalid, sorry. Please use the navigation bar or search to continue.</p>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        {{#previous}}
-                            <a rel="prev" href="{{ path_to_root }}{{link}}" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-                        {{/previous}}
 
-                        {{#next}}
-                            <a rel="next prefetch" href="{{ path_to_root }}{{link}}" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        {{/next}}
 
                         <div style="clear: both"></div>
                     </nav>
@@ -231,96 +189,25 @@
 
         </div>
 
-        {{#if live_reload_endpoint}}
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "{{{live_reload_endpoint}}}";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        {{/if}}
 
-        {{#if google_analytics}}
-        <!-- Google Analytics Tag -->
-        <script>
-            var localAddrs = ["localhost", "127.0.0.1", ""];
 
-            // make sure we don't activate google analytics if the developer is
-            // inspecting the book locally...
-            if (localAddrs.indexOf(document.location.hostname) === -1) {
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-                ga('create', '{{google_analytics}}', 'auto');
-                ga('send', 'pageview');
-            }
-        </script>
-        {{/if}}
-
-        {{#if playground_line_numbers}}
-        <script>
-            window.playground_line_numbers = true;
-        </script>
-        {{/if}}
-
-        {{#if playground_copyable}}
         <script>
             window.playground_copyable = true;
         </script>
-        {{/if}}
 
-        {{#if playground_js}}
-        <script src="{{ path_to_root }}ace.js"></script>
-        <script src="{{ path_to_root }}editor.js"></script>
-        <script src="{{ path_to_root }}mode-rust.js"></script>
-        <script src="{{ path_to_root }}theme-dawn.js"></script>
-        <script src="{{ path_to_root }}theme-tomorrow_night.js"></script>
-        {{/if}}
 
-        {{#if search_js}}
-        <script src="{{ path_to_root }}elasticlunr.min.js"></script>
-        <script src="{{ path_to_root }}mark.min.js"></script>
-        <script src="{{ path_to_root }}searcher.js"></script>
-        {{/if}}
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
 
-        <script src="{{ path_to_root }}clipboard.min.js"></script>
-        <script src="{{ path_to_root }}highlight.js"></script>
-        <script src="{{ path_to_root }}book.js"></script>
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        {{#each additional_js}}
-        <script src="{{ ../path_to_root }}{{this}}"></script>
-        {{/each}}
+        <script src="theme/custom.js"></script>
 
-        {{#if is_print}}
-        {{#if mathjax_support}}
-        <script>
-        window.addEventListener('load', function() {
-            MathJax.Hub.Register.StartupHook('End', function() {
-                window.setTimeout(window.print, 100);
-            });
-        });
-        </script>
-        {{else}}
-        <script>
-        window.addEventListener('load', function() {
-            window.setTimeout(window.print, 100);
-        });
-        </script>
-        {{/if}}
-        {{/if}}
 
     </div>
     </body>
