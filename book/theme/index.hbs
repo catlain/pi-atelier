@@ -80,9 +80,6 @@
         <div id="menu-bar-hover-placeholder"></div>
         <div id="menu-bar" class="menu-bar sticky">
             <div class="left-buttons">
-                <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-expanded="false" aria-keyshortcuts="S" aria-controls="sidebar">
-                    {{fa "solid" "bars"}}
-                </button>
                 <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
                     {{fa "solid" "paintbrush"}}
                 </button>
@@ -139,15 +136,8 @@
         </div>
         {{/if}}
 
-        <!-- Sidebar + Content -->
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <div class="sidebar-scrollbox">
-                {{#toc}}{{/toc}}
-            </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
-        </nav>
-
-        <div id="page-wrapper" class="page-wrapper">
+        <!-- Sidebar removed for full-width layout -->
+        <div id="page-wrapper" class="page-wrapper" style="margin-left:0;">
             <div class="page">
                 <div id="menu-bar-hover-placeholder"></div>
                 <div id="content" class="content">

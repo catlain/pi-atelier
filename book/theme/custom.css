@@ -59,10 +59,9 @@ code, pre, kbd, samp {
   z-index: 100;
 }
 
-/* 侧边栏从菜单栏下方开始 */
-#sidebar {
-  top: var(--menu-bar-height);
-  padding-top: 0;
+/* 侧边栏已从模板移除，隐藏残留元素 */
+#sidebar, #sidebar-resize-handle, .sidebar {
+  display: none !important;
 }
 
 /* 内容区也需要留出菜单栏空间 */
