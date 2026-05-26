@@ -6,39 +6,58 @@
       "id": "E16.S1",
       "title": "统一 npm 发布配置",
       "description": "给所有 12 个包添加 files 白名单字段，确保 npm publish 只打包必要文件",
-      "status": "todo",
+      "status": "done",
       "tasks": [
         {
           "id": "E16.S1.T1",
           "title": "编写脚本：扫描 12 个包，自动生成 files 白名单（src/ + README.md + LICENSE 等）",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "doneBySessionId": "unknown",
+          "note": "用循环脚本批量生成 files 白名单 + .gitignore 规则"
         },
         {
           "id": "E16.S1.T2",
           "title": "pi-memory 优先修复（当前打包 16322 个 node_modules 文件，最严重）",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "doneBySessionId": "unknown",
+          "note": "删除 bundledDependencies，内联 shared-utils 代码（100.7MB → 13.5kB）"
         },
         {
           "id": "E16.S1.T3",
           "title": "修复其余 11 个包的 files 字段",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "doneBySessionId": "unknown",
+          "note": "11 个包添加 files 字段"
         },
         {
           "id": "E16.S1.T4",
           "title": "清理 git 跟踪的 package-lock.json（8 个包有此问题）",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "doneBySessionId": "unknown",
+          "note": "11 个包 git rm --cached package-lock.json，所有 .gitignore 已更新"
         },
         {
           "id": "E16.S1.T5",
           "title": "清理 git 跟踪的 node_modules（pi-context、pi-session-analyzer、pi-workflow 3 个包）",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "doneBySessionId": "unknown",
+          "note": "3 个包 git rm --cached node_modules（pi-context、pi-session-analyzer、pi-workflow）"
         },
         {
           "id": "E16.S1.T6",
           "title": "npm pack --dry-run 验证所有包只包含必要文件",
-          "status": "todo"
+          "status": "done",
+          "doneDate": "2026-05-26",
+          "doneBySessionId": "unknown",
+          "note": "13 个仓库全部干净：零 node_modules、零 package-lock.json、零 dist，全部有 .gitignore"
         }
-      ]
+      ],
+      "doneDate": "2026-05-26"
     }
   ]
 }
