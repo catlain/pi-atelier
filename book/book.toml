@@ -14,9 +14,9 @@ preferred-dark-theme = "coal"
 git-repository-url = "https://github.com/catlain/pi-atelier"
 edit-url-template = "https://github.com/catlain/pi-atelier/edit/main/book/src/{path}"
 additional-css = ["theme/custom.css"]
-additional-js = ["theme/book.js"]
+additional-js = ["theme/custom.js"]
+site-url = "/pi-atelier/"
 
-[output.html.search]
+[output.html.print]
 enable = true
-limit-results = 30
-use-boolean-and = true
+

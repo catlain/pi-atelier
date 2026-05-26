@@ -1,4 +1,10 @@
+<div class="hero">
+
 # pi-atelier：让 AI 编程助手变得专业
+
+<div class="subtitle">从零教会你使用 pi-atelier 扩展生态，让 AI 编程助手从「会写代码」进化到「会管理项目」</div>
+
+</div>
 
 ## 这本书是给谁看的？
 
@@ -19,6 +25,54 @@ pi-atelier 是一组 **pi 扩展**，让 AI 编程助手具备项目管理能力
 - 会话一长就变笨
 
 pi-atelier 的扩展补上了这些能力缺口：
+
+<div class="feature-grid">
+
+<div class="feature-card">
+
+### 🧠 记忆
+让 AI 记住跨会话的知识
+
+</div>
+
+<div class="feature-card">
+
+### 📋 规划
+管理 Epic → Story → Task 三层路线图
+
+</div>
+
+<div class="feature-card">
+
+### 🛡️ 守卫
+给 AI 立规矩，防止犯错
+
+</div>
+
+<div class="feature-card">
+
+### 🔍 诊断
+控制上下文质量 + token 消耗分析
+
+</div>
+
+<div class="feature-card">
+
+### 📊 分析
+搜索和回溯历史会话
+
+</div>
+
+<div class="feature-card">
+
+### 🗜️ 压缩
+长会话中保持 AI 的聪明
+
+</div>
+
+</div>
+
+详细对比见下表：
 
 | 能力 | 扩展 | 一句话描述 |
 |------|------|-----------|
