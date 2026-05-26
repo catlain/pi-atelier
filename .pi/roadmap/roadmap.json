@@ -1,46 +1,41 @@
 {
-  "source": "pi-atelier-docs",
+  "source": "pi-atelier-split",
   "syncedAt": "2026-05-26",
   "stories": [
     {
-      "id": "E3.S12",
-      "title": "美化书显示效果",
-      "description": "优化主题、字体、导航、CSS 美化，让书的阅读体验更专业",
-      "status": "doing",
+      "id": "E16.S1",
+      "title": "统一 npm 发布配置",
+      "description": "给所有 12 个包添加 files 白名单字段，确保 npm publish 只打包必要文件",
+      "status": "todo",
       "tasks": [
         {
-          "id": "E3.S12.T0",
-          "title": "修改主题为 rust，配置字体为 Noto Sans SC + Source Code Pro",
+          "id": "E16.S1.T1",
+          "title": "编写脚本：扫描 12 个包，自动生成 files 白名单（src/ + README.md + LICENSE 等）",
           "status": "todo"
         },
         {
-          "id": "E3.S12.T1",
-          "title": "添加底部章节导航条（上一章/下一章文字标签）",
+          "id": "E16.S1.T2",
+          "title": "pi-memory 优先修复（当前打包 16322 个 node_modules 文件，最严重）",
           "status": "todo"
         },
         {
-          "id": "E3.S12.T2",
-          "title": "优化代码块样式（圆角、阴影、语言标签、复制按钮美化）",
+          "id": "E16.S1.T3",
+          "title": "修复其余 11 个包的 files 字段",
           "status": "todo"
         },
         {
-          "id": "E3.S12.T3",
-          "title": "优化表格和引用块样式（斑马纹、圆角引用）",
+          "id": "E16.S1.T4",
+          "title": "清理 git 跟踪的 package-lock.json（8 个包有此问题）",
           "status": "todo"
         },
         {
-          "id": "E3.S12.T4",
-          "title": "添加自定义 favicon 和优化链接悬停样式",
+          "id": "E16.S1.T5",
+          "title": "清理 git 跟踪的 node_modules（pi-context、pi-session-analyzer、pi-workflow 3 个包）",
           "status": "todo"
         },
         {
-          "id": "E3.S12.T5",
-          "title": "优化移动端适配和侧边栏样式",
-          "status": "todo"
-        },
-        {
-          "id": "E3.S12.T6",
-          "title": "配置 Git 最后更新时间展示",
+          "id": "E16.S1.T6",
+          "title": "npm pack --dry-run 验证所有包只包含必要文件",
           "status": "todo"
         }
       ]

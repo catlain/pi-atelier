@@ -275,19 +275,8 @@ h3 { font-size: 1.25em; }
   max-width: 900px;
 }
 
-/* ── 隐藏侧边栏 resize handle（会遮挡内容） ── */
-.sidebar-resize-handle,
-.sidebar-resize-indicator {
-  display: none !important;
-  width: 0 !important;
-}
-
-/* sidebar 隐藏时，内容全宽居中 */
-#mdbook-sidebar-toggle-anchor:not(:checked) ~ .page-wrapper {
-  margin-left: 0 !important;
-}
-
-#mdbook-sidebar-toggle-anchor:not(:checked) ~ .page-wrapper .content main {
+/* ── 内容居中（无侧边栏） ── */
+.content main {
   margin-left: auto !important;
   margin-right: auto !important;
   max-width: 900px;
