@@ -96,7 +96,7 @@ export function countLines(directory: string, extension: string): {
   
   const results = files.map(file => ({
     path: file,
-    lines: execSync(`wc -l < ${file}`).toString().trim() |> Number
+    lines: Number(execSync(`wc -l < ${file}`).toString().trim())
   }));
   
   return {
@@ -206,6 +206,47 @@ await storage.write('config.json', { theme: 'dark' });
 const projectRoot = paths.getProjectRoot();
 const memoryDir = paths.getMemoryDir();
 ```
+
+## 调试你的扩展
+
+扩展开发中最常遇到的问题：工具注册了但 AI 不调用、handler 报错了看不到日志、返回结果不是预期的。
+
+### 查看日志输出
+
+扩展中 `logger.info()` 和 `console.log()` 的输出会出现在 pi 的**终端窗口**中（不是聊天窗口）。调试步骤：
+
+```bash
+# 在终端中启动 pi（而不是后台运行），这样能看到所有日志输出
+pi
+
+# 然后在聊天窗口中让 AI 调用你的工具
+# 终端会显示日志输出
+```
+
+### 确认工具是否注册成功
+
+在 pi 聊天中直接问 AI：
+
+```
+你现在有哪些工具可以用？能看到 code_stats 吗？
+```
+
+如果 AI 看不到你的工具，检查：
+- `package.json` 中是否有 `"piExtension": true`
+- `settings.json` 中包路径是否正确
+- `activate()` 函数是否正确导出
+
+### 常见问题排查
+
+| 问题 | 原因 | 解决方案 |
+|------|------|----------|
+| AI 看不到工具 | `piExtension` 字段缺失 | 在 package.json 加 `"piExtension": true` |
+| 工具调用报错 | handler 内部异常 | 查看终端日志中的错误栈 |
+| AI 不调用工具 | description 太模糊 | 让工具描述更具体，包含参数说明和示例 |
+| 返回值为空 | 异步操作未 await | handler 加 `async`，调用加 `await` |
+| 路径找不到 | 相对路径问题 | 用 `paths.getProjectRoot()` 获取绝对路径 |
+
+> 💡 **技巧**：开发扩展时，可以在 handler 里先 `console.log(JSON.stringify(args, null, 2))` 打印参数，确认 AI 传了什么进来。
 
 ## 发布你的扩展
 
