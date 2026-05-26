@@ -7,6 +7,7 @@ src = "src"
 
 [build]
 build-dir = "book"
+# 英文版构建：cp -r src/en/* /tmp/mdbook-en/src/ && sed 's|src = "src"|src = "src"|' book.toml > /tmp/mdbook-en/book.toml && mdbook build /tmp/mdbook-en
 
 [output.html]
 default-theme = "navy"

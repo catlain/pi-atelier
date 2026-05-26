@@ -1,0 +1,3 @@
+# 3.2 How pi-shepherd Works: The Hook Mechanism
+
+> This section is a work in progress...

@@ -1,0 +1,3 @@
+# 6.4 Hands-On: Configuring an Automation Pipeline
+
+> This section is under construction...

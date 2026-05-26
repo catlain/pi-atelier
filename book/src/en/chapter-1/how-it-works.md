@@ -1,0 +1,3 @@
+# 1.2 How pi-memory Works: Files as Memory, Index as Navigation
+
+> This section is under construction...

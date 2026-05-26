@@ -413,12 +413,12 @@
       "id": "E3.S11",
       "title": "书的国际化（中英双语）",
       "description": "翻译全书为英文版",
-      "status": "todo",
+      "status": "done",
       "tasks": [
         {
           "id": "E3.S11.T0",
           "title": "翻译全书为英文版（src/en/）",
-          "status": "todo"
+          "status": "done"
         }
       ]
     }

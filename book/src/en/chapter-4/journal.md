@@ -1,0 +1,3 @@
+# 4.2 pi-journal Principles: Automatic Logging
+
+> This section is under construction...

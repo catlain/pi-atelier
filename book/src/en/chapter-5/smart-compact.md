@@ -1,0 +1,3 @@
+# 5.2 pi-smart-compact Principle: Two-Stage Compression
+
+> This section is a work in progress...

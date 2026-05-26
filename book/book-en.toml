@@ -1,0 +1,20 @@
+[book]
+title = "pi-atelier: The Book"
+authors = ["pi-atelier contributors"]
+language = "en"
+description = "Learn to use the pi-atelier extension ecosystem - from an AI that writes code to one that manages projects"
+src = "src/en"
+
+[build]
+build-dir = "book-en"
+
+[output.html]
+default-theme = "navy"
+git-repository-url = "https://github.com/catlain/pi-atelier"
+edit-url-template = "https://github.com/catlain/pi-atelier/edit/main/book/src/{path}"
+additional-css = ["theme/custom.css"]
+
+[output.html.search]
+enable = true
+limit-results = 30
+use-boolean-and = true

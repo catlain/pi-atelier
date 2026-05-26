@@ -1,0 +1,24 @@
+# 英文版配置
+# 构建命令：mdbook build -d book-en 此文件需要放在 src/en/ 目录下
+# 实际用法：cd book && cp book.en.toml /tmp/ && cp -r src/en /tmp/src && mv /tmp/book.en.toml /tmp/book.toml && cd /tmp && mdbook build -d /home/lain/.pi/agent/git/github.com/catlain/pi-atelier/book/book-en
+
+[book]
+title = "pi-atelier: The Book"
+authors = ["pi-atelier contributors"]
+language = "en"
+description = "Learn to use the pi-atelier extension ecosystem - from an AI that writes code to one that manages projects"
+src = "src"
+
+[build]
+build-dir = "book-en"
+
+[output.html]
+default-theme = "navy"
+git-repository-url = "https://github.com/catlain/pi-atelier"
+edit-url-template = "https://github.com/catlain/pi-atelier/edit/main/book/src/en/{path}"
+additional-css = ["theme/custom.css"]
+
+[output.html.search]
+enable = true
+limit-results = 30
+use-boolean-and = true
