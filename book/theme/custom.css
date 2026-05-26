@@ -1,42 +1,349 @@
-/* pi-atelier custom theme overrides */
+/* ============================================================
+   pi-atelier 开源书 — 自定义样式
+   ============================================================ */
 
-/* 让代码块有更好的辨识度 */
-pre code {
-  border-radius: 4px;
+/* ── 字体 ── */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap');
+
+:root {
+  --font-body: 'Noto Sans SC', 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Source Code Pro', Consolas, 'Ubuntu Mono', Menlo, monospace;
 }
 
-/* 章节导言框（用于痛点叙事） */
+html {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-mono);
+}
+
+/* ── 底部章节导航条 ── */
+.nav-wrapper {
+  margin-top: 3em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--table-border-color);
+}
+
+.nav-chapters {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-fg);
+  text-decoration: none;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.nav-chapters:hover {
+  background: var(--sidebar-active);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.nav-chapters .nav-label {
+  display: inline;
+}
+
+/* 桌面端隐藏默认箭头图标旁的文字标签（由 CSS 控制） */
+.nav-chapters.previous::before {
+  content: "← ";
+}
+
+.nav-chapters.next::after {
+  content: " →";
+}
+
+/* ── 代码块美化 ── */
+pre {
+  border-radius: 8px;
+  padding: 1em;
+  margin: 1.2em 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid var(--table-border-color);
+  overflow-x: auto;
+}
+
+pre code {
+  font-size: 0.875em;
+  line-height: 1.6;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+}
+
+/* 行内代码 */
+:not(pre) > code {
+  background: var(--quote-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.875em;
+  color: var(--inline-code-color);
+  border: 1px solid var(--quote-border);
+}
+
+/* ── 表格美化 ── */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--table-border-color);
+  margin: 1.2em 0;
+  width: 100%;
+}
+
+thead {
+  background: var(--table-header-bg);
+}
+
+th {
+  font-weight: 600;
+  color: var(--fg);
+  padding: 10px 16px;
+  text-align: left;
+}
+
+td {
+  padding: 10px 16px;
+  border-top: 1px solid var(--table-border-color);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--table-alternate-bg);
+}
+
+tbody tr:hover {
+  background: var(--quote-bg);
+}
+
+/* ── 引用块美化 ── */
+blockquote {
+  border-left: 4px solid var(--links);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 20px;
+  margin: 1.2em 0;
+  background: var(--quote-bg);
+  font-style: normal;
+}
+
+blockquote p {
+  margin: 0;
+}
+
+/* ── 自定义提示框 ── */
 .pain-point {
   background: #fff3cd;
   border-left: 4px solid #ffc107;
-  padding: 12px 20px;
-  margin: 16px 0;
-  border-radius: 4px;
+  padding: 14px 20px;
+  margin: 1.2em 0;
+  border-radius: 0 8px 8px 0;
+  color: #664d03;
 }
 
-/* 解决方案框 */
+.pain-point::before {
+  content: "🤔 ";
+  font-weight: 600;
+}
+
 .solution {
   background: #d4edda;
   border-left: 4px solid #28a745;
-  padding: 12px 20px;
-  margin: 16px 0;
-  border-radius: 4px;
+  padding: 14px 20px;
+  margin: 1.2em 0;
+  border-radius: 0 8px 8px 0;
+  color: #155724;
 }
 
-/* 提示框 */
+.solution::before {
+  content: "💡 ";
+  font-weight: 600;
+}
+
 .tip {
   background: #d1ecf1;
   border-left: 4px solid #17a2b8;
-  padding: 12px 20px;
-  margin: 16px 0;
-  border-radius: 4px;
+  padding: 14px 20px;
+  margin: 1.2em 0;
+  border-radius: 0 8px 8px 0;
+  color: #0c5460;
 }
 
-/* 警告框 */
+.tip::before {
+  content: "💡 ";
+  font-weight: 600;
+}
+
 .warning {
   background: #f8d7da;
   border-left: 4px solid #dc3545;
-  padding: 12px 20px;
-  margin: 16px 0;
+  padding: 14px 20px;
+  margin: 1.2em 0;
+  border-radius: 0 8px 8px 0;
+  color: #721c24;
+}
+
+.warning::before {
+  content: "⚠️ ";
+  font-weight: 600;
+}
+
+/* ── 链接悬停 ── */
+.content a {
+  color: var(--links);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--links);
+  transition: all 0.2s ease;
+}
+
+.content a:hover {
+  border-bottom-style: solid;
+  color: var(--sidebar-active);
+}
+
+/* ── 标题锚点样式 ── */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+h1 { font-size: 2em; margin-top: 0; }
+h2 { font-size: 1.5em; border-bottom: 2px solid var(--table-border-color); padding-bottom: 0.3em; }
+h3 { font-size: 1.25em; }
+
+/* ── 侧边栏优化 ── */
+.sidebar .sidebar-scrollbox {
+  padding: 8px 0;
+}
+
+.sidebar .chapter {
+  padding: 4px 12px;
   border-radius: 4px;
+  margin: 1px 4px;
+  transition: background 0.2s;
+}
+
+.sidebar .chapter:hover {
+  background: var(--sidebar-spacer);
+}
+
+.sidebar .chapter.active {
+  background: var(--sidebar-active);
+  color: #fff;
+  font-weight: 500;
+}
+
+/* 侧边栏分组标题 */
+.sidebar .part-title {
+  font-weight: 700;
+  font-size: 0.9em;
+  padding: 12px 12px 4px;
+  color: var(--sidebar-fg);
+  opacity: 0.7;
+}
+
+/* ── 搜索框美化 ── */
+#searchbar {
+  border-radius: 6px;
+  border: 1px solid var(--searchbar-border-color);
+  padding: 8px 12px;
+  font-size: 0.9em;
+  transition: border-color 0.2s;
+}
+
+#searchbar:focus {
+  outline: none;
+  border-color: var(--links);
+  box-shadow: 0 0 0 3px rgba(43, 121, 162, 0.1);
+}
+
+/* ── 页面底部留白 ── */
+.content {
+  padding-bottom: 4em;
+  max-width: 800px;
+}
+
+/* ── 移动端适配 ── */
+@media only screen and (max-width: 768px) {
+  .nav-chapters {
+    padding: 10px 16px;
+    font-size: 0.85em;
+  }
+
+  h1 { font-size: 1.6em; }
+  h2 { font-size: 1.3em; }
+
+  table {
+    font-size: 0.85em;
+  }
+
+  th, td {
+    padding: 8px 10px;
+  }
+}
+
+/* ── 打印优化 ── */
+@media print {
+  .nav-chapters, .sidebar, #searchbar, #menu-bar {
+    display: none;
+  }
+
+  .content {
+    max-width: 100%;
+  }
+
+  pre {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
+
+/* ── 代码语言标签 ── */
+.code-lang-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 2px 10px;
+  font-size: 0.75em;
+  font-weight: 500;
+  color: var(--fg);
+  background: var(--table-header-bg);
+  border-radius: 0 8px 0 6px;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+
+/* ── 导航文字标签 ── */
+.nav-text {
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+/* ── 滚动条美化（Webkit） ── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sidebar-active);
 }

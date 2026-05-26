@@ -7,13 +7,14 @@ src = "src"
 
 [build]
 build-dir = "book"
-# 英文版构建：cp -r src/en/* /tmp/mdbook-en/src/ && sed 's|src = "src"|src = "src"|' book.toml > /tmp/mdbook-en/book.toml && mdbook build /tmp/mdbook-en
 
 [output.html]
-default-theme = "navy"
+default-theme = "rust"
+preferred-dark-theme = "coal"
 git-repository-url = "https://github.com/catlain/pi-atelier"
 edit-url-template = "https://github.com/catlain/pi-atelier/edit/main/book/src/{path}"
 additional-css = ["theme/custom.css"]
+additional-js = ["theme/book.js"]
 
 [output.html.search]
 enable = true

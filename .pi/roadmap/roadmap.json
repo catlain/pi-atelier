@@ -3,422 +3,45 @@
   "syncedAt": "2026-05-26",
   "stories": [
     {
-      "id": "E0.S0",
-      "title": "提炼 README 模板规范",
-      "description": "分析 pi-memory README，提炼通用模板",
-      "status": "done",
+      "id": "E3.S12",
+      "title": "美化书显示效果",
+      "description": "优化主题、字体、导航、CSS 美化，让书的阅读体验更专业",
+      "status": "doing",
       "tasks": [
         {
-          "id": "E0.S0.T0",
-          "title": "分析 pi-memory README 结构，提炼出通用模板",
-          "status": "done"
+          "id": "E3.S12.T0",
+          "title": "修改主题为 rust，配置字体为 Noto Sans SC + Source Code Pro",
+          "status": "todo"
         },
         {
-          "id": "E0.S0.T1",
-          "title": "写模板文档 TEMPLATE-README.md 放到 pi-atelier 组织仓库",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E0.S1",
-      "title": "用模板重写 pi-roadmap README 并验证",
-      "description": "用模板重写 pi-roadmap README，验证模板效果",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E0.S1.T0",
-          "title": "按模板重写 pi-roadmap README",
-          "status": "done"
+          "id": "E3.S12.T1",
+          "title": "添加底部章节导航条（上一章/下一章文字标签）",
+          "status": "todo"
         },
         {
-          "id": "E0.S1.T1",
-          "title": "对比模板和实际输出，调整模板不适用的部分",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E1.S0",
-      "title": "核心扩展包 README",
-      "description": "升级核心扩展包的 README",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E1.S0.T0",
-          "title": "重写 pi-smart-compact README",
-          "status": "done"
+          "id": "E3.S12.T2",
+          "title": "优化代码块样式（圆角、阴影、语言标签、复制按钮美化）",
+          "status": "todo"
         },
         {
-          "id": "E1.S0.T1",
-          "title": "重写 pi-session-analyzer README",
-          "status": "done"
+          "id": "E3.S12.T3",
+          "title": "优化表格和引用块样式（斑马纹、圆角引用）",
+          "status": "todo"
         },
         {
-          "id": "E1.S0.T2",
-          "title": "重写 pi-payload-analyzer README",
-          "status": "dropped"
+          "id": "E3.S12.T4",
+          "title": "添加自定义 favicon 和优化链接悬停样式",
+          "status": "todo"
         },
         {
-          "id": "E1.S0.T3",
-          "title": "重写 pi-context README",
-          "status": "dropped"
+          "id": "E3.S12.T5",
+          "title": "优化移动端适配和侧边栏样式",
+          "status": "todo"
         },
         {
-          "id": "E1.S0.T4",
-          "title": "重写 pi-context-manager README（合并后新包）",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E1.S1",
-      "title": "辅助扩展包 README",
-      "description": "升级辅助扩展包的 README",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E1.S1.T0",
-          "title": "重写 pi-scheduler README",
-          "status": "done"
-        },
-        {
-          "id": "E1.S1.T1",
-          "title": "重写 pi-shepherd README",
-          "status": "done"
-        },
-        {
-          "id": "E1.S1.T2",
-          "title": "重写 pi-journal README",
-          "status": "done"
-        },
-        {
-          "id": "E1.S1.T3",
-          "title": "重写 pi-workflow README",
-          "status": "done"
-        },
-        {
-          "id": "E1.S1.T4",
-          "title": "重写 pi-atelier 组织仓库 README",
-          "status": "done"
-        },
-        {
-          "id": "E1.S1.T5",
-          "title": "重写 pi-shared-utils README",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E1.S2",
-      "title": "为每个包补充基础文件",
-      "description": "检查并补全所有包的 LICENSE、CHANGELOG、package.json",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E1.S2.T0",
-          "title": "检查并补全所有包的 LICENSE 文件",
-          "status": "done"
-        },
-        {
-          "id": "E1.S2.T1",
-          "title": "为每个包创建 CHANGELOG.md",
-          "status": "done"
-        },
-        {
-          "id": "E1.S2.T2",
-          "title": "检查所有 package.json 的 keywords/repository/description 完整性",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E2.S0",
-      "title": "制定双语文档策略和目录规范",
-      "description": "确定双语文件命名/目录方案",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E2.S0.T0",
-          "title": "确定双语文件命名/目录方案（README.md 中文 + README.en.md 英文）",
-          "status": "done"
-        },
-        {
-          "id": "E2.S0.T1",
-          "title": "调研 GitHub 国际化最佳实践",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E2.S1",
-      "title": "翻译所有活跃包的 README 为英文版",
-      "description": "共 10 个活跃包",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E2.S1.T0",
-          "title": "翻译 pi-memory README",
-          "status": "done"
-        },
-        {
-          "id": "E2.S1.T1",
-          "title": "翻译 pi-roadmap README",
-          "status": "done"
-        },
-        {
-          "id": "E2.S1.T2",
-          "title": "翻译 pi-smart-compact README",
-          "status": "done"
-        },
-        {
-          "id": "E2.S1.T3",
-          "title": "翻译 pi-session-analyzer README",
-          "status": "done"
-        },
-        {
-          "id": "E2.S1.T4",
-          "title": "翻译 pi-context-manager README",
-          "status": "done"
-        },
-        {
-          "id": "E2.S1.T5",
-          "title": "翻译 pi-shared-utils README",
-          "status": "done"
-        },
-        {
-          "id": "E2.S1.T6",
-          "title": "翻译 pi-scheduler README",
-          "status": "done"
-        },
-        {
-          "id": "E2.S1.T7",
-          "title": "翻译 pi-shepherd README",
-          "status": "done"
-        },
-        {
-          "id": "E2.S1.T8",
-          "title": "翻译 pi-journal README",
-          "status": "done"
-        },
-        {
-          "id": "E2.S1.T9",
-          "title": "翻译 pi-workflow README",
-          "status": "done"
-        },
-        {
-          "id": "E2.S1.T10",
-          "title": "翻译 pi-atelier 组织仓库 README",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E2.S2",
-      "title": "每个包的中英文 README 互相链接",
-      "description": "为所有包的 README 头部加上语言切换链接",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E2.S2.T0",
-          "title": "为所有活跃包的 README 头部加上语言切换链接",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S0",
-      "title": "技术选型与项目初始化",
-      "description": "选定 mdBook 并初始化 book/ 项目结构",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S0.T0",
-          "title": "选定技术栈（mdBook）并初始化 book/ 项目结构",
-          "status": "done"
-        },
-        {
-          "id": "E3.S0.T1",
-          "title": "配置 GitHub Actions 自动部署到 GitHub Pages",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S1",
-      "title": "规划全书内容",
-      "description": "从历史会话中挖掘真实案例，设计每章的内容大纲",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S1.T0",
-          "title": "规划第一章「一个 AI 的记忆」",
-          "status": "done"
-        },
-        {
-          "id": "E3.S1.T1",
-          "title": "规划第二章「从记忆到规划」",
-          "status": "done"
-        },
-        {
-          "id": "E3.S1.T2",
-          "title": "规划第三章「给 AI 立规矩」",
-          "status": "done"
-        },
-        {
-          "id": "E3.S1.T3",
-          "title": "规划第四章「让 AI 学会复盘」",
-          "status": "done"
-        },
-        {
-          "id": "E3.S1.T4",
-          "title": "规划第五章「长会话生存指南」",
-          "status": "done"
-        },
-        {
-          "id": "E3.S1.T5",
-          "title": "规划第六章「自动化与工作流」",
-          "status": "done"
-        },
-        {
-          "id": "E3.S1.T6",
-          "title": "规划第七章「自己动手做扩展」",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S2",
-      "title": "写第一章：一个 AI 的记忆",
-      "description": "完成第一章全部内容",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S2.T0",
-          "title": "写第一章全部内容",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S3",
-      "title": "写第二章：从记忆到规划",
-      "description": "完成第二章全部内容",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S3.T0",
-          "title": "写第二章全部内容",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S4",
-      "title": "写第三章：给 AI 立规矩",
-      "description": "完成第三章全部内容（含 pi-context-manager 合并后更新）",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S4.T0",
-          "title": "写第三章全部内容",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S5",
-      "title": "写第四章：让 AI 学会复盘",
-      "description": "完成第四章全部内容",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S5.T0",
-          "title": "写第四章全部内容",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S6",
-      "title": "写第五章：长会话生存指南",
-      "description": "完成第五章全部内容",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S6.T0",
-          "title": "写第五章全部内容",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S7",
-      "title": "写第六章：自动化与工作流",
-      "description": "完成第六章全部内容",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S7.T0",
-          "title": "写第六章全部内容",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S8",
-      "title": "写第七章：自己动手做扩展",
-      "description": "完成第七章全部内容",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S8.T0",
-          "title": "写第七章全部内容",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S9",
-      "title": "写附录与收尾",
-      "description": "完成附录内容",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S9.T0",
-          "title": "写附录全部内容",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S10",
-      "title": "读者视角审查",
-      "description": "子代理模拟真实用户阅读全书并评价",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S10.T0",
-          "title": "3 种模拟用户审查",
-          "status": "done"
-        },
-        {
-          "id": "E3.S10.T1",
-          "title": "汇总审查报告并修复关键问题",
-          "status": "done"
-        }
-      ]
-    },
-    {
-      "id": "E3.S11",
-      "title": "书的国际化（中英双语）",
-      "description": "翻译全书为英文版",
-      "status": "done",
-      "tasks": [
-        {
-          "id": "E3.S11.T0",
-          "title": "翻译全书为英文版（src/en/）",
-          "status": "done"
+          "id": "E3.S12.T6",
+          "title": "配置 Git 最后更新时间展示",
+          "status": "todo"
         }
       ]
     }
