@@ -59,8 +59,9 @@ code, pre, kbd, samp {
   z-index: 100;
 }
 
-/* 侧边栏已从模板移除，隐藏残留元素 */
-#sidebar, #sidebar-resize-handle, .sidebar {
+/* 侧边栏 + 浮动导航箭头已从模板移除，隐藏残留 */
+#sidebar, #sidebar-resize-handle, .sidebar,
+.nav-wide-wrapper, .nav-wide-wrapper .nav-chapters {
   display: none !important;
 }
 

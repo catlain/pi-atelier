@@ -169,27 +169,7 @@
                 </div>
             </div>
 
-            <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                {{#if previous}}
-                    <a rel="prev" href="{{ path_to_root }}{{previous.link}}" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        {{#if (eq ../text_direction "rtl")}}
-                        {{fa "solid" "angle-right"}}
-                        {{else}}
-                        {{fa "solid" "angle-left"}}
-                        {{/if}}
-                    </a>
-                {{/if}}
-
-                {{#if next}}
-                    <a rel="next prefetch" href="{{ path_to_root }}{{next.link}}" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        {{#if (eq text_direction "rtl")}}
-                        {{fa "solid" "angle-left"}}
-                        {{else}}
-                        {{fa "solid" "angle-right"}}
-                        {{/if}}
-                    </a>
-                {{/if}}
-            </nav>
+            <!-- nav-wide-wrapper removed: floating side arrows were blocking content
 
         </div>
 
