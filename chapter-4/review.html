@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" class="rust" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>第四章：让 AI 学会复盘 - pi-atelier: AI Agent 工具链实战指南</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+        <meta name="description" content="从零教会用户使用 pi-atelier 扩展生态，让 AI 编程助手从&#x27;会写代码&#x27;进化到&#x27;会管理项目&#x27;">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+    </head>
+    <body class="sidebar-hidden no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "coal" : "rust";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <!-- sidebar removed -->
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <!-- sidebar-toggle removed -->
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">pi-atelier: AI Agent 工具链实战指南</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/chapter-4/review.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ARIA sidebar script removed -->
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="让-ai-学会复盘"><a class="header" href="#让-ai-学会复盘">让 AI 学会复盘</a></h1>
+<h2 id="你可能遇到过这种情况"><a class="header" href="#你可能遇到过这种情况">你可能遇到过这种情况</a></h2>
+<p>你开了一个 3 小时的会话，AI 帮你做了很多事：</p>
+<ul>
+<li>修了两个 bug</li>
+<li>重构了一个模块</li>
+<li>配置了 CI 流水线</li>
+<li>写了一堆测试</li>
+</ul>
+<p>第二天你想回顾一下："昨天那个登录 bug 具体是怎么修的？"但你只有模糊的记忆——是改了 <code>auth.ts</code> 还是 <code>middleware.ts</code>？是加了空值检查还是改了类型断言？</p>
+<p>你翻遍了 git log，commit message 写的是"fix: update auth"——等于没写。</p>
+<blockquote>
+<p>💡 <strong>AI 做了很多事，但没有人记录"为什么这样做"</strong>。git 只记了改了什么，没记思考过程。</p>
+</blockquote>
+<h2 id="两件工具journal-和-session-analyzer"><a class="header" href="#两件工具journal-和-session-analyzer">两件工具：Journal 和 Session Analyzer</a></h2>
+<p>pi-atelier 提供了两个互补的工具来解决这个问题：</p>
+<h3 id="pi-journal--自动记录"><a class="header" href="#pi-journal--自动记录">pi-journal — 自动记录</a></h3>
+<p>Journal（日志）在后台默默记录每个会话的关键事件：</p>
+<ul>
+<li>哪些文件被读取了</li>
+<li>哪些文件被修改了</li>
+<li>AI 做了哪些关键决策</li>
+<li>会话的起止时间</li>
+</ul>
+<pre><code>┌─────────────────────────────────────┐
+│           AI 会话进行中               │
+│                                      │
+│  读取 src/auth.ts    → Journal 记录  │
+│  修改 src/auth.ts    → Journal 记录  │
+│  运行 npm test       → Journal 记录  │
+│  提交 git commit     → Journal 记录  │
+│                                      │
+│  会话结束 → 生成当日摘要              │
+└─────────────────────────────────────┘
+</code></pre>
+<h3 id="pi-session-analyzer--深度回溯"><a class="header" href="#pi-session-analyzer--深度回溯">pi-session-analyzer — 深度回溯</a></h3>
+<p>Session Analyzer（会话分析器）让你搜索和分析历史会话：</p>
+<div class="table-wrapper"><table><thead><tr><th>功能</th><th>说明</th></tr></thead><tbody>
+<tr><td>跨会话搜索</td><td>关键词搜索所有历史会话的内容</td></tr>
+<tr><td>按文件搜索</td><td>找到所有修改过某个文件的会话</td></tr>
+<tr><td>时间线视图</td><td>按时间顺序查看一个会话的完整过程</td></tr>
+<tr><td>摘要生成</td><td>自动总结一个会话做了什么</td></tr>
+<tr><td>分支分析</td><td>分析 <code>/tree</code> 产生的平行分支</td></tr>
+</tbody></table>
+</div>
+<h2 id="实际案例找到上周的-bug-修复"><a class="header" href="#实际案例找到上周的-bug-修复">实际案例：找到上周的 bug 修复</a></h2>
+<h3 id="场景跨会话搜索"><a class="header" href="#场景跨会话搜索">场景：跨会话搜索</a></h3>
+<p>你说："帮我找一下上次修 DuckDB 时区问题的会话。"</p>
+<p>AI 调用 <code>session_search</code>：</p>
+<pre><code>🔍 搜索 "DuckDB 时区" — 找到 2 个匹配会话：
+
+1. 05-22 19:36 — DuckDB 时区配置修复
+   改了 src/db/connection.ts
+   
+2. 05-20 14:30 — 数据库初始化讨论
+   讨论了时区策略但没改代码
+</code></pre>
+<h3 id="场景查看会话详情"><a class="header" href="#场景查看会话详情">场景：查看会话详情</a></h3>
+<p>你说："看看第一个会话的详细过程。"</p>
+<p>AI 调用 <code>session_analyze</code>，生成时间线：</p>
+<pre><code>📅 会话时间线（05-22 19:36）
+
+[19:36] 用户：DuckDB 查询返回 UTC 时间，需要改成中国时区
+[19:37] AI：读取 db/connection.ts
+[19:38] AI：发现连接时没有设置时区参数
+[19:39] AI：修改 connection.ts，添加 SET timezone = 'Asia/Shanghai'
+[19:40] AI：运行测试，2 个测试失败
+[19:41] AI：发现测试用的 mock 没有时区设置
+[19:42] AI：修改测试 mock
+[19:43] AI：所有测试通过 ✅
+[19:44] AI：提交 git commit "fix: set DuckDB timezone to Asia/Shanghai"
+</code></pre>
+<h3 id="场景按文件追踪"><a class="header" href="#场景按文件追踪">场景：按文件追踪</a></h3>
+<p>你说："connection.ts 最近被谁改过？"</p>
+<p>AI 调用 <code>session_search</code> 的 <code>file</code> 模式：</p>
+<pre><code>📄 src/db/connection.ts 的修改历史：
+
+1. 05-22 19:36 — DuckDB 时区修复（你）
+2. 05-20 14:30 — 数据库连接池配置（同事）
+3. 05-18 09:15 — 初始创建（你）
+</code></pre>
+<h2 id="journal-的输出格式"><a class="header" href="#journal-的输出格式">Journal 的输出格式</a></h2>
+<p>Journal 生成的日志存储在 <code>.pi/journal/</code> 目录下：</p>
+<pre><code>.pi/journal/
+├── 2026-05-22.md        # 当日日志
+├── 2026-05-21.md
+└── summaries/
+    ├── weekly-2026-W21.md  # 周总结
+    └── daily/              # 每日摘要
+</code></pre>
+<p>每日日志的内容示例：</p>
+<pre><code class="language-markdown"># 2026-05-22 工作日志
+
+## 会话 1：DuckDB 时区修复（19:36 - 19:44）
+
+- 修改：src/db/connection.ts
+- 修改：tests/db/connection.test.ts
+- 决策：在连接层设置时区，不在 SQL 层
+- 测试：全部通过
+
+## 会话 2：API 文档编写（20:15 - 21:30）
+
+- 创建：docs/api/auth.md
+- 创建：docs/api/users.md
+- 修改：docs/api/index.md
+</code></pre>
+<h2 id="session-analyzer-的分析维度"><a class="header" href="#session-analyzer-的分析维度">Session Analyzer 的分析维度</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>模式</th><th>用途</th><th>命令示例</th></tr></thead><tbody>
+<tr><td><code>summary</code></td><td>会话概览</td><td>"这个会话做了什么"</td></tr>
+<tr><td><code>entries</code></td><td>逐条事件</td><td>"列出所有文件修改"</td></tr>
+<tr><td><code>timeline</code></td><td>时间线</td><td>"AI 的操作顺序是什么"</td></tr>
+<tr><td><code>chain</code></td><td>子代理追踪</td><td>"子代理做了什么"</td></tr>
+<tr><td><code>audit</code></td><td>审计检查</td><td>"有没有违规操作"</td></tr>
+<tr><td><code>digest</code></td><td>对话序列</td><td>"我和 AI 聊了什么"</td></tr>
+<tr><td><code>takeover</code></td><td>接手报告</td><td>"帮我接手上次的工作"</td></tr>
+</tbody></table>
+</div>
+<h3 id="最有用的模式takeover"><a class="header" href="#最有用的模式takeover">最有用的模式：takeover</a></h3>
+<p><code>takeover</code> 生成一份"接手报告"，包含 5 个维度：</p>
+<pre><code>📋 会话接手报告
+
+1. 用户意图：修复 DuckDB 时区问题
+2. 修改文件：connection.ts, connection.test.ts
+3. 最近步骤：修改了测试 mock，测试通过
+4. 下一步：考虑是否需要在文档中说明时区行为
+5. 关键决策：选择在连接层而非 SQL 层处理时区
+</code></pre>
+<p>当你想"接着上次的工作继续"时，这个报告能帮你（或者另一个 AI）快速恢复上下文。</p>
+<h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
+<h3 id="-让-journal-发挥最大价值"><a class="header" href="#-让-journal-发挥最大价值">✅ 让 Journal 发挥最大价值</a></h3>
+<ul>
+<li><strong>频繁提交</strong>：AI 在 Journal 中记录的事件粒度跟 git commit 一致</li>
+<li><strong>定期回顾</strong>：每周用 <code>session_search</code> 回顾本周做了什么</li>
+<li><strong>结合记忆</strong>：Journal 记录"做了什么"，Memory 记录"学到了什么"</li>
+</ul>
+<h3 id="-session-analyzer-的高效用法"><a class="header" href="#-session-analyzer-的高效用法">✅ Session Analyzer 的高效用法</a></h3>
+<ul>
+<li><strong><code>grep</code> 模式</strong>：跨所有会话搜索关键词（比翻 git log 快得多）</li>
+<li><strong><code>file</code> 模式</strong>：找到所有动过某个文件的会话（代码审查利器）</li>
+<li><strong><code>takeover</code> 模式</strong>：接手别人的工作时，先生成接手报告</li>
+</ul>
+<h3 id="-常见误区"><a class="header" href="#-常见误区">❌ 常见误区</a></h3>
+<ul>
+<li>不要把 Journal 当 Memory 用——Journal 是日志（发生了什么），Memory 是知识（学到了什么）</li>
+<li>不要在 Journal 里找代码内容——Journal 只记录操作，不记录代码全文</li>
+</ul>
+<h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
+<p>有了复盘能力，AI 和你都能回顾过去的工作。但还有一个问题：会话越长，AI 越容易"变笨"——开始重复自己、忘记前面的约定。</p>
+<p>下一章，我们来看如何让 AI 在长会话中保持聪明。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter-3/rules.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter-5/long-session.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- nav-wide-wrapper removed -->
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../theme/custom.js"></script>
+
+
+    </div>
+    </body>
+</html>

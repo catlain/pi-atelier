@@ -1,0 +1,359 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" class="rust" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>第三章：给 AI 立规矩 - pi-atelier: AI Agent 工具链实战指南</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+        <meta name="description" content="从零教会用户使用 pi-atelier 扩展生态，让 AI 编程助手从&#x27;会写代码&#x27;进化到&#x27;会管理项目&#x27;">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+    </head>
+    <body class="sidebar-hidden no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "coal" : "rust";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <!-- sidebar removed -->
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <!-- sidebar-toggle removed -->
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">pi-atelier: AI Agent 工具链实战指南</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/chapter-3/rules.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ARIA sidebar script removed -->
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="给-ai-立规矩"><a class="header" href="#给-ai-立规矩">给 AI 立规矩</a></h1>
+<h2 id="你可能遇到过这种情况"><a class="header" href="#你可能遇到过这种情况">你可能遇到过这种情况</a></h2>
+<p>你让 AI 帮你"修一下登录页面的样式"。30 秒后你看了一眼代码——</p>
+<p>AI 不但改了样式，还：</p>
+<ul>
+<li>"顺手"重构了整个登录组件的目录结构</li>
+<li>把 CSS 模块改成了 Tailwind（你项目没用 Tailwind）</li>
+<li>删除了 3 个它认为"没用"的测试文件</li>
+<li>把 package.json 里的依赖升级到了最新版</li>
+</ul>
+<p>等你发现的时候，代码已经提交了。</p>
+<blockquote>
+<p>💡 <strong>AI 越能干，越需要规矩</strong>。能力强但没有边界，造成的破坏反而更大。</p>
+</blockquote>
+<h2 id="两道防线shepherd-和-context"><a class="header" href="#两道防线shepherd-和-context">两道防线：Shepherd 和 Context</a></h2>
+<p>pi-atelier 提供了两层防护机制：</p>
+<h3 id="第一道pi-shepherd--行为守卫"><a class="header" href="#第一道pi-shepherd--行为守卫">第一道：pi-shepherd — 行为守卫</a></h3>
+<p>Shepherd（牧羊犬）在 AI 的关键动作前做检查，相当于"门卫"。</p>
+<pre><code>AI 准备执行动作
+     │
+     ▼
+┌──────────────────┐
+│   Shepherd 钩子   │
+│  检查：该不该做？  │
+└──────┬───────────┘
+       │
+   ┌───┴───┐
+   │       │
+  放行    阻止 + 提示原因
+</code></pre>
+<p>支持的钩子时机：</p>
+<div class="table-wrapper"><table><thead><tr><th>钩子</th><th>触发时机</th><th>典型用途</th></tr></thead><tbody>
+<tr><td><code>before_edit</code></td><td>AI 编辑文件前</td><td>检查是否改了不该改的文件</td></tr>
+<tr><td><code>before_write</code></td><td>AI 写新文件前</td><td>检查文件路径是否合理</td></tr>
+<tr><td><code>before_bash</code></td><td>AI 执行命令前</td><td>禁止危险命令（rm -rf /）</td></tr>
+<tr><td><code>after_bash</code></td><td>命令执行后</td><td>自动格式化、lint 检查</td></tr>
+<tr><td><code>agent_end</code></td><td>会话结束前</td><td>提醒提交代码、更新文档</td></tr>
+</tbody></table>
+</div>
+<h3 id="第二道pi-context-manager--信息质量与诊断"><a class="header" href="#第二道pi-context-manager--信息质量与诊断">第二道：pi-context-manager — 信息质量与诊断</a></h3>
+<p>Context Manager（上下文管家）不但控制 AI 能看到什么信息，还能帮你诊断 token 消耗问题。</p>
+<p>AI 的"聪明程度"直接取决于它能看到的上下文质量。如果上下文里有噪音（过期的日志、无关的文件内容），AI 就会做出错误的判断。</p>
+<p>pi-context-manager 的核心能力：</p>
+<ul>
+<li><strong>Distill（蒸馏）</strong>：对工具返回的大段内容做压缩，保留关键信息</li>
+<li><strong>过滤</strong>：按规则屏蔽不相关的内容</li>
+<li><strong>优先级排序</strong>：重要的信息排前面</li>
+<li><strong>Token 诊断</strong>：用数据说话——分析上下文里 token 都花在哪了</li>
+</ul>
+<pre><code>工具返回大量内容（可能 50KB）
+     │
+     ▼
+┌──────────────────┐
+│   Context Distill │
+│  压缩到 5KB 关键信息 │
+└──────────────────┘
+     │
+     ▼
+AI 看到精炼后的信息，做出更好的判断
+</code></pre>
+<h2 id="实际案例防止-ai-犯错"><a class="header" href="#实际案例防止-ai-犯错">实际案例：防止 AI 犯错</a></h2>
+<h3 id="场景-1禁止修改系统文件"><a class="header" href="#场景-1禁止修改系统文件">场景 1：禁止修改系统文件</a></h3>
+<pre><code class="language-json">{
+  "rules": [
+    {
+      "id": "no-system-files",
+      "hook": "before_edit",
+      "condition": "filePath matches '.pi/memory/.*'",
+      "action": "deny",
+      "message": "记忆文件只能通过 memory_update 工具修改，不要直接编辑"
+    }
+  ]
+}
+</code></pre>
+<p>这样当 AI 尝试用 <code>edit</code> 工具直接修改记忆文件时，shepherd 会拦截并告诉它用正确的方式。</p>
+<h3 id="场景-2会话结束提醒"><a class="header" href="#场景-2会话结束提醒">场景 2：会话结束提醒</a></h3>
+<pre><code class="language-json">{
+  "rules": [
+    {
+      "id": "commit-reminder",
+      "hook": "agent_end",
+      "action": "inject",
+      "message": "检查是否有未提交的改动。如果有，提交并推送到远程仓库。"
+    }
+  ]
+}
+</code></pre>
+<p>AI 在会话结束前会自动检查 git 状态，不会遗漏提交。</p>
+<h3 id="场景-3自动-lint"><a class="header" href="#场景-3自动-lint">场景 3：自动 lint</a></h3>
+<pre><code class="language-json">{
+  "rules": [
+    {
+      "id": "auto-lint",
+      "hook": "after_bash",
+      "condition": "command matches 'edit|write'",
+      "action": "run",
+      "command": "npx eslint {filePath}"
+    }
+  ]
+}
+</code></pre>
+<p>每次 AI 编辑文件后自动跑 lint，保证代码质量。</p>
+<h2 id="shepherd-规则的配置方式"><a class="header" href="#shepherd-规则的配置方式">Shepherd 规则的配置方式</a></h2>
+<p>规则存储在 <code>shepherd/rules.json</code> 中，每条规则包含：</p>
+<div class="table-wrapper"><table><thead><tr><th>字段</th><th>说明</th><th>示例</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td>规则唯一标识</td><td><code>"no-system-files"</code></td></tr>
+<tr><td><code>hook</code></td><td>触发时机</td><td><code>"before_edit"</code></td></tr>
+<tr><td><code>condition</code></td><td>触发条件（可选）</td><td><code>"filePath matches 'src/.*'"</code></td></tr>
+<tr><td><code>action</code></td><td>执行动作</td><td><code>"deny"</code> / <code>"inject"</code> / <code>"run"</code></td></tr>
+<tr><td><code>message</code></td><td>提示信息</td><td><code>"不要直接编辑记忆文件"</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="常用规则模板"><a class="header" href="#常用规则模板">常用规则模板</a></h3>
+<pre><code class="language-json">{
+  "rules": [
+    {
+      "id": "protect-config",
+      "hook": "before_edit",
+      "condition": "filePath matches '(package\\.json|tsconfig\\.json)$'",
+      "action": "warn",
+      "message": "正在修改配置文件，请确认这是有意的"
+    },
+    {
+      "id": "no-force-push",
+      "hook": "before_bash",
+      "condition": "command matches 'push.*--force'",
+      "action": "deny",
+      "message": "禁止 force push，这会覆盖远程历史"
+    },
+    {
+      "id": "test-reminder",
+      "hook": "agent_end",
+      "action": "inject",
+      "message": "运行测试确认所有测试通过后再提交"
+    }
+  ]
+}
+</code></pre>
+<h2 id="context-的配置方式"><a class="header" href="#context-的配置方式">Context 的配置方式</a></h2>
+<p>pi-context-manager 通过 <code>settings.json</code> 中的 <code>packages</code> 配置安装（包名为 <code>"pi-context-manager"</code>），默认提供：</p>
+<ul>
+<li>自动 distill 大型工具输出</li>
+<li>按优先级排序上下文</li>
+<li>payload_analyze 工具——分析 token 预算、增长趋势、最贵的工具调用</li>
+<li>可通过 AGENTS.md 注入全局提示</li>
+</ul>
+<p>高级用户可以在 <code>.pi/config.json</code> 中自定义过滤规则。</p>
+<h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
+<h3 id="-好的规则设计"><a class="header" href="#-好的规则设计">✅ 好的规则设计</a></h3>
+<ul>
+<li><strong>精确的条件</strong>：只拦截需要拦截的场景，不要一刀切</li>
+<li><strong>清晰的提示</strong>：告诉 AI "为什么不行"和"应该怎么做"</li>
+<li><strong>分层防护</strong>：重要的事情用 <code>deny</code>（强制），次要的用 <code>warn</code>（提醒）</li>
+</ul>
+<h3 id="-不好的规则设计"><a class="header" href="#-不好的规则设计">❌ 不好的规则设计</a></h3>
+<ul>
+<li><strong>过于宽松</strong>：<code>"condition": "always"</code> 会拦截所有操作，AI 什么都做不了</li>
+<li><strong>过于严厉</strong>：禁止所有 <code>bash</code> 命令，AI 连 <code>ls</code> 都不能执行</li>
+<li><strong>模糊的提示</strong>：<code>"message": "注意"</code> —— 注意什么？</li>
+</ul>
+<h3 id="规则的优先级"><a class="header" href="#规则的优先级">规则的优先级</a></h3>
+<p>当多条规则同时匹配时：</p>
+<ol>
+<li><code>deny</code> &gt; <code>warn</code> &gt; <code>inject</code></li>
+<li>同优先级下，后定义的先生效</li>
+<li><code>agent_end</code> 钩子按定义顺序依次执行</li>
+</ol>
+<h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
+<p>有了记忆、规划和规矩，AI 已经是一个靠谱的助手了。但一个会话做了很多事之后——你怎么知道它具体做了什么？哪些文件改了？哪些决策做了？</p>
+<p>下一章，我们来看如何让 AI 学会<strong>复盘</strong>。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter-2/roadmap.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter-4/review.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- nav-wide-wrapper removed -->
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../theme/custom.js"></script>
+
+
+    </div>
+    </body>
+</html>
