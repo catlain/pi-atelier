@@ -265,10 +265,32 @@ h3 { font-size: 1.25em; }
   box-shadow: 0 0 0 3px rgba(43, 121, 162, 0.1);
 }
 
-/* ── 页面底部留白 ── */
+/* ── 页面底部留白 + 内容居中 ── */
 .content {
   padding-bottom: 4em;
-  max-width: 800px;
+  max-width: 900px;
+}
+
+.content main {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 900px;
+}
+
+/* sidebar 可见时，内容在右侧区域居中 */
+#mdbook-sidebar-toggle-anchor:checked ~ .page-wrapper {
+  /* mdBook 默认会加 margin-left，不需要额外处理 */
+}
+
+/* sidebar 隐藏时，内容全宽居中 */
+#mdbook-sidebar-toggle-anchor:not(:checked) ~ .page-wrapper {
+  margin-left: 0 !important;
+}
+
+#mdbook-sidebar-toggle-anchor:not(:checked) ~ .page-wrapper .content main {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: 900px;
 }
 
 /* ── 移动端适配 ── */
