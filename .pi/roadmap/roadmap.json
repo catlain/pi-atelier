@@ -41,7 +41,7 @@
           "title": "对比模板和实际输出，调整模板不适用的部分",
           "status": "done",
           "doneDate": "2026-05-26",
-          "note": "pi-roadmap README 已用模板重写，验证模板完整性 — 所有 10 个必选章节都适用"
+          "note": "pi-roadmap README 已用模板重写，验证模板完整性"
         }
       ],
       "doneDate": "2026-05-26"
@@ -56,28 +56,25 @@
           "title": "重写 pi-smart-compact README",
           "status": "done",
           "doneDate": "2026-05-26",
-          "note": "135 行完整 README：两阶段流程图、命令表、配置字段表（6项）、模型推荐、4 个使用场景"
+          "note": "135 行完整 README"
         },
         {
           "id": "E1.S0.T1",
           "title": "重写 pi-session-analyzer README",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "完整 README：双工具 ASCII 流程图、参数表+action 参考表、存储说明、5 个用例、最佳实践、限制、架构树"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E1.S0.T2",
           "title": "重写 pi-payload-analyzer README",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "完整 README：ASCII 流程图、10 个 action 参考表、6 个参数、5 个用例、存储说明、注意事项"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E1.S0.T3",
           "title": "重写 pi-context README",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "补充用例表/最佳实践/限制/架构"
+          "doneDate": "2026-05-26"
         }
       ],
       "doneDate": "2026-05-26"
@@ -91,43 +88,37 @@
           "id": "E1.S1.T0",
           "title": "重写 pi-scheduler README",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "补充 Why/How/Best Practices/限制/架构，保留原有 6 模块完整代码示例"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E1.S1.T1",
           "title": "重写 pi-shepherd README",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "补充 Why/How 流程图/用例表/最佳实践/限制/架构"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E1.S1.T2",
           "title": "重写 pi-journal README",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "补充用例表/最佳实践/限制/架构"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E1.S1.T3",
           "title": "重写 pi-workflow README",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "补充 Why/用例表/最佳实践/限制/架构"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E1.S1.T4",
           "title": "重写 pi-atelier 组织仓库 README",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "全面重写：补充哲学/推荐组合/贡献指南/开发指南"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E1.S1.T5",
           "title": "重写 pi-shared-utils README",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "README 已完整，包含所有模板章节（Why/How/6 模块代码示例/Best Practices/限制/架构）"
+          "doneDate": "2026-05-26"
         }
       ],
       "doneDate": "2026-05-26"
@@ -141,49 +132,287 @@
           "id": "E1.S2.T0",
           "title": "检查并补全所有包的 LICENSE 文件",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "补充用例表/最佳实践/限制/架构"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E1.S2.T1",
           "title": "为每个包创建 CHANGELOG.md",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "全面重写：补充 Why/How 流程图/用例表/最佳实践/限制/架构"
+          "doneDate": "2026-05-26"
         },
         {
           "id": "E1.S2.T2",
           "title": "检查所有 package.json 的 keywords/repository/description 完整性",
           "status": "done",
-          "doneDate": "2026-05-26",
-          "note": "补充 Why/用例表/最佳实践/限制/架构"
+          "doneDate": "2026-05-26"
         }
       ],
       "doneDate": "2026-05-26"
     },
     {
       "id": "E2.S0",
-      "title": "创建 docs 仓库并搭建 MkDocs 站点",
+      "title": "制定双语文档策略和目录规范",
       "status": "todo",
       "tasks": [
         {
-          "id": "E2.S0.T0",
-          "title": "创建 pi-atelier/docs 仓库，初始化 MkDocs Material",
+          "id": "E2.S1.T0",
+          "title": "翻译 pi-memory README（中文基准版 → 英文版）",
           "status": "todo"
         },
         {
-          "id": "E2.S0.T1",
-          "title": "写 Quick Start 指南：5 分钟搭建 AI Agent 工具链",
+          "id": "E2.S1.T1",
+          "title": "翻译 pi-roadmap README",
           "status": "todo"
         },
         {
-          "id": "E2.S0.T2",
-          "title": "配置 mkdocs-monorepo-plugin 聚合各包 README",
+          "id": "E2.S1.T2",
+          "title": "翻译 pi-smart-compact README",
           "status": "todo"
         },
         {
-          "id": "E2.S0.T3",
-          "title": "配置 GitHub Actions 自动部署到 GitHub Pages",
+          "id": "E2.S1.T3",
+          "title": "翻译 pi-session-analyzer README",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S1.T4",
+          "title": "翻译 pi-payload-analyzer README",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S1.T5",
+          "title": "翻译 pi-context README",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S1.T6",
+          "title": "翻译 pi-shared-utils README",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S1.T7",
+          "title": "翻译 pi-scheduler README",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S1.T8",
+          "title": "翻译 pi-shepherd README",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S1.T9",
+          "title": "翻译 pi-journal README",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S1.T10",
+          "title": "翻译 pi-workflow README",
+          "status": "todo"
+        },
+        {
+          "id": "E2.S1.T11",
+          "title": "翻译 pi-atelier 组织仓库 README",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E2.S2",
+      "title": "每个包的中英文 README 互相链接",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E2.S2.T0",
+          "title": "为所有 12 个包的 README 头部加上语言切换链接（中文 | English）",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S0",
+      "title": "规划开源书的整体结构和章节目录",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S0.T0",
+          "title": "调研优秀开源书的章节结构（如 Rust Book, Vue.js Guide）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S0.T1",
+          "title": "设计书的 TOC：入门 → 核心概念 → 逐个扩展详解 → 组合实战 → 贡献指南",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S0.T2",
+          "title": "确定技术栈：MkDocs Material / Docusaurus / mdBook，选定并初始化项目",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S1",
+      "title": "写第一章：入门与安装",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S1.T0",
+          "title": "什么是 pi-atelier：AI Agent 工具链生态的愿景",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S1.T1",
+          "title": "5 分钟快速上手：安装 pi + 第一个扩展",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S1.T2",
+          "title": "扩展的安装和管理机制（packages 配置、git/npm 两种方式）",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S2",
+      "title": "写第二章：核心概念",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S2.T0",
+          "title": "pi 扩展架构：工具注册、生命周期钩子、配置系统",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S2.T1",
+          "title": "数据流：AI 如何发现和调用扩展提供的工具",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S2.T2",
+          "title": "设计哲学：为什么每个包只做一件事",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S3",
+      "title": "写第三章：逐个扩展详解（含示例和设计思路）",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S3.T0",
+          "title": "pi-memory：持久记忆系统（原理 + 配置 + 完整示例）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S3.T1",
+          "title": "pi-roadmap：路线图管理（原理 + JSON 结构 + 工具参数 + 示例）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S3.T2",
+          "title": "pi-smart-compact：智能上下文压缩（原理 + 配置 + 效果对比）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S3.T3",
+          "title": "pi-session-analyzer：会话分析（原理 + 用例 + 输出解读）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S3.T4",
+          "title": "pi-payload-analyzer：Payload 调试（原理 + action 参考 + 实战）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S3.T5",
+          "title": "pi-scheduler：定时任务（原理 + cron 示例 + 最佳实践）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S3.T6",
+          "title": "pi-shepherd：会话守护（原理 + 钩子机制 + 配置）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S3.T7",
+          "title": "pi-context：上下文增强（原理 + 配置 + 效果）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S3.T8",
+          "title": "pi-journal：开发日志（原理 + 自动记录 + 查询）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S3.T9",
+          "title": "pi-workflow：工作流引擎（原理 + 定义 + 触发）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S3.T10",
+          "title": "pi-shared-utils：共享工具库（原理 + 模块参考）",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S4",
+      "title": "写第四章：组合实战",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S4.T0",
+          "title": "场景一：用 memory + roadmap + shepherd 搭建项目管理体系",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S4.T1",
+          "title": "场景二：用 smart-compact + session-analyzer + payload-analyzer 做上下文优化",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S4.T2",
+          "title": "场景三：用 scheduler + journal + workflow 做自动化开发流水线",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S5",
+      "title": "写第五章：贡献指南与进阶",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S5.T0",
+          "title": "如何开发自己的 pi 扩展（SDK 使用指南）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S5.T1",
+          "title": "如何贡献到 pi-atelier 生态（PR 流程、代码规范）",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S5.T2",
+          "title": "部署与发布：GitHub Pages + 自动化 CI",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "E3.S6",
+      "title": "书的国际化（中英双语）",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "E3.S6.T0",
+          "title": "配置 i18n 插件支持中英切换",
+          "status": "todo"
+        },
+        {
+          "id": "E3.S6.T1",
+          "title": "翻译全书为英文版",
           "status": "todo"
         }
       ]
