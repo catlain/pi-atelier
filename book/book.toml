@@ -1,21 +1,22 @@
 [book]
-title = "pi-atelier: AI Agent Toolkit Practical Guide"
+title = "pi-atelier: AI Agent 工具链实战指南"
 authors = ["pi-atelier contributors"]
-language = "en"
-description = "A practical guide to using the pi-atelier extension ecosystem, evolving AI coding assistants from 'can write code' to 'can manage projects'"
-src = "src/en"
+language = "zh-CN"
+description = "从零教会用户使用 pi-atelier 扩展生态，让 AI 编程助手从'会写代码'进化到'会管理项目'"
+src = "src"
 
 [build]
-build-dir = "book-en"
+build-dir = "book"
 
 [output.html]
 default-theme = "rust"
 preferred-dark-theme = "coal"
 git-repository-url = "https://github.com/catlain/pi-atelier"
-edit-url-template = "https://github.com/catlain/pi-atelier/edit/main/book/src/en/{path}"
+edit-url-template = "https://github.com/catlain/pi-atelier/edit/main/book/src/{path}"
 additional-css = ["theme/custom.css"]
 additional-js = ["theme/custom.js"]
-site-url = "/pi-atelier/en/"
+site-url = "/pi-atelier/"
 
 [output.html.print]
 enable = true
+
