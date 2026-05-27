@@ -182,6 +182,74 @@ Epic: 把所有事情做完        ← 太模糊，没有方向
 3. **Task 应该 30 分钟内可执行**："配置 package.json 的 name 字段"而不是"配置构建"
 4. **同层级的项应该是同粒度**：不要一个 Story 有 2 个 Task，另一个有 20 个
 
+## 进阶场景：计划调整与进度追踪
+
+### 场景：需要改变方向
+
+计划赶不上变化。昨天规划好的路线图，今天发现需求变了。你不需要重新建一个——用 `roadmap_plan` 更新即可：
+
+```
+你：昨天规划的重构方案太大了，我想先只做认证模块。
+
+AI 调用 roadmap_plan(action="update")：
+  → 对比当前路线图和你的新需求
+  → 保留已完成的任务不动
+  → 标记不需要的任务为 dropped
+  → 添加新的任务
+```
+
+**关键原则**：`roadmap_plan` 是增量更新，不是覆盖。已经 `done` 的任务永远不会被改回去。
+
+### 场景：追踪谁做了什么
+
+在多会话协作中，你经常想知道"这个 task 是哪个会话完成的？"Roadmap 自动追踪：
+
+```
+roadmap_show(roadmapId="package-docs")
+
+结果：
+  E0.S0.T0 调研 GitHub 文档规范 ✅ by: 8740-8fce3e7af232
+  E0.S0.T1 提炼 README 模板 ✅ by: b8b5-85516ead6253
+  E0.S0.T2 用第一个包验证模板 ✅ by: b8b5-85516ead6253
+  E1.S0.T0 核心扩展 - pi-shepherd 🔄 doing by: aa55-a4860e851afb
+```
+
+每个完成的 task 后面的 `by: xxxx-xxxxxxxxxxxx` 是会话 ID 的短格式（UUID 最后两段）。你可以用这个 ID 搜索到具体的会话：
+
+```
+session_search(action="grep", query="8740-8fce3e7af232")
+
+→ 找到该会话，然后用 session_analyze(action="summary") 查看详情
+```
+
+### 场景：归档已完成的 Epic
+
+项目做完了，不想让已完成的 Epic 占据视线：
+
+```
+roadmap_archive(roadmapId="package-docs")
+
+→ 自动归档所有已完成的 Epic
+→ 默认隐藏，需要时用 show_archived=true 查看
+```
+
+### 场景：不知道下一步做什么
+
+打开 pi 时不知道该继续什么：
+
+```
+roadmap_next()
+
+结果：
+  📊 推荐下一步任务（按优先级排序）：
+  
+  1. E1.S0.T3 — 配置 package.json 的 files 白名单 (high, todo)
+  2. E1.S1.T0 — 工具扩展 - pi-roadmap (medium, todo)
+  3. E2.S0.T0 — 调研 mdBook 主题定制 (low, todo)
+```
+
+`roadmap_next` 自动按 doing → todo、high → medium → low 排序，告诉你最该做什么。
+
 ## 下一步
 
 AI 有了记忆（记住知识）和路线图（管理任务）。但有时候，AI 还是会"犯错"——改不该改的文件、用不该用的方式。
