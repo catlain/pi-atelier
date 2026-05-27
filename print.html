@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "searchindex-eda664b5.js";
+            window.path_to_searchindex_js = "searchindex-64b453cc.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-e3322ab6.js"></script>
@@ -950,7 +950,7 @@ AI 看到精炼后的信息，做出更好的判断
 </table>
 </div>
 <blockquote>
-<p>⚠️ <strong>关于 pi-journal</strong>：pi-journal 是计划中的日志扩展，但目前<strong>功能尚未完成</strong>（<code>tools=[], commands=[]</code>，核心功能未注册到 pi）。当前版本中，请使用 pi-session-analyzer 来回溯历史会话。</p>
+<p>💡 <strong>关于 pi-journal</strong>：pi-journal 可以通过 <code>/journal</code> 命令或 <code>journal</code> 工具生成日报/周报，采集 git 活动、记忆变更、会话活动三路数据。详见 <a href="chapter-4/journal.html">4.2 pi-journal 原理</a>。</p>
 </blockquote>
 <h2 id="实际案例找到上周的-bug-修复"><a class="header" href="#实际案例找到上周的-bug-修复">实际案例：找到上周的 bug 修复</a></h2>
 <h3 id="场景跨会话搜索"><a class="header" href="#场景跨会话搜索">场景：跨会话搜索</a></h3>
@@ -1791,7 +1791,7 @@ context.registerHook({
 <tr><td>pi-scheduler</td><td><code>"pi-scheduler"</code></td><td><code>schedule</code>, <code>/loop</code>, <code>/remind</code>, <code>/tasks</code></td><td>定时任务和提醒</td></tr>
 <tr><td>pi-workflow</td><td><code>"pi-workflow"</code></td><td><code>registerWorkflowTool</code>（供其他扩展调用）</td><td>工作流框架库</td></tr>
 <tr><td>pi-shared-utils</td><td><code>"pi-shared-utils"</code></td><td>logger, storage, paths, json, validator, settings-backup, file-lock</td><td>扩展开发工具库</td></tr>
-<tr><td>pi-journal</td><td><code>"pi-journal"</code></td><td>⚠️ 开发中，功能未注册</td><td>日志报告生成器</td></tr>
+<tr><td>pi-journal</td><td><code>"pi-journal"</code></td><td>✅ 可用</td><td>日志报告生成器（<code>/journal</code> 命令 + <code>journal</code> 工具）</td></tr>
 </tbody>
 </table>
 </div>
