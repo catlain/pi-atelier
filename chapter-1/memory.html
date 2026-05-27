@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "../searchindex-1d3c5cca.js";
+            window.path_to_searchindex_js = "../searchindex-c0f8faa3.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4d4df149.js"></script>
@@ -221,6 +221,17 @@
 │  └──────────┘     └──────────────────┘  │
 └─────────────────────────────────────────┘
 </code></pre>
+<h3 id="自动注入每轮对话自动加载记忆索引"><a class="header" href="#自动注入每轮对话自动加载记忆索引">自动注入：每轮对话自动加载记忆索引</a></h3>
+<p>pi-memory 在每个会话开始时（<code>before_agent_start</code> 事件）会自动执行以下操作：</p>
+<ol>
+<li><strong>读取 <code>memory-prompt.md</code></strong> — 记忆系统的使用说明（告诉 AI 有记忆功能、文件在哪）</li>
+<li><strong>读取 <code>MEMORY.md</code> 索引</strong> — 全局 <code>~/.pi/agent/memory/MEMORY.md</code> + 项目 <code>.pi/memory/MEMORY.md</code></li>
+<li><strong>注入到 system prompt</strong> — AI 在每轮对话开头就能看到所有记忆的标题和关键词</li>
+</ol>
+<p>这意味着 AI 不需要主动去“查“记忆——<strong>记忆索引已经在它的上下文里了</strong>。AI 看到 <code>JS_replace_$陷阱</code> 这样的标题，就知道有这条记忆存在，需要时用 <code>read</code> 工具读取完整内容。</p>
+<blockquote>
+<p>⚠️ <strong>注入的是索引，不是全部内容</strong>。MEMORY.md 里只有标题和关键词，不是完整的记忆内容。AI 需要 <code>read</code> 具体文件才能获取细节。</p>
+</blockquote>
 <p>记忆的核心结构：</p>
 <div class="table-wrapper">
 <table>
@@ -228,10 +239,11 @@
 <tr><th>组件</th><th>作用</th></tr>
 </thead>
 <tbody>
-<tr><td><code>MEMORY.md</code></td><td>索引文件，列出所有记忆的标题和关键词</td></tr>
-<tr><td>记忆文件（<code>.md</code>）</td><td>每个文件一个主题，包含具体知识点</td></tr>
-<tr><td><code>memory_update</code> 工具</td><td>AI 用来写入/更新记忆</td></tr>
-<tr><td><code>memory_index</code> 工具</td><td>AI 用来查看已有记忆</td></tr>
+<tr><td><code>MEMORY.md</code></td><td>索引文件，列出所有记忆的标题和关键词（自动注入到每轮对话）</td></tr>
+<tr><td>记忆文件（<code>.md</code>）</td><td>每个文件一个主题，包含具体知识点（按需读取）</td></tr>
+<tr><td><code>memory_update</code> 工具</td><td>AI 用来写入/更新记忆文件 + 自动更新 MEMORY.md 索引</td></tr>
+<tr><td><code>memory_index</code> 工具</td><td>AI 用来查看已有记忆（手动查询）</td></tr>
+<tr><td><code>before_agent_start</code> 钩子</td><td>会话开始时自动注入记忆索引到 system prompt</td></tr>
 </tbody>
 </table>
 </div>
