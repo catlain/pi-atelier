@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>第一章：一个 AI 的记忆 - pi-atelier: AI Agent 工具链实战指南</title>
+        <title>5.2 Smart Compact 原理 - pi-atelier: AI Agent 工具链实战指南</title>
 
 
         <!-- Custom HTML head -->
@@ -146,7 +146,7 @@
                         <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
                             <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
-                        <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/chapter-1/memory.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                        <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/chapter-5/smart-compact.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
                             <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
                         </a>
 
@@ -180,171 +180,99 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="一个-ai-的记忆"><a class="header" href="#一个-ai-的记忆">一个 AI 的记忆</a></h1>
-<h2 id="你可能遇到过这种情况"><a class="header" href="#你可能遇到过这种情况">你可能遇到过这种情况</a></h2>
-<p>你正在用 AI 编程助手开发一个项目。第一天的会话里，你花了半小时向 AI 解释：</p>
-<ul>
-<li>项目用的是 Rust + Axum 技术栈</li>
-<li>数据库用的 DuckDB 而不是 PostgreSQL</li>
-<li>认证模块用的 JWT，不是 Session</li>
-<li>部署目标是 ARM 架构的嵌入式设备</li>
-</ul>
-<p>AI 听懂了，帮你写了完美的代码。</p>
-<p>第二天，你开了一个新会话，AI 全忘了。它又开始建议你用 Express.js、连 PostgreSQL、用 Session 认证……</p>
+                        <h1 id="52-pi-smart-compact-原理两阶段增强压缩"><a class="header" href="#52-pi-smart-compact-原理两阶段增强压缩">5.2 pi-smart-compact 原理：两阶段增强压缩</a></h1>
 <blockquote>
-<p>💡 <strong>这就是 AI 的“金鱼记忆“问题</strong>：每次新会话都是一张白纸。</p>
+<p>Smart Compact 是 pi 内置 Compaction 机制的增强版——它不是简单地截断历史，而是“聪明地“决定保留什么、丢弃什么。</p>
 </blockquote>
-<h2 id="记忆让-ai-拥有跨会话的知识"><a class="header" href="#记忆让-ai-拥有跨会话的知识">记忆：让 AI 拥有跨会话的知识</a></h2>
-<p>pi-memory 就是来解决这个问题的。它给 AI 装上了一个“笔记本“：</p>
-<ul>
-<li><strong>自动记录</strong>：AI 在会话中做出的架构决策、踩过的坑、达成的共识</li>
-<li><strong>自动加载</strong>：每次新会话开始时，AI 自动读取之前的关键知识</li>
-<li><strong>按项目隔离</strong>：不同项目的记忆互不干扰</li>
-</ul>
-<h3 id="工作原理"><a class="header" href="#工作原理">工作原理</a></h3>
-<pre><code>┌─────────────────────────────────────────┐
-│              AI 会话                      │
-│                                          │
-│  ┌──────────┐     ┌──────────────────┐  │
-│  │ 用户对话  │ ──→ │ AI 自动提取知识点  │  │
-│  └──────────┘     └────────┬─────────┘  │
-│                            │             │
-│                            ▼             │
-│                   ┌─────────────────┐    │
-│                   │  memory_update   │    │
-│                   │  写入记忆文件     │    │
-│                   └─────────────────┘    │
-│                                          │
-│  ┌──────────┐     ┌──────────────────┐  │
-│  │ 新会话    │ ──→ │ before_agent_start│  │
-│  │ 开始      │     │ 自动加载记忆索引   │  │
-│  └──────────┘     └──────────────────┘  │
-└─────────────────────────────────────────┘
+<h2 id="为什么需要增强压缩"><a class="header" href="#为什么需要增强压缩">为什么需要增强压缩？</a></h2>
+<p>pi 内置的 Compaction 会在上下文接近上限时自动压缩旧对话，但它不够“聪明“：</p>
+<pre><code>内置 Compaction：
+  压缩前 100 轮 → 压缩后生成一段通用摘要
+  问题：摘要太粗糙，关键细节丢失
 </code></pre>
-<p>记忆的核心结构：</p>
+<p>Smart Compact 的改进——两阶段压缩：</p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>组件</th><th>作用</th></tr>
+<tr><th>阶段</th><th>触发时机</th><th>做什么</th></tr>
 </thead>
 <tbody>
-<tr><td><code>MEMORY.md</code></td><td>索引文件，列出所有记忆的标题和关键词</td></tr>
-<tr><td>记忆文件（<code>.md</code>）</td><td>每个文件一个主题，包含具体知识点</td></tr>
-<tr><td><code>memory_update</code> 工具</td><td>AI 用来写入/更新记忆</td></tr>
-<tr><td><code>memory_index</code> 工具</td><td>AI 用来查看已有记忆</td></tr>
+<tr><td>Phase 1</td><td>上下文使用率 &gt; 60%</td><td>提取关键信息：决策、约定、文件修改、结论</td></tr>
+<tr><td>Phase 2</td><td>上下文使用率 &gt; 80%</td><td>丢弃低价值信息：重复文件读取、中间调试输出、失败的尝试</td></tr>
 </tbody>
 </table>
 </div>
-<h3 id="记忆文件的格式"><a class="header" href="#记忆文件的格式">记忆文件的格式</a></h3>
-<p>每个记忆文件遵循统一格式：</p>
-<pre><code class="language-markdown"># 标题
+<pre><code>第一阶段（60%）：
+  80K 原始对话 → 40K 增强摘要（保留所有决策和关键结论）
 
-关键词：`kw1` `kw2` `kw3` ...
-
-## 具体内容
-
-- 知识点 1
-- 知识点 2
-- 决策记录：为什么选择了方案 A 而不是方案 B
+第二阶段（80%）：
+  40K 增强摘要 → 20K 精炼摘要（只保留当前任务所需的信息）
 </code></pre>
-<p>文件命名规则：<code>主题--关键词1,关键词2,关键词3.md</code></p>
-<p>例如：<code>数据库选型--DuckDB,嵌入式,ARM,列存,分析查询.md</code></p>
-<h2 id="实际案例新项目的第一周"><a class="header" href="#实际案例新项目的第一周">实际案例：新项目的第一周</a></h2>
-<p>让我们看一个真实的场景。假设你在开发一个数据分析工具：</p>
-<h3 id="第-1-天项目初始化"><a class="header" href="#第-1-天项目初始化">第 1 天：项目初始化</a></h3>
-<p>你和 AI 讨论了技术选型，决定用 Python + FastAPI + DuckDB。会话结束时，AI 自动写入记忆：</p>
-<pre><code class="language-markdown"># 技术栈决策
-
-关键词：`Python` `FastAPI` `DuckDB` `技术选型`
-
-## 选择理由
-
-- FastAPI：异步支持好，自动生成 API 文档
-- DuckDB：嵌入式分析数据库，无需单独部署，适合单机分析场景
-  - 不选 PostgreSQL：项目不需要并发写入，嵌入式更简单
-- Python 3.12+：用了新的类型语法
-</code></pre>
-<h3 id="第-3-天踩了一个坑"><a class="header" href="#第-3-天踩了一个坑">第 3 天：踩了一个坑</a></h3>
-<p>你在 DuckDB 的日期处理上遇到了问题——默认时区是 UTC，但你的用户在中国。AI 帮你解决后，写了一条记忆：</p>
-<pre><code class="language-markdown"># DuckDB时区问题
-
-关键词：`DuckDB` `时区` `日期` `UTC` `Asia/Shanghai`
-
-## 问题和解决方案
-
-DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
-
-解决：在连接时设置 `SET timezone = 'Asia/Shanghai'`
-
-注意：不要在 SQL 层面做时区转换，在 Python 层用 datetime 处理更可靠。
-</code></pre>
-<h3 id="第-7-天新会话无需重复解释"><a class="header" href="#第-7-天新会话无需重复解释">第 7 天：新会话，无需重复解释</a></h3>
-<p>你开了一个新会话说“给分析接口加个导出 CSV 的功能“。AI 已经知道：</p>
-<ul>
-<li>项目用 FastAPI + DuckDB</li>
-<li>时区用 Asia/Shanghai</li>
-<li>数据库查询在 Python 层处理</li>
-</ul>
-<p>不需要你再说一遍。</p>
-<blockquote>
-<p>✨ <strong>这就是记忆的价值</strong>：省去了每次重复解释的 30 分钟。</p>
-</blockquote>
-<h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
-<h3 id="-应该记住的内容"><a class="header" href="#-应该记住的内容">✅ 应该记住的内容</a></h3>
-<ul>
-<li><strong>技术决策</strong>：为什么选了 A 而不是 B</li>
-<li><strong>踩过的坑</strong>：遇到的问题和解决方案</li>
-<li><strong>项目约定</strong>：命名规范、目录结构、部署方式</li>
-<li><strong>架构知识</strong>：模块关系、数据流、关键接口</li>
-</ul>
-<h3 id="-不应该记住的内容"><a class="header" href="#-不应该记住的内容">❌ 不应该记住的内容</a></h3>
-<ul>
-<li>临时调试信息（“这个变量值是 42”）</li>
-<li>已经过时的结论（记得定期清理）</li>
-<li>通用编程知识（AI 本来就知道怎么写 for 循环）</li>
-</ul>
-<h3 id="记忆文件管理"><a class="header" href="#记忆文件管理">记忆文件管理</a></h3>
-<p>记忆不是越多越好。当文件超过 <strong>25 个</strong>时，需要清理：</p>
-<ol>
-<li><strong>合并</strong>：同主题的多文件合并为一个</li>
-<li><strong>归档</strong>：过时的结论被新结论取代，删掉旧的</li>
-<li><strong>拆分</strong>：单文件超过 200 行时，按子主题拆分</li>
-</ol>
-<p>记忆系统会自动在 AI 尝试写入时检查数量，超过 <strong>40 个</strong>会拒绝写入，强制先清理。</p>
 <h2 id="配置"><a class="header" href="#配置">配置</a></h2>
-<p>pi-memory 通过 pi 的 <code>settings.json</code> 安装：</p>
+<h3 id="安装"><a class="header" href="#安装">安装</a></h3>
 <pre><code class="language-json">{
-  "packages": [
-    "pi-memory"
-  ]
+  "packages": ["pi-smart-compact"]
 }
 </code></pre>
-<p>无需额外配置，安装即用。记忆文件存储在项目的 <code>.pi/memory/</code> 目录下。</p>
-<h3 id="记忆的作用域"><a class="header" href="#记忆的作用域">记忆的作用域</a></h3>
+<h3 id="命令"><a class="header" href="#命令">命令</a></h3>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>作用域</th><th>路径</th><th>用途</th></tr>
+<tr><th>命令</th><th>用途</th></tr>
 </thead>
 <tbody>
-<tr><td>项目级</td><td><code>.pi/memory/</code></td><td>项目特有的知识（架构、决策、坑）</td></tr>
-<tr><td>全局</td><td><code>~/.pi/agent/memory/</code></td><td>跨项目通用的知识（工具链、编码纪律）</td></tr>
+<tr><td><code>/smart-compact</code></td><td>手动触发压缩</td></tr>
+<tr><td><code>/smart-compact-config</code></td><td>查看当前配置和模式</td></tr>
 </tbody>
 </table>
 </div>
-<h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
-<p>现在 AI 有了记忆，能记住过去的知识。但面对一个大项目，它知道第一步该做什么、第二步该做什么吗？</p>
-<p>下一章，我们来看如何让 AI 学会<strong>规划</strong>。</p>
+<h3 id="自动手动模式"><a class="header" href="#自动手动模式">自动/手动模式</a></h3>
+<p>在 <code>.pi/settings.json</code> 中配置：</p>
+<pre><code class="language-json">{
+  "smart-compact": {
+    "auto": "auto"
+  }
+}
+</code></pre>
+<ul>
+<li><code>auto</code>（默认）：自动在合适的时机触发压缩</li>
+<li><code>manual</code>：只在用户执行 <code>/smart-compact</code> 时触发</li>
+</ul>
+<h2 id="压缩保留什么"><a class="header" href="#压缩保留什么">压缩保留什么？</a></h2>
+<p>Smart Compact 优先保留以下内容：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>优先级</th><th>内容类型</th><th>为什么保留</th></tr>
+</thead>
+<tbody>
+<tr><td>🔴 最高</td><td>用户明确的要求和约束</td><td>这是任务目标</td></tr>
+<tr><td>🟠 高</td><td>关键决策和选择理由</td><td>避免 AI 重复讨论已否决的方案</td></tr>
+<tr><td>🟡 中</td><td>文件修改记录</td><td>让 AI 知道哪些文件已改过</td></tr>
+<tr><td>🟢 低</td><td>工具调用过程（读取了什么、搜索了什么）</td><td>可以重新执行</td></tr>
+<tr><td>⚪ 最低</td><td>失败的尝试和调试过程</td><td>已经学到了教训</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
+<ul>
+<li><strong>不要等 80% 才关注</strong>：60% 时 AI 的质量就开始下降，Phase 1 是最佳的预防时机</li>
+<li><strong>手动触发适合关键操作前</strong>：在开始一个重要的重构之前，手动 <code>/smart-compact</code> 清理上下文</li>
+<li><strong>配合 context-manager</strong>：Smart Compact 压缩对话历史，Context Manager 的 distill 压缩工具输出，两者互补</li>
+</ul>
+<blockquote>
+<p>📖 回到 <a href="./long-session.html">5.1 长会话生存指南</a> 看完整的诊断和优化案例。</p>
+</blockquote>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../chapter-5/long-session.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../chapter-2/roadmap.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../chapter-5/payload-analyzer.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -354,11 +282,11 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../chapter-5/long-session.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../chapter-2/roadmap.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../chapter-5/payload-analyzer.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>

@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "searchindex-64b453cc.js";
+            window.path_to_searchindex_js = "searchindex-66e6d587.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-e3322ab6.js"></script>
+        <script src="toc-4d4df149.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -744,7 +744,7 @@ E0.S0.T1 — 提炼 README 模板（high priority）
      ▼
 AI 看到精炼后的信息，做出更好的判断
 </code></pre>
-<p>详细原理见 <a href="chapter-3/context.html">3.3 Context Manager 原理</a>。</p>
+<p>详细原理见 <a href="#33-pi-context-manager-原理信息质量控制与-token-诊断">3.3 Context Manager 原理</a>。</p>
 <h2 id="实际案例防止-ai-犯错"><a class="header" href="#实际案例防止-ai-犯错">实际案例：防止 AI 犯错</a></h2>
 <h3 id="场景-1编辑后自动提醒跑测试"><a class="header" href="#场景-1编辑后自动提醒跑测试">场景 1：编辑后自动提醒跑测试</a></h3>
 <pre><code class="language-json">{
@@ -890,7 +890,7 @@ AI 看到精炼后的信息，做出更好的判断
 <blockquote>
 <p>💡 <strong>所有命令无参调用时显示当前配置和用法说明</strong>，例如直接输入 <code>/distill-config</code> 即可查看当前阈值和用法。</p>
 </blockquote>
-<p>详细原理见 <a href="chapter-3/context.html">3.3 Context Manager 原理</a>。</p>
+<p>详细原理见 <a href="#33-pi-context-manager-原理信息质量控制与-token-诊断">3.3 Context Manager 原理</a>。</p>
 <h2 id="最佳实践-2"><a class="header" href="#最佳实践-2">最佳实践</a></h2>
 <h3 id="-好的规则设计"><a class="header" href="#-好的规则设计">✅ 好的规则设计</a></h3>
 <ul>
@@ -916,6 +916,389 @@ AI 看到精炼后的信息，做出更好的判断
 <h2 id="下一步-2"><a class="header" href="#下一步-2">下一步</a></h2>
 <p>有了记忆、规划和规矩，AI 已经是一个靠谱的助手了。但一个会话做了很多事之后——你怎么知道它具体做了什么？哪些文件改了？哪些决策做了？</p>
 <p>下一章，我们来看如何让 AI 学会<strong>复盘</strong>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="32-pi-shepherd-原理规则驱动的钩子系统"><a class="header" href="#32-pi-shepherd-原理规则驱动的钩子系统">3.2 pi-shepherd 原理：规则驱动的钩子系统</a></h1>
+<blockquote>
+<p>Shepherd 是 pi-atelier 的“神经系统“——它不提供工具或命令，而是通过事件钩子连接所有其他扩展。</p>
+</blockquote>
+<h2 id="架构概览"><a class="header" href="#架构概览">架构概览</a></h2>
+<pre><code>pi 事件总线
+     │
+     ├─ before_provider_request  ← Shepherd 在此注入临时提示
+     │
+     ├─ tool_call                ← Shepherd 拦截/改写工具调用
+     │      │
+     │      ▼
+     │   工具执行
+     │      │
+     │      ▼
+     ├─ tool_result              ← Shepherd 检查结果、触发后续动作
+     │
+     ├─ agent_end                ← Shepherd 触发收尾工作
+     │
+     └─ session_shutdown         ← Shepherd 清理临时状态
+</code></pre>
+<h2 id="核心概念"><a class="header" href="#核心概念">核心概念</a></h2>
+<h3 id="规则rule"><a class="header" href="#规则rule">规则（Rule）</a></h3>
+<p>每条规则是一个 JSON 对象，定义了“<strong>什么时机</strong>、<strong>什么条件</strong>、<strong>做什么动作</strong>“：</p>
+<pre><code>规则 = 钩子时机(hook) + 匹配条件(conditions/pattern) + 动作(action) + 提示(reason)
+</code></pre>
+<h3 id="动作类型详解"><a class="header" href="#动作类型详解">动作类型详解</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>动作</th><th>注入方式</th><th>用户可见</th><th>典型用途</th></tr>
+</thead>
+<tbody>
+<tr><td><code>notify</code></td><td>注入到 AI 上下文</td><td>✅ 是</td><td>提醒 AI 跑测试、lint</td></tr>
+<tr><td><code>steer</code></td><td>静默注入</td><td>❌ 否</td><td>引导 AI 查阅规范</td></tr>
+<tr><td><code>rewrite</code></td><td>修改工具参数</td><td>✅ 是</td><td>自动给命令加前缀</td></tr>
+<tr><td><code>deny</code></td><td>阻止执行</td><td>✅ 是</td><td>禁止危险操作</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="状态追踪state"><a class="header" href="#状态追踪state">状态追踪（State）</a></h3>
+<p>Shepherd 内部维护了工具调用的状态计数器：</p>
+<pre><code class="language-json">"state": { "countKind": "errors", "gte": 5 }
+</code></pre>
+<p>这表示“累计错误 ≥ 5 次时触发“。<code>countKind</code> 支持：</p>
+<ul>
+<li><code>"errors"</code>：工具返回错误时计数</li>
+<li><code>"calls"</code>：工具被调用时计数</li>
+</ul>
+<h3 id="跨扩展通信"><a class="header" href="#跨扩展通信">跨扩展通信</a></h3>
+<p>Shepherd 通过 <code>pi.events</code> 事件总线接收其他扩展的“提示“（hint）：</p>
+<pre><code>其他扩展发出 hint → pi.events.emit("ephemeral:hint") → Shepherd 收集
+                                                                 │
+before_provider_request 时 → Shepherd 把收集的 hints 注入 AI 上下文
+</code></pre>
+<p>这种机制让扩展之间可以协作而不需要直接依赖。</p>
+<h2 id="规则加载流程"><a class="header" href="#规则加载流程">规则加载流程</a></h2>
+<pre><code>1. 加载扩展包内的 rules.json（全局默认规则）
+     │
+     ▼
+2. 扫描项目目录下的 .pi/shepherd-rules-*.json（项目规则）
+     │
+     ▼
+3. 规则叠加生效（项目规则覆盖同名全局规则）
+</code></pre>
+<p><code>/reload</code> 命令会重新加载所有规则，无需重启 pi。</p>
+<h2 id="配置-1"><a class="header" href="#配置-1">配置</a></h2>
+<p>Shepherd 的配置通过 shared-utils 做三层合并（defaults → 全局 settings → 项目 settings）：</p>
+<pre><code class="language-json">// .pi/settings.json（项目级）
+{
+	"shepherd": {
+		"projectRulesPattern": "shepherd-rules-",  // 项目规则文件前缀
+		"maxWarnings": 5                            // 最大警告数
+	}
+}
+</code></pre>
+<h2 id="下一步-3"><a class="header" href="#下一步-3">下一步</a></h2>
+<p>了解 Shepherd 如何守卫 AI 行为后，下一节我们看 <a href="#33-pi-context-manager-原理信息质量控制与-token-诊断">Context Manager 如何控制信息质量</a>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="33-pi-context-manager-原理信息质量控制与-token-诊断"><a class="header" href="#33-pi-context-manager-原理信息质量控制与-token-诊断">3.3 pi-context-manager 原理：信息质量控制与 Token 诊断</a></h1>
+<blockquote>
+<p>pi-context-manager 由原 pi-context 和 pi-payload-analyzer 合并而来，统一管理上下文质量和 token 诊断。</p>
+</blockquote>
+<h2 id="三个核心能力"><a class="header" href="#三个核心能力">三个核心能力</a></h2>
+<h3 id="1-distill压缩工具返回的海量信息"><a class="header" href="#1-distill压缩工具返回的海量信息">1. Distill：压缩工具返回的海量信息</a></h3>
+<p>当工具返回大量内容（比如读取一个 1000 行的文件），pi-context-manager 会自动压缩，只保留关键信息：</p>
+<pre><code>原始工具输出（50KB）
+     │
+     ▼
+┌────────────────────────┐
+│   Distill 处理器        │
+│   提取关键行 + 摘要      │
+└────────────────────────┘
+     │
+     ▼
+压缩后输出（~5KB）
+     │
+     ▼
+AI 看到精炼后的信息
+</code></pre>
+<p><strong>Distill 默认自动开启</strong>。有两个关键参数：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>配置项</th><th>命令</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td><code>distillThreshold</code></td><td><code>/distill-config</code></td><td>超过此 token 数的工具输出会被压缩</td></tr>
+<tr><td><code>firstSeenCap</code></td><td><code>/distill-config --cap</code></td><td>首次遇到的工具输出上限（0 = 不设上限）</td></tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>💡 <strong>firstSeenCap 的作用</strong>：有些工具第一次返回结果非常大（比如 <code>ls</code> 列出一个大目录），但又不需要保留全部内容。<code>firstSeenCap</code> 限制首次输出的最大 token 数，后续请求中如果该结果被 distill 处理会进一步压缩。</p>
+</blockquote>
+<h3 id="2-tool-result-processor智能格式化精简"><a class="header" href="#2-tool-result-processor智能格式化精简">2. Tool Result Processor：智能格式化精简</a></h3>
+<p>Tool Result Processor 对特定工具的输出做结构化精简，比 distill 更精准：</p>
+<ul>
+<li><strong>Code Graph 输出精简</strong>：自动压缩 AST 搜索结果，保留关键签名和位置</li>
+<li><strong>MCP JSON 输出精简</strong>：压缩 MCP 工具返回的冗长 JSON</li>
+<li><strong>错误输出精简</strong>：截断过长的错误堆栈</li>
+<li><strong>Web 搜索输出精简</strong>：只保留搜索结果的关键信息</li>
+</ul>
+<p>通过 <code>/processor-config</code> 命令查看或设置处理阈值。</p>
+<h3 id="3-aging老化淘汰旧内容"><a class="header" href="#3-aging老化淘汰旧内容">3. Aging：老化淘汰旧内容</a></h3>
+<p>在长会话中，早期的工具输出可能已经不再相关。Aging 机制自动淘汰“过时“的内容：</p>
+<pre><code>轮次 1: 工具输出 A（新鲜 🟢）
+轮次 5: 工具输出 A（有点旧 🟡）
+轮次 10: 工具输出 A（太旧了 🔴 → 自动删除）
+</code></pre>
+<p><strong>Aging 的智能豁免</strong>：某些内容类型不会被老化淘汰，包括：</p>
+<ul>
+<li>技能文件（SKILL.md）的内容</li>
+<li>用户手动标记保留的内容</li>
+<li>最近一次被 AI 引用的内容</li>
+</ul>
+<p>通过 <code>/aging-config</code> 命令设置淘汰轮数，<code>/aging-config off</code> 禁用。</p>
+<h3 id="4-payload-分析用数据诊断上下文问题"><a class="header" href="#4-payload-分析用数据诊断上下文问题">4. Payload 分析：用数据诊断上下文问题</a></h3>
+<p>会话变长后 AI 变笨？用 <code>payload_analyze</code> 找出原因。</p>
+<blockquote>
+<p>⚠️ <strong>重要</strong>：<code>payload_analyze</code> 是一个 <strong>AI 工具</strong>，不是终端命令。你需要在 pi 的聊天对话中让 AI 来执行它。例如：</p>
+<pre><code>帮我用 payload_analyze 看一下当前的 token 使用情况
+</code></pre>
+<p>或者更精确地指定：</p>
+<pre><code>运行 payload_analyze action="budget"
+</code></pre>
+</blockquote>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>分析模式</th><th>怎么跟 AI 说</th><th>看什么</th></tr>
+</thead>
+<tbody>
+<tr><td><code>budget</code></td><td>“分析一下 token 预算分布”</td><td>system/tools/history 各部分的 token 占比</td></tr>
+<tr><td><code>growth</code></td><td>“看看 token 增长趋势”</td><td>随会话进行，token 是怎么膨胀的</td></tr>
+<tr><td><code>expensive</code></td><td>“找最耗 token 的工具调用”</td><td>最贵的工具调用 Top N</td></tr>
+<tr><td><code>overview</code></td><td>“详细分析 payload”</td><td>逐消息的详细 token 分析</td></tr>
+<tr><td><code>messages</code></td><td>“查看第 5 条消息”</td><td>按索引/范围/关键词精确定位消息</td></tr>
+<tr><td><code>chain</code></td><td>“追踪这个工具调用的命运”</td><td>跨 payload 追踪同一个工具调用</td></tr>
+<tr><td><code>diff</code></td><td>“对比两个 payload 的差异”</td><td>找出两次请求之间的变化</td></tr>
+<tr><td><code>stats</code></td><td>“看 distill/processor 的命中率”</td><td>聚合统计压缩效率</td></tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>💡 <strong>先用 budget，再深入</strong>：遇到上下文问题时，先用 <code>budget</code> 看整体分布，然后用 <code>expensive</code> 定位大户，最后用 <code>messages</code> 精确查看某条消息。</p>
+</blockquote>
+<h2 id="context-tui-面板"><a class="header" href="#context-tui-面板">/context TUI 面板</a></h2>
+<p>pi-context-manager 还提供了一个 TUI（终端界面）面板，让你可视化浏览上下文内容：</p>
+<pre><code>/context 命令
+     │
+     ▼
+┌─────────────────────────────────────┐
+│  📊 Context Panel                    │
+│                                      │
+│  [分类] [工具详情] [标记删除]         │
+│                                      │
+│  ├─ System Prompt    4.2K tokens     │
+│  ├─ Tool Definitions 8.1K tokens     │
+│  ├─ Memory           2.3K tokens     │
+│  ├─ History          52K tokens      │
+│  │   ├─ 轮次 1-10  (已标记删除)      │
+│  │   ├─ 轮次 11-20                   │
+│  │   └─ 轮次 21-30                   │
+│  └─ Tool Results     64K tokens      │
+│      ├─ read(schema.ts)  8.2K 🔴     │
+│      └─ grep("TODO")    4.1K 🟡     │
+└─────────────────────────────────────┘
+</code></pre>
+<p>在面板中可以：</p>
+<ul>
+<li><strong>分类浏览</strong>：按类型查看上下文内容</li>
+<li><strong>工具详情</strong>：查看每个工具返回的完整内容</li>
+<li><strong>标记删除</strong>：手动标记不需要的内容，下次请求时自动排除</li>
+</ul>
+<h2 id="完整命令速查"><a class="header" href="#完整命令速查">完整命令速查</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>命令</th><th>用途</th><th>无参行为</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/record [on|off]</code></td><td>开关 payload 录制</td><td>切换开关</td></tr>
+<tr><td><code>/context</code></td><td>打开 TUI 可视化面板</td><td>—</td></tr>
+<tr><td><code>/distill-config [N]</code></td><td>查看/设置 distill 阈值</td><td>显示当前配置 + 用法</td></tr>
+<tr><td><code>/distill-config --cap [N]</code></td><td>查看/设置 firstSeenCap</td><td>显示当前配置 + 用法</td></tr>
+<tr><td><code>/processor-config [N|off]</code></td><td>查看/设置 processor 阈值</td><td>显示当前配置 + 用法</td></tr>
+<tr><td><code>/aging-config [N|off]</code></td><td>查看/设置 aging 轮数</td><td>显示当前配置 + 用法</td></tr>
+<tr><td><code>/context-clean [sessionId]</code></td><td>清理持久化数据</td><td>清理全部</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="最佳实践-3"><a class="header" href="#最佳实践-3">最佳实践</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>你遇到的问题</th><th>先做什么</th><th>再做什么</th><th>解决方案</th></tr>
+</thead>
+<tbody>
+<tr><td>会话 30 轮后 AI 变笨</td><td><code>payload_analyze(action="growth")</code></td><td>看 token 在哪个阶段暴涨</td><td>调低 distill 阈值 / 装智能压缩</td></tr>
+<tr><td>AI 忽略某些文件内容</td><td>检查 distill 配置</td><td>可能是 distill 过度压缩</td><td>调整 <code>distillThreshold</code></td></tr>
+<tr><td>每次工具调用特别慢</td><td><code>payload_analyze(action="expensive")</code></td><td>找出最贵的 Top N 调用</td><td>限制大文件读取或拆分文件</td></tr>
+<tr><td>旧工具输出占空间</td><td><code>/aging-config</code> 查看</td><td>设置合适的淘汰轮数</td><td>Aging 自动淘汰 + 手动 <code>/context</code> 面板清理</td></tr>
+<tr><td>首次工具输出太大</td><td><code>/distill-config --cap</code></td><td>设置首次全文上限</td><td><code>firstSeenCap</code> 限制首次输出大小</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="下一步-4"><a class="header" href="#下一步-4">下一步</a></h2>
+<p>下一章，我们来看如何让 AI 学会<strong>复盘</strong>——自动记录会话事件，随时回溯历史。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="35-shepherd-实战场景"><a class="header" href="#35-shepherd-实战场景">3.5 Shepherd 实战场景</a></h1>
+<blockquote>
+<p>这一节通过真实场景展示如何用 Shepherd 规则解决 AI 编码中的常见问题。</p>
+</blockquote>
+<h2 id="场景-1编辑代码后自动提醒跑测试"><a class="header" href="#场景-1编辑代码后自动提醒跑测试">场景 1：编辑代码后自动提醒跑测试</a></h2>
+<h3 id="问题"><a class="header" href="#问题">问题</a></h3>
+<p>AI 改了 TypeScript 代码但忘了跑测试。你每次都得手动说“跑一下测试“。</p>
+<h3 id="规则"><a class="header" href="#规则">规则</a></h3>
+<pre><code class="language-json">{
+	"comment": "[TypeScript] 编辑后必须跑测试",
+	"hook": "tool_result",
+	"tool": "edit",
+	"action": "notify",
+	"conditions": [
+		{ "field": "path", "pattern": "\\.ts$", "flags": "" }
+	],
+	"reason": "编辑了 TypeScript 文件，必须跑覆盖该代码的单元测试（如无测试则先补充），修复所有测试问题确保通过。",
+	"enabled": true
+}
+</code></pre>
+<h3 id="效果"><a class="header" href="#效果">效果</a></h3>
+<pre><code>AI：我修改了 src/auth/login.ts 的空值检查逻辑。
+🛡️ Shepherd 提醒：编辑了 TypeScript 文件，必须跑覆盖该代码的单元测试。
+AI：好的，我来跑测试... ✅ 3 个测试全部通过。
+</code></pre>
+<h2 id="场景-2防止-ai-乱改别人的代码"><a class="header" href="#场景-2防止-ai-乱改别人的代码">场景 2：防止 AI 乱改别人的代码</a></h2>
+<h3 id="问题-1"><a class="header" href="#问题-1">问题</a></h3>
+<p>你在 team 项目里工作，工作区有同事的未提交改动。AI 一看“这里不对“，顺手就 <code>git checkout</code> 恢复了别人的文件。</p>
+<h3 id="规则-1"><a class="header" href="#规则-1">规则</a></h3>
+<pre><code class="language-json">{
+	"comment": "[安全] 禁止 git checkout 恢复文件",
+	"hook": "tool_call",
+	"tool": "bash",
+	"action": "deny",
+	"conditions": [
+		{ "field": "text", "pattern": "git\\s+checkout\\s+--", "flags": "" }
+	],
+	"reason": "❌ 禁止 git checkout 恢复文件！工作区里有别人的未提交改动，你没有权力决定哪些改动是"无关"的。",
+	"enabled": true
+}
+</code></pre>
+<h3 id="效果-1"><a class="header" href="#效果-1">效果</a></h3>
+<pre><code>AI 准备执行：git checkout -- src/config.ts
+🛡️ Shepherd 阻止：禁止 git checkout 恢复文件！
+AI：抱歉，我不会恢复别人的文件。让我看看其他方案...
+</code></pre>
+<h2 id="场景-3会话结束自动提交代码"><a class="header" href="#场景-3会话结束自动提交代码">场景 3：会话结束自动提交代码</a></h2>
+<h3 id="问题-2"><a class="header" href="#问题-2">问题</a></h3>
+<p>AI 改了一堆文件，会话结束了，但代码没提交。第二天发现工作区一团糟。</p>
+<h3 id="规则-2"><a class="header" href="#规则-2">规则</a></h3>
+<pre><code class="language-json">{
+	"comment": "[收尾] 编辑后提醒 commit + 记忆更新 + 总结",
+	"hook": "agent_end",
+	"action": "notify",
+	"check": "has_edits",
+	"reason": "检测到文件编辑，执行收尾工作：\n1️⃣ Git commit...\n2️⃣ 更新记忆...\n3️⃣ 会话总结",
+	"stopReason": ["stop"],
+	"enabled": true
+}
+</code></pre>
+<p><code>check: "has_edits"</code> 确保只有真的改了文件才提醒，不会在纯聊天会话中干扰。<code>stopReason: ["stop"]</code> 确保只在 AI 正常结束时触发，被中断时不触发。</p>
+<h2 id="场景-4编辑-gd-文件后自动提醒跑架构检查"><a class="header" href="#场景-4编辑-gd-文件后自动提醒跑架构检查">场景 4：编辑 .gd 文件后自动提醒跑架构检查</a></h2>
+<h3 id="问题-3"><a class="header" href="#问题-3">问题</a></h3>
+<p>你在做 Godot 游戏项目，AI 编辑了 <code>.gd</code> 文件后应该跑架构检查 + 格式化检查，但每次都得手动提醒。</p>
+<h3 id="规则同一个文件可以有多条规则按顺序执行"><a class="header" href="#规则同一个文件可以有多条规则按顺序执行">规则（同一个文件可以有多条规则，按顺序执行）</a></h3>
+<pre><code class="language-json">{
+	"comment": "[arch] 编辑 .gd 文件后提醒跑编译验证",
+	"hook": "tool_result",
+	"tool": "edit",
+	"action": "notify",
+	"conditions": [
+		{ "field": "path", "pattern": "\\.gd$", "flags": "" }
+	],
+	"reason": "编辑了 .gd 文件，请跑 check_arch 验证架构合规。",
+	"enabled": true
+},
+{
+	"comment": "[format] 编辑 .gd 文件后提醒跑格式化检查",
+	"hook": "tool_result",
+	"tool": "edit",
+	"action": "notify",
+	"conditions": [
+		{ "field": "path", "pattern": "\\.gd$", "flags": "" }
+	],
+	"reason": "编辑了 .gd 文件，请跑 gdformat 格式化检查。",
+	"enabled": true
+}
+</code></pre>
+<p>两条规则都会触发，AI 会依次跑架构检查和格式化检查。</p>
+<h2 id="场景-5工具反复出错时自动提醒翻记忆"><a class="header" href="#场景-5工具反复出错时自动提醒翻记忆">场景 5：工具反复出错时自动提醒翻记忆</a></h2>
+<h3 id="问题-4"><a class="header" href="#问题-4">问题</a></h3>
+<p>AI 在连续出错——edit 匹配失败、bash 命令找不到、测试反复不过。它在同一个死胡同里绕圈。</p>
+<h3 id="规则-3"><a class="header" href="#规则-3">规则</a></h3>
+<pre><code class="language-json">{
+	"comment": "[debug] 工具反复出错时提醒翻记忆",
+	"hook": "tool_result",
+	"action": "steer",
+	"state": { "countKind": "errors", "gte": 5 },
+	"reason": "🔍 **工具反复出错**：连续失败多次，翻看 .pi/memory/ 目录下的记忆文件，看是否已有踩坑记录。",
+	"enabled": true,
+	"subagent": false
+}
+</code></pre>
+<p>关键点：</p>
+<ul>
+<li><code>state: { "countKind": "errors", "gte": 5 }</code> — 累计出错 5 次才触发，不会每次都提醒</li>
+<li><code>action: "steer"</code> — 静默注入引导，不在用户界面显示</li>
+<li><code>subagent: false</code> — 子代理中不触发，避免干扰独立任务</li>
+</ul>
+<h3 id="效果-2"><a class="header" href="#效果-2">效果</a></h3>
+<pre><code>AI 尝试 edit，失败...
+AI 尝试 edit，失败...
+AI 尝试 bash sed，失败...
+AI 尝试 edit，失败...
+AI 尝试 edit，失败...
+🛡️ Shepherd 静默引导：翻看记忆文件。
+AI：让我看看记忆... 找到了！记忆文件说"edit 匹配失败时先检查 CRLF"。
+AI：运行 audit_format.py 检查格式... 果然是 CRLF 问题。
+</code></pre>
+<h2 id="场景-6自动改写高频命令"><a class="header" href="#场景-6自动改写高频命令">场景 6：自动改写高频命令</a></h2>
+<h3 id="问题-5"><a class="header" href="#问题-5">问题</a></h3>
+<p>AI 经常执行 <code>git status</code>、<code>git log</code>、<code>npm test</code> 等命令，这些命令的输出可能很长，浪费 token。</p>
+<h3 id="规则-4"><a class="header" href="#规则-4">规则</a></h3>
+<pre><code class="language-json">{
+	"comment": "[rtk] 自动代理高频 bash 命令",
+	"tool": "bash",
+	"action": "rewrite",
+	"pattern": "^(git\\s+(status|log|diff)|cargo\\s+(test|build|clippy)|pytest)\\b",
+	"flags": "",
+	"reason": "rtk command rewrite：自动加 rtk 前缀压缩输出",
+	"enabled": true
+}
+</code></pre>
+<p>当 AI 执行 <code>git status</code> 时，Shepherd 自动改写为 <code>rtk git status</code>（rtk 是一个输出压缩工具），减少 token 消耗。AI 不需要知道这个改写——对它来说，执行结果就是更简洁了。</p>
+<h2 id="规则设计模式总结"><a class="header" href="#规则设计模式总结">规则设计模式总结</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>模式</th><th>动作</th><th>适用场景</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>编辑后提醒</strong></td><td><code>notify</code> + <code>conditions</code></td><td>改代码后跑测试、lint、格式化</td></tr>
+<tr><td><strong>危险操作阻止</strong></td><td><code>deny</code> + <code>conditions</code></td><td>禁止 <code>git checkout</code>、禁止删文件</td></tr>
+<tr><td><strong>收尾自动化</strong></td><td><code>agent_end</code> + <code>check</code></td><td>会话结束自动 commit + 记忆更新</td></tr>
+<tr><td><strong>连续出错引导</strong></td><td><code>steer</code> + <code>state</code></td><td>反复失败时引导翻记忆</td></tr>
+<tr><td><strong>命令改写</strong></td><td><code>rewrite</code> + <code>pattern</code></td><td>自动给命令加前缀压缩输出</td></tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>📖 回到 <a href="#给-ai-立规矩">3.1 给 AI 立规矩</a> 看完整的规则字段说明。</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="让-ai-学会复盘"><a class="header" href="#让-ai-学会复盘">让 AI 学会复盘</a></h1>
 <h2 id="你可能遇到过这种情况-3"><a class="header" href="#你可能遇到过这种情况-3">你可能遇到过这种情况</a></h2>
@@ -950,7 +1333,7 @@ AI 看到精炼后的信息，做出更好的判断
 </table>
 </div>
 <blockquote>
-<p>💡 <strong>关于 pi-journal</strong>：pi-journal 可以通过 <code>/journal</code> 命令或 <code>journal</code> 工具生成日报/周报，采集 git 活动、记忆变更、会话活动三路数据。详见 <a href="chapter-4/journal.html">4.2 pi-journal 原理</a>。</p>
+<p>💡 <strong>关于 pi-journal</strong>：pi-journal 可以通过 <code>/journal</code> 命令或 <code>journal</code> 工具生成日报/周报，采集 git 活动、记忆变更、会话活动三路数据。详见 <a href="#42-pi-journal自动日志报告">4.2 pi-journal 原理</a>。</p>
 </blockquote>
 <h2 id="实际案例找到上周的-bug-修复"><a class="header" href="#实际案例找到上周的-bug-修复">实际案例：找到上周的 bug 修复</a></h2>
 <h3 id="场景跨会话搜索"><a class="header" href="#场景跨会话搜索">场景：跨会话搜索</a></h3>
@@ -1027,7 +1410,7 @@ session_analyze(action="entries", compact=true)
 5. 关键决策：选择在连接层而非 SQL 层处理时区
 </code></pre>
 <p>当你想“接着上次的工作继续“时，这个报告能帮你（或者另一个 AI）快速恢复上下文。</p>
-<h2 id="最佳实践-3"><a class="header" href="#最佳实践-3">最佳实践</a></h2>
+<h2 id="最佳实践-4"><a class="header" href="#最佳实践-4">最佳实践</a></h2>
 <h3 id="-session-analyzer-的高效用法"><a class="header" href="#-session-analyzer-的高效用法">✅ Session Analyzer 的高效用法</a></h3>
 <ul>
 <li><strong><code>grep</code> 模式</strong>：跨所有会话搜索关键词（比翻 git log 快得多）</li>
@@ -1041,9 +1424,104 @@ session_analyze(action="entries", compact=true)
 <li>不要用 <code>session_search</code> 代替记忆——搜索是回溯（过去做了什么），记忆是知识（学到了什么）</li>
 <li>不要期望找到代码全文——会话记录是摘要，不是完整备份</li>
 </ul>
-<h2 id="下一步-3"><a class="header" href="#下一步-3">下一步</a></h2>
+<h2 id="下一步-5"><a class="header" href="#下一步-5">下一步</a></h2>
 <p>有了复盘能力，AI 和你都能回顾过去的工作。但还有一个问题：会话越长，AI 越容易“变笨“——开始重复自己、忘记前面的约定。</p>
 <p>下一章，我们来看如何让 AI 在长会话中保持聪明。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="42-pi-journal自动日志报告"><a class="header" href="#42-pi-journal自动日志报告">4.2 pi-journal：自动日志报告</a></h1>
+<h2 id="为什么需要日志"><a class="header" href="#为什么需要日志">为什么需要日志</a></h2>
+<p>你开了一天 pi，做了很多事：</p>
+<ul>
+<li>上午修了两个 bug，顺带重构了一个模块</li>
+<li>下午配置了 CI 流水线，写了一堆测试</li>
+<li>晚上研究了一个新方案，更新了记忆文件</li>
+</ul>
+<p>到了晚上你想回顾：“今天到底干了什么？“你翻 git log，全是碎片化的 commit；翻记忆文件，只记了关键结论；翻会话记录，十几个会话不知道从哪看起。</p>
+<blockquote>
+<p>💡 <strong>你需要一个“自动日报“</strong>——把散落在 git、记忆、会话中的活动汇总成一份可读的报告。</p>
+</blockquote>
+<h2 id="pi-journal-做什么"><a class="header" href="#pi-journal-做什么">pi-journal 做什么</a></h2>
+<p>pi-journal 采集三种数据源，自动生成 Markdown 格式的日报/周报：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>数据源</th><th>采集内容</th></tr>
+</thead>
+<tbody>
+<tr><td>Git 活动</td><td>扫描 <code>~/.pi/agent/git/</code> 下所有仓库，统计提交数、文件变更、增加/删除行数</td></tr>
+<tr><td>记忆变更</td><td>扫描全局和项目记忆目录，找出时间范围内的文件变更</td></tr>
+<tr><td>会话活动</td><td>扫描 pi 会话记录，统计会话数、工具调用、编辑操作、活跃时长</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="使用方式"><a class="header" href="#使用方式">使用方式</a></h2>
+<h3 id="命令journal"><a class="header" href="#命令journal">命令：<code>/journal</code></a></h3>
+<pre><code class="language-bash"># 今天的日报（默认）
+/journal
+
+# 指定时间范围
+/journal yesterday
+/journal this_week
+/journal 3d          # 最近 3 天
+/journal 2025-05-27  # 指定日期
+</code></pre>
+<h3 id="工具journal"><a class="header" href="#工具journal">工具：<code>journal</code></a></h3>
+<p>AI 也可以主动调用 <code>journal</code> 工具来生成报告。当你说“写个日记“、“今天做了什么”、“写周报“时，AI 会自动触发。</p>
+<h2 id="生成的报告格式"><a class="header" href="#生成的报告格式">生成的报告格式</a></h2>
+<pre><code class="language-markdown"># 📓 日报 — 2025-05-27
+
+## Git 活动
+- **pi-shepherd** (2 commits, +45/-12)
+  - 新增 tool_result 规则支持
+  - 修复优先级排序 bug
+- **pi-context-manager** (1 commit, +30/-5)
+  - 添加 aging 自动淘汰功能
+
+## 记忆变更
+- 新增: debug_anti_pattern.md
+- 更新: coding_standards.md
+
+## 会话活动
+- 019e6494 (45m) — Shepherd 规则引擎重构
+  - 工具调用: 23, 编辑: 8
+- 019e6203 (30m) — Context aging 功能实现
+  - 工具调用: 15, 编辑: 5
+
+## 摘要
+- 总提交: 3
+- 总会话: 12
+- 总编辑: 43
+</code></pre>
+<h2 id="最佳实践-5"><a class="header" href="#最佳实践-5">最佳实践</a></h2>
+<h3 id="-推荐用法"><a class="header" href="#-推荐用法">✅ 推荐用法</a></h3>
+<ul>
+<li><strong>每日收工前</strong>：<code>/journal</code> 生成日报，回顾今天做了什么</li>
+<li><strong>周五总结</strong>：<code>/journal this_week</code> 生成周报</li>
+<li><strong>让 AI 写</strong>：直接说“写个今天的日记“，AI 会调用工具生成</li>
+</ul>
+<h3 id="-注意事项"><a class="header" href="#-注意事项">⚠️ 注意事项</a></h3>
+<ul>
+<li>报告中的“AI 总结“部分需要 AI 在生成后补充</li>
+<li>Git 活动只扫描 <code>~/.pi/agent/git/</code> 下的仓库，不包含系统其他位置的 git 仓库</li>
+<li>会话活动依赖 pi 的会话记录存储</li>
+</ul>
+<h2 id="工作原理-2"><a class="header" href="#工作原理-2">工作原理</a></h2>
+<pre><code>用户输入时间范围
+      ↓
+  parseTimeRange()  →  解析为 since/until 时间戳
+      ↓
+  ┌─────────────┬──────────────┬──────────────────┐
+  │ Git 活动     │ 记忆变更      │ 会话活动          │
+  │ 自动发现仓库  │ 扫描 memory/ │ 从 session-analyzer│
+  │ git log 统计 │ 文件时间戳    │ 获取会话列表      │
+  └──────┬──────┴──────┬───────┴────────┬─────────┘
+         ↓             ↓                ↓
+      renderReport()  →  汇总渲染为 Markdown
+         ↓
+      输出报告
+</code></pre>
+<h2 id="下一步-6"><a class="header" href="#下一步-6">下一步</a></h2>
+<p>pi-journal 解决了“回顾过去“的需求。但有时候你需要的不只是回顾——你需要<strong>找到某个具体的会话，看 AI 当时是怎么想的</strong>。下一节我们来看 pi-session-analyzer 的详细用法。</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="长会话生存指南"><a class="header" href="#长会话生存指南">长会话生存指南</a></h1>
 <h2 id="你可能遇到过这种情况-4"><a class="header" href="#你可能遇到过这种情况-4">你可能遇到过这种情况</a></h2>
@@ -1223,9 +1701,9 @@ Top 3 最贵的工具调用：
 <p>特殊豁免：技能文件（SKILL.md）内容不会被 aging 淘汰，确保 AI 始终能看到当前加载的技能。</p>
 <h3 id="tool-result-processor后处理器"><a class="header" href="#tool-result-processor后处理器">Tool Result Processor（后处理器）</a></h3>
 <p>对特定类型的工具输出做格式化精简（如 code-graph 的 AST 搜索结果、MCP JSON 输出）。通过 <code>/processor-config</code> 设置阈值。</p>
-<h3 id="context-tui-面板"><a class="header" href="#context-tui-面板">/context TUI 面板</a></h3>
+<h3 id="context-tui-面板-1"><a class="header" href="#context-tui-面板-1">/context TUI 面板</a></h3>
 <p>输入 <code>/context</code> 可以打开可视化面板，分类浏览上下文内容，手动标记不需要的内容进行删除。</p>
-<h2 id="最佳实践-4"><a class="header" href="#最佳实践-4">最佳实践</a></h2>
+<h2 id="最佳实践-6"><a class="header" href="#最佳实践-6">最佳实践</a></h2>
 <h3 id="-保持长会话健康的习惯"><a class="header" href="#-保持长会话健康的习惯">✅ 保持长会话健康的习惯</a></h3>
 <ol>
 <li><strong>用 compact 模式搜索</strong>：<code>code_graph_semantic_code_search(compact: true)</code> 比 <code>grep</code> 省 70% token</li>
@@ -1248,10 +1726,450 @@ Top 3 最贵的工具调用：
 <li>“压缩会丢失重要信息” → Smart Compact 优先保留决策和结论</li>
 <li>“重启会话就好了” → 治标不治本，下次还会遇到同样的问题</li>
 </ul>
-<h2 id="下一步-4"><a class="header" href="#下一步-4">下一步</a></h2>
+<h2 id="下一步-7"><a class="header" href="#下一步-7">下一步</a></h2>
 <p>现在 AI 有了记忆、规划、规矩、复盘和压缩——它已经是一个相当能干的助手了。但它还是“被动“的——你问它才做。</p>
 <p>能不能让 AI 主动工作？比如每天自动检查代码质量，或者自动跑一轮研究分析？</p>
 <p>下一章，我们来看如何让 AI <strong>自动化工作</strong>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="52-pi-smart-compact-原理两阶段增强压缩"><a class="header" href="#52-pi-smart-compact-原理两阶段增强压缩">5.2 pi-smart-compact 原理：两阶段增强压缩</a></h1>
+<blockquote>
+<p>Smart Compact 是 pi 内置 Compaction 机制的增强版——它不是简单地截断历史，而是“聪明地“决定保留什么、丢弃什么。</p>
+</blockquote>
+<h2 id="为什么需要增强压缩"><a class="header" href="#为什么需要增强压缩">为什么需要增强压缩？</a></h2>
+<p>pi 内置的 Compaction 会在上下文接近上限时自动压缩旧对话，但它不够“聪明“：</p>
+<pre><code>内置 Compaction：
+  压缩前 100 轮 → 压缩后生成一段通用摘要
+  问题：摘要太粗糙，关键细节丢失
+</code></pre>
+<p>Smart Compact 的改进——两阶段压缩：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>阶段</th><th>触发时机</th><th>做什么</th></tr>
+</thead>
+<tbody>
+<tr><td>Phase 1</td><td>上下文使用率 &gt; 60%</td><td>提取关键信息：决策、约定、文件修改、结论</td></tr>
+<tr><td>Phase 2</td><td>上下文使用率 &gt; 80%</td><td>丢弃低价值信息：重复文件读取、中间调试输出、失败的尝试</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code>第一阶段（60%）：
+  80K 原始对话 → 40K 增强摘要（保留所有决策和关键结论）
+
+第二阶段（80%）：
+  40K 增强摘要 → 20K 精炼摘要（只保留当前任务所需的信息）
+</code></pre>
+<h2 id="配置-2"><a class="header" href="#配置-2">配置</a></h2>
+<h3 id="安装"><a class="header" href="#安装">安装</a></h3>
+<pre><code class="language-json">{
+  "packages": ["pi-smart-compact"]
+}
+</code></pre>
+<h3 id="命令"><a class="header" href="#命令">命令</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>命令</th><th>用途</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/smart-compact</code></td><td>手动触发压缩</td></tr>
+<tr><td><code>/smart-compact-config</code></td><td>查看当前配置和模式</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="自动手动模式"><a class="header" href="#自动手动模式">自动/手动模式</a></h3>
+<p>在 <code>.pi/settings.json</code> 中配置：</p>
+<pre><code class="language-json">{
+  "smart-compact": {
+    "auto": "auto"
+  }
+}
+</code></pre>
+<ul>
+<li><code>auto</code>（默认）：自动在合适的时机触发压缩</li>
+<li><code>manual</code>：只在用户执行 <code>/smart-compact</code> 时触发</li>
+</ul>
+<h2 id="压缩保留什么"><a class="header" href="#压缩保留什么">压缩保留什么？</a></h2>
+<p>Smart Compact 优先保留以下内容：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>优先级</th><th>内容类型</th><th>为什么保留</th></tr>
+</thead>
+<tbody>
+<tr><td>🔴 最高</td><td>用户明确的要求和约束</td><td>这是任务目标</td></tr>
+<tr><td>🟠 高</td><td>关键决策和选择理由</td><td>避免 AI 重复讨论已否决的方案</td></tr>
+<tr><td>🟡 中</td><td>文件修改记录</td><td>让 AI 知道哪些文件已改过</td></tr>
+<tr><td>🟢 低</td><td>工具调用过程（读取了什么、搜索了什么）</td><td>可以重新执行</td></tr>
+<tr><td>⚪ 最低</td><td>失败的尝试和调试过程</td><td>已经学到了教训</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="最佳实践-7"><a class="header" href="#最佳实践-7">最佳实践</a></h2>
+<ul>
+<li><strong>不要等 80% 才关注</strong>：60% 时 AI 的质量就开始下降，Phase 1 是最佳的预防时机</li>
+<li><strong>手动触发适合关键操作前</strong>：在开始一个重要的重构之前，手动 <code>/smart-compact</code> 清理上下文</li>
+<li><strong>配合 context-manager</strong>：Smart Compact 压缩对话历史，Context Manager 的 distill 压缩工具输出，两者互补</li>
+</ul>
+<blockquote>
+<p>📖 回到 <a href="#长会话生存指南">5.1 长会话生存指南</a> 看完整的诊断和优化案例。</p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="53-用-pi-context-manager-诊断-token-消耗"><a class="header" href="#53-用-pi-context-manager-诊断-token-消耗">5.3 用 pi-context-manager 诊断 Token 消耗</a></h1>
+<blockquote>
+<p>pi-payload-analyzer 的功能已合并到 pi-context-manager 中。本节介绍如何使用统一的 <code>payload_analyze</code> 工具诊断上下文问题。</p>
+</blockquote>
+<h2 id="token-都花在哪了"><a class="header" href="#token-都花在哪了">Token 都花在哪了？</a></h2>
+<p>长会话中 AI 变笨，往往是因为上下文被“垃圾“填满了。但具体是哪些内容占了 token？靠猜是不行的。</p>
+<p>pi-context-manager 提供了 <code>payload_analyze</code> 工具，用<strong>数据</strong>告诉你 token 的去向。</p>
+<h2 id="需要先开启录制"><a class="header" href="#需要先开启录制">需要先开启录制</a></h2>
+<p><code>payload_analyze</code> 需要先录制 payload 才能分析。在对话中输入：</p>
+<pre><code>/record on
+</code></pre>
+<p>录制会保存在 <code>~/.pi/agent/distill/recordings/</code> 目录下。录制期间会有轻微的性能开销，用完记得 <code>/record off</code> 关闭。</p>
+<h2 id="分析模式速查"><a class="header" href="#分析模式速查">分析模式速查</a></h2>
+<h3 id="全局概览类"><a class="header" href="#全局概览类">全局概览类</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>模式</th><th>用途</th><th>输出</th></tr>
+</thead>
+<tbody>
+<tr><td><code>list</code></td><td>列出所有录制文件</td><td>文件列表 + 大小</td></tr>
+<tr><td><code>budget</code></td><td>Token 预算分析</td><td>system/tools/history 各部分占比</td></tr>
+<tr><td><code>growth</code></td><td>增长趋势</td><td>token 随请求变化的曲线</td></tr>
+<tr><td><code>stats</code></td><td>聚合统计</td><td>distill/processor 命中率、压缩效率</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="深入诊断类"><a class="header" href="#深入诊断类">深入诊断类</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>模式</th><th>用途</th><th>输出</th></tr>
+</thead>
+<tbody>
+<tr><td><code>expensive</code></td><td>最贵的工具调用</td><td>按 token 排序的 Top N</td></tr>
+<tr><td><code>overview</code></td><td>逐消息详细分析</td><td>每条消息的 token 构成 + distill 事件</td></tr>
+<tr><td><code>messages</code></td><td>精确定位消息</td><td>按索引/范围/关键词过滤</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="追踪对比类"><a class="header" href="#追踪对比类">追踪对比类</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>模式</th><th>用途</th><th>输出</th></tr>
+</thead>
+<tbody>
+<tr><td><code>chain</code></td><td>追踪工具调用命运</td><td>同一个 argsSig 跨 payload 的变化</td></tr>
+<tr><td><code>chain-tcid</code></td><td>追踪 toolCallId</td><td>验证 distill 行为</td></tr>
+<tr><td><code>diff</code></td><td>对比两个 payload</td><td>找出两次请求的差异</td></tr>
+<tr><td><code>single</code></td><td>分析单个文件</td><td>单个录制文件的完整分析</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="messages-模式的精确定位"><a class="header" href="#messages-模式的精确定位">messages 模式的精确定位</a></h3>
+<p><code>messages</code> 是最灵活的诊断工具，支持多种过滤方式：</p>
+<pre><code># 看第 5 条消息（0-based）
+payload_analyze(action="messages", msgIndex=5)
+
+# 看第 5-10 条消息
+payload_analyze(action="messages", msgRange="5-10")
+
+# 看最后 5 条消息
+payload_analyze(action="messages", msgRange="last:5")
+
+# 按关键词过滤
+payload_analyze(action="messages", grep="error|fail")
+
+# 按工具名过滤
+payload_analyze(action="messages", toolName="read")
+</code></pre>
+<h2 id="实战案例"><a class="header" href="#实战案例">实战案例</a></h2>
+<h3 id="案例-1找出上下文膨胀的根因"><a class="header" href="#案例-1找出上下文膨胀的根因">案例 1：找出上下文膨胀的根因</a></h3>
+<pre><code>第一步：budget 模式看总量
+你："帮我用 payload_analyze 分析 token 预算"
+结果：Tool Results 占 49.5%
+
+第二步：expensive 模式找大户
+你："找出最耗 token 的工具调用 Top 10"
+结果：read(schema.ts) 占 8.2K tokens
+
+第三步：优化
+→ 用 offset/limit 分块读取大文件
+→ 或者启用 distill 自动压缩
+</code></pre>
+<h3 id="案例-2诊断压缩效率"><a class="header" href="#案例-2诊断压缩效率">案例 2：诊断压缩效率</a></h3>
+<pre><code>第一步：stats 模式看命中率
+你："看 distill 和 processor 的压缩效率"
+结果：distill 命中率 75%，processor 命中率 60%
+
+第二步：chain 模式追踪
+你："追踪 read(schema.ts) 的 distill 行为"
+结果：第 3 次请求被 distill，从 8.2K 压缩到 1.5K
+</code></pre>
+<h3 id="案例-3对比两次请求的差异"><a class="header" href="#案例-3对比两次请求的差异">案例 3：对比两次请求的差异</a></h3>
+<pre><code>你："对比这两个 payload 有什么不同"
+AI 调用 payload_analyze(action="diff", payloadPath="...", payloadPath2="...")
+结果：第二次请求多了 3 条工具调用，但 distill 压缩了 2 条
+</code></pre>
+<blockquote>
+<p>📖 完整长会话诊断案例见 <a href="#长会话生存指南">5.1 长会话生存指南</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="54-长会话实战场景"><a class="header" href="#54-长会话实战场景">5.4 长会话实战场景</a></h1>
+<blockquote>
+<p>这一节通过真实使用场景，展示如何组合 pi-atelier 的工具解决长会话中的常见问题。</p>
+</blockquote>
+<h2 id="场景-1ai-变笨了用-smart-compact-压缩"><a class="header" href="#场景-1ai-变笨了用-smart-compact-压缩">场景 1：AI 变笨了——用 Smart Compact 压缩</a></h2>
+<h3 id="症状"><a class="header" href="#症状">症状</a></h3>
+<p>你跟 AI 已经聊了 2 个小时，做了很多事。突然发现 AI 开始：</p>
+<ul>
+<li>问你之前已经回答过的问题</li>
+<li>重新提出已经被否决的方案</li>
+<li>代码质量明显下降——少了错误处理</li>
+</ul>
+<h3 id="传统压缩-vs-smart-compact"><a class="header" href="#传统压缩-vs-smart-compact">传统压缩 vs Smart Compact</a></h3>
+<p>pi 内置的 Compaction 会在上下文接近上限时自动触发，但它只是简单地压缩旧对话为一段通用摘要。Smart Compact 更聪明：</p>
+<pre><code>传统 Compaction：
+  100 轮对话 → 一段 500 字的通用摘要
+  问题：关键细节丢失，AI 不知道之前做了什么决定
+
+Smart Compact（两阶段）：
+  Phase 1（60% 使用率）：
+    → 提取：决策、约定、文件修改、结论
+    → 保留所有关键信息，丢弃冗余过程
+  
+  Phase 2（80% 使用率）：
+    → 进一步精炼，只保留当前任务所需
+    → 丢弃：重复读取、失败尝试、调试过程
+</code></pre>
+<h3 id="操作步骤"><a class="header" href="#操作步骤">操作步骤</a></h3>
+<pre><code>1. AI 已经帮你做了很多事，你感觉上下文快满了
+2. 输入 /smart-compact
+3. Smart Compact 分析对话历史，生成增强摘要
+4. AI 继续工作，但"记得"所有关键决策
+</code></pre>
+<p>或者什么都不做——如果配置了 <code>auto</code> 模式（默认），Smart Compact 会在合适的时机自动触发。</p>
+<h3 id="配合-context-manager-效果更好"><a class="header" href="#配合-context-manager-效果更好">配合 Context Manager 效果更好</a></h3>
+<p>Smart Compact 压缩<strong>对话历史</strong>，Context Manager 的 Distill 压缩<strong>工具返回结果</strong>。两个配合使用：</p>
+<pre><code>上下文窗口
+├── 对话历史 ←── Smart Compact 压缩（保留决策和结论）
+├── 工具结果 ←── Distill 压缩（保留关键信息，丢弃冗余）
+└── 记忆注入 ←── 固定大小，不变
+</code></pre>
+<h2 id="场景-2上下文已经炸了handoff-接手"><a class="header" href="#场景-2上下文已经炸了handoff-接手">场景 2：上下文已经炸了——Handoff 接手</a></h2>
+<h3 id="症状-1"><a class="header" href="#症状-1">症状</a></h3>
+<p>更极端的情况：AI 报错了——“上下文窗口超出限制”（context window exceeded）。整个会话已经无法继续。</p>
+<p>这时候光压缩已经来不及了——会话直接崩溃。</p>
+<h3 id="解决方案开新会话--takeover-接手"><a class="header" href="#解决方案开新会话--takeover-接手">解决方案：开新会话 + takeover 接手</a></h3>
+<pre><code>1. 开一个新会话
+2. 告诉 AI："帮我接手上次的工作"
+3. AI 调用 session_analyze(action="takeover")
+4. 生成 5 维度接手报告：
+
+📋 会话接手报告
+
+1. 用户意图：重构认证模块，从 JWT 切换到 session-based
+2. 修改文件：
+   - src/auth/middleware.ts（已改完）
+   - src/auth/login.ts（进行中，80% 完成）
+   - src/auth/__tests__/login.test.ts（待写）
+3. 最近步骤：
+   - 修改了 middleware.ts 的类型签名
+   - 开始改 login.ts 但还没改完
+   - 测试还没写
+4. 下一步：
+   - 完成 login.ts 的修改
+   - 写 login.test.ts 的测试
+   - 跑一遍全量测试
+5. 关键决策：
+   - 选择 session-based 而非 refresh token 方案
+   - 原因：项目不需要跨域 SSO
+</code></pre>
+<h3 id="takeover-的-5-个维度"><a class="header" href="#takeover-的-5-个维度">takeover 的 5 个维度</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>维度</th><th>包含什么</th><th>为什么重要</th></tr>
+</thead>
+<tbody>
+<tr><td>用户意图</td><td>原始需求和目标</td><td>新 AI 知道“要做什么“</td></tr>
+<tr><td>修改文件</td><td>已改和待改的文件列表</td><td>知道“改了什么“</td></tr>
+<tr><td>最近步骤</td><td>最近 3-5 步操作</td><td>知道“进行到哪了“</td></tr>
+<tr><td>下一步</td><td>还需要做什么</td><td>知道“接下来该做什么“</td></tr>
+<tr><td>关键决策</td><td>重要的技术选择和理由</td><td>知道“为什么这样做“</td></tr>
+</tbody>
+</table>
+</div>
+<p>有了这 5 个维度，新会话的 AI 可以在 1-2 轮对话内完全恢复工作上下文。</p>
+<h3 id="操作示例"><a class="header" href="#操作示例">操作示例</a></h3>
+<pre><code>你：帮我接手上次修 Godot MCP Bridge 的工作
+
+AI：
+  🛠 session_analyze(action="takeover", sessionId="019e620f-...")
+  
+  📋 接手报告已生成。上次你在调试 MCP Bridge 的 WebSocket 连接问题，
+  已经定位到 nohup 导致 listen() 返回值被吞。下一步是不用 nohup 
+  直接启动 TCP 端口。要我继续吗？
+</code></pre>
+<h2 id="场景-3想了解过去发生了什么会话分析"><a class="header" href="#场景-3想了解过去发生了什么会话分析">场景 3：想了解过去发生了什么——会话分析</a></h2>
+<h3 id="症状-2"><a class="header" href="#症状-2">症状</a></h3>
+<p>你昨天让 AI 做了一大堆事。今天你想回顾：“昨天那个 DuckDB 时区 bug 具体是怎么修的？”</p>
+<h3 id="操作步骤-1"><a class="header" href="#操作步骤-1">操作步骤</a></h3>
+<pre><code>第一步：跨会话搜索
+你：搜一下之前修 DuckDB 时区的会话
+
+AI：
+  🛠 session_search(action="grep", query="DuckDB 时区")
+  
+  找到 2 个匹配会话：
+  1. 05-22 19:36 — DuckDB 时区配置修复
+  2. 05-20 14:30 — 数据库初始化讨论
+
+第二步：看时间线
+你：看看第一个的详细过程
+
+AI：
+  🛠 session_analyze(action="timeline", sessionId="...")
+  
+  📅 时间线：
+  [19:36] 用户：DuckDB 查询返回 UTC 时间
+  [19:37] AI：读取 db/connection.ts
+  [19:38] AI：发现没有设置时区参数
+  [19:39] AI：添加 SET timezone = 'Asia/Shanghai'
+  [19:43] AI：所有测试通过 ✅
+
+第三步：看对话原文（如果需要更多细节）
+你：看看 19:39 前后的对话原文
+
+AI：
+  🛠 session_analyze(action="entries", msgRange="5-10", sessionId="...")
+</code></pre>
+<h3 id="常用的分析模式组合"><a class="header" href="#常用的分析模式组合">常用的分析模式组合</a></h3>
+<pre><code>快速了解一个会话：summary → 知道做了什么
+追踪操作顺序：   timeline → 知道步骤
+查看对话原文：   entries  → 知道细节
+接手别人的工作： takeover → 知道上下文
+检查是否有违规： audit    → 知道有没有问题
+</code></pre>
+<h2 id="场景-4工具输出占满了上下文aging-自动遗忘"><a class="header" href="#场景-4工具输出占满了上下文aging-自动遗忘">场景 4：工具输出占满了上下文——Aging 自动遗忘</a></h2>
+<h3 id="症状-3"><a class="header" href="#症状-3">症状</a></h3>
+<p>AI 在一个会话中用了大量工具：读了 20 个文件、跑了 10 次搜索、执行了 5 次 bash 命令。每个工具返回的结果都留在上下文里。</p>
+<p>问题是：你只需要<strong>最近的几个</strong>结果。20 分钟前 <code>read</code> 的那个文件，现在早就不需要了。</p>
+<h3 id="解决方案aging-自动淘汰"><a class="header" href="#解决方案aging-自动淘汰">解决方案：Aging 自动淘汰</a></h3>
+<p>Aging（老化淘汰）会在指定轮数后自动淘汰未被再次引用的工具输出：</p>
+<pre><code>时间线：
+  第 1 轮：read(auth.ts) → 5K tokens
+  第 2 轮：read(middleware.ts) → 4K tokens
+  第 3 轮：grep("TODO") → 3K tokens
+  ...
+  第 10 轮：edit(auth.ts)  ← auth.ts 又被引用，"续命"成功
+  
+  第 1+8=9 轮：grep("TODO") → 8 轮没被引用，自动淘汰 ✅
+  第 2+8=10 轮：middleware.ts 没被再次引用，自动淘汰 ✅
+  第 1+8=9 轮：auth.ts → 被 edit 引用，保留！
+</code></pre>
+<h3 id="配置-aging"><a class="header" href="#配置-aging">配置 Aging</a></h3>
+<pre><code>/aging-config 8    # 8 轮后淘汰（推荐 8-12）
+/aging-config off  # 关闭自动淘汰
+</code></pre>
+<blockquote>
+<p>💡 <strong>技能文件豁免</strong>：SKILL.md 的内容不会被 aging 淘汰——AI 始终能看到当前加载的技能。</p>
+</blockquote>
+<h3 id="手动干预context-tui-面板"><a class="header" href="#手动干预context-tui-面板">手动干预：/context TUI 面板</a></h3>
+<p>如果不想等自动淘汰，可以手动标记删除：</p>
+<pre><code>1. 输入 /context 打开 TUI 面板
+2. 分类浏览：按工具类型、时间顺序查看所有上下文内容
+3. 选中不需要的内容，标记为删除
+4. 下次 AI 发送请求时，标记的内容不会带上
+</code></pre>
+<p>这在以下场景特别有用：</p>
+<ul>
+<li>AI 读了一个巨大的配置文件但你只需要其中一行</li>
+<li>搜索返回了 50 条结果但你只用了 3 条</li>
+<li>之前调试时的错误信息已经不需要了</li>
+</ul>
+<h2 id="场景-5为什么-ai-变慢了token-预算诊断"><a class="header" href="#场景-5为什么-ai-变慢了token-预算诊断">场景 5：为什么 AI 变慢了——Token 预算诊断</a></h2>
+<h3 id="症状-4"><a class="header" href="#症状-4">症状</a></h3>
+<p>AI 的响应越来越慢，而且每轮对话的等待时间明显变长。你怀疑是上下文太大了，但不知道具体是什么在占空间。</p>
+<h3 id="操作步骤-2"><a class="header" href="#操作步骤-2">操作步骤</a></h3>
+<pre><code>第一步：开启录制
+你：/record on
+
+... 多做几轮对话 ...
+
+第二步：看 token 预算
+你：帮我分析 token 预算
+
+AI：
+  🛠 payload_analyze(action="budget")
+  
+  📊 Token 预算分析
+  System Prompt:    4,200 (3.2%)
+  Tool Definitions: 8,100 (6.2%)
+  Memory Injection: 2,300 (1.8%)
+  Conversation:    52,400 (40.0%)
+  Tool Results:    64,800 (49.5%)  ← 大头在这！
+  
+第三步：找最贵的调用
+你：找出最耗 token 的工具调用
+
+AI：
+  🛠 payload_analyze(action="expensive", topN=5)
+  
+  Top 5 最贵的工具调用：
+  1. read(src/database/schema.ts)  — 8,200 tokens
+  2. code_graph_module_overview    — 6,400 tokens
+  3. grep("TODO|FIXME")           — 4,100 tokens
+  4. read(src/config/settings.ts) — 3,800 tokens
+  5. bash("npm test")             — 3,200 tokens
+
+第四步：针对性优化
+→ schema.ts 太大，用 offset/limit 只读需要的部分
+→ code_graph 用 compact=true 模式
+→ grep 加 --include 限定文件类型
+</code></pre>
+<h3 id="诊断流程速查"><a class="header" href="#诊断流程速查">诊断流程速查</a></h3>
+<pre><code>1. budget  → 看总量分布（哪部分占比最高？）
+2. expensive → 找大户（具体哪个调用最耗 token？）
+3. growth  → 看趋势（哪段时间增长最快？）
+4. messages → 精确定位（看看那条具体的消息内容）
+5. 针对性优化（换工具、加过滤、启用 distill）
+</code></pre>
+<h2 id="场景组合超长会话的完整生存策略"><a class="header" href="#场景组合超长会话的完整生存策略">场景组合：超长会话的完整生存策略</a></h2>
+<pre><code>会话开始
+│
+├── 第 1-20 轮：正常工作，不用操心
+│
+├── 第 20-40 轮：上下文使用率 ~40%
+│   → 开启 /record on（可选，为后续诊断做准备）
+│   → 注意避免重复读取大文件
+│
+├── 第 40-60 轮：上下文使用率 ~60%
+│   → Smart Compact Phase 1 自动触发（如果装了）
+│   → 或手动 /smart-compact
+│   → Aging 开始淘汰旧工具输出
+│
+├── 第 60-80 轮：上下文使用率 ~80%
+│   → Smart Compact Phase 2 触发
+│   → 考虑是否该开新会话了
+│   → 如果要继续：用 payload_analyze budget 检查
+│
+├── 💥 崩溃了！
+│   → 开新会话
+│   → session_analyze(action="takeover") 接手
+│   → 继续工作
+│
+└── 收工前：
+    → /record off
+    → 让 AI 用 /journal 生成日报
+    → agent_end 自动提醒 commit + 记忆更新
+</code></pre>
+<blockquote>
+<p>📖 回到 <a href="#长会话生存指南">5.1 长会话生存指南</a> 看完整的工具介绍。</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="自动化与工作流"><a class="header" href="#自动化与工作流">自动化与工作流</a></h1>
 <h2 id="你可能遇到过这种情况-5"><a class="header" href="#你可能遇到过这种情况-5">你可能遇到过这种情况</a></h2>
@@ -1430,7 +2348,7 @@ AI：⏰ 提醒：该检查 CI 结果了。当前时间 15:30。
 <li><strong>因子优化（Factor Optimization）</strong>：初筛 + 解剖 + 组合 + 迭代 + 验证</li>
 </ol>
 <p>通常你不需要直接操作 Workflow——AI 会根据任务复杂度自动选择是否启用子代理。</p>
-<h2 id="最佳实践-5"><a class="header" href="#最佳实践-5">最佳实践</a></h2>
+<h2 id="最佳实践-8"><a class="header" href="#最佳实践-8">最佳实践</a></h2>
 <h3 id="-好的定时任务设计"><a class="header" href="#-好的定时任务设计">✅ 好的定时任务设计</a></h3>
 <ul>
 <li><strong>明确的指令</strong>：告诉 AI 具体要做什么，不要模糊的“检查一下“</li>
@@ -1449,7 +2367,7 @@ AI：⏰ 提醒：该检查 CI 结果了。当前时间 15:30。
 <li>“子代理越多越好” → 太多子代理的综合成本可能超过收益</li>
 <li>“Workflow 可以做任何事” → 它擅长研究和分析，不适合需要人工判断的决策</li>
 </ul>
-<h2 id="下一步-5"><a class="header" href="#下一步-5">下一步</a></h2>
+<h2 id="下一步-8"><a class="header" href="#下一步-8">下一步</a></h2>
 <p>到目前为止，我们介绍了 pi-atelier 提供的所有核心工具。但如果这些工具还不够——你想做一个当前没有的功能呢？</p>
 <p>下一章，我们来看如何自己动手<strong>开发扩展</strong>。</p>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1475,7 +2393,7 @@ AI：⏰ 提醒：该检查 CI 结果了。当前时间 15:30。
 │   └── xxx-description.md
 └── README.md           # 文档
 </code></pre>
-<h3 id="核心概念"><a class="header" href="#核心概念">核心概念</a></h3>
+<h3 id="核心概念-1"><a class="header" href="#核心概念-1">核心概念</a></h3>
 <div class="table-wrapper">
 <table>
 <thead>
