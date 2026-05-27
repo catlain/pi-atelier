@@ -1,44 +1,44 @@
 <!DOCTYPE HTML>
-<html lang="zh-CN" class="rust sidebar-visible" dir="ltr">
+<html lang="en" class="rust sidebar-visible" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>pi-atelier：让 AI 编程助手变得专业 - pi-atelier: AI Agent 工具链实战指南</title>
+        <title>Chapter 1: An AI&#x27;s Memory - pi-atelier: AI Agent Toolkit Practical Guide</title>
 
 
         <!-- Custom HTML head -->
 
-        <meta name="description" content="从零教会用户使用 pi-atelier 扩展生态，让 AI 编程助手从&#x27;会写代码&#x27;进化到&#x27;会管理项目&#x27;">
+        <meta name="description" content="A practical guide to using the pi-atelier extension ecosystem, evolving AI coding assistants from &#x27;can write code&#x27; to &#x27;can manage projects&#x27;">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="favicon-3a9d0890.svg">
-        <link rel="stylesheet" href="css/variables-8adf115d.css">
-        <link rel="stylesheet" href="css/general-0392ca55.css">
-        <link rel="stylesheet" href="css/chrome-fc474251.css">
-        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon-3a9d0890.svg">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="fonts/fonts-35116d2a.css">
+        <link rel="stylesheet" href="../fonts/fonts-35116d2a.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="theme/custom-4ec21217.css">
+        <link rel="stylesheet" href="../theme/custom-4ec21217.css">
 
 
         <!-- Provide site root and default themes to javascript -->
         <script>
-            const path_to_root = "";
+            const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "searchindex-c0f8faa3.js";
+            window.path_to_searchindex_js = "../searchindex-b25d7f3f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4d4df149.js"></script>
+        <script src="../toc-11716e09.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -105,7 +105,7 @@
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
-                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
             <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -137,16 +137,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">pi-atelier: AI Agent 工具链实战指南</h1>
+                    <h1 class="menu-title">pi-atelier: AI Agent Toolkit Practical Guide</h1>
 
                     <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
                             <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
-                        <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/introduction.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                        <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/en/src/en/chapter-1/memory.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
                             <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
                         </a>
 
@@ -180,172 +180,253 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <div class="hero">
-<h1 id="pi-atelier让-ai-编程助手变得专业"><a class="header" href="#pi-atelier让-ai-编程助手变得专业">pi-atelier：让 AI 编程助手变得专业</a></h1>
-<div class="subtitle">从零教会你使用 pi-atelier 扩展生态，让 AI 编程助手从「会写代码」进化到「会管理项目」</div>
-
-</div>
-
-<h2 id="这本书是给谁看的"><a class="header" href="#这本书是给谁看的">这本书是给谁看的？</a></h2>
-<p>如果你在做以下任何一件事，这本书适合你：</p>
+                        <h1 id="an-ais-memory"><a class="header" href="#an-ais-memory">An AI’s Memory</a></h1>
+<h2 id="youve-probably-seen-this-before"><a class="header" href="#youve-probably-seen-this-before">You’ve Probably Seen This Before</a></h2>
+<p>You’re using an AI coding assistant to develop a project. On the first day, you spent half an hour explaining to the AI:</p>
 <ul>
-<li>用 AI 编程助手（如 pi、Cursor、Copilot）写代码</li>
-<li>觉得 AI 助手“差一点“就能做得更好</li>
-<li>想让 AI 从“问答工具“进化成“项目搭档“</li>
+<li>The project uses Rust + Axum tech stack</li>
+<li>The database is DuckDB, not PostgreSQL</li>
+<li>The auth module uses JWT, not Session</li>
+<li>The deployment target is an ARM-based embedded device</li>
 </ul>
-<h2 id="什么是-pi-atelier"><a class="header" href="#什么是-pi-atelier">什么是 pi-atelier？</a></h2>
-<p>pi-atelier 是一组 <strong>pi 扩展</strong>，让 AI 编程助手具备项目管理能力。</p>
-<p>普通 AI 助手能写代码，但：</p>
+<p>The AI understood, and helped you write perfect code.</p>
+<p>The next day, you start a new session and the AI has forgotten everything. It starts suggesting Express.js, connecting to PostgreSQL, using Session auth…</p>
+<blockquote>
+<p>💡 <strong>This is the AI’s “goldfish memory” problem</strong>: every new session is a blank slate.</p>
+</blockquote>
+<h2 id="memory-giving-ai-cross-session-knowledge"><a class="header" href="#memory-giving-ai-cross-session-knowledge">Memory: Giving AI Cross-Session Knowledge</a></h2>
+<p>pi-memory is the solution. It gives the AI a “notebook”:</p>
 <ul>
-<li>每次开会话都忘光之前的事</li>
-<li>做大任务容易跑偏</li>
-<li>没有规矩，容易犯低级错误</li>
-<li>会话一长就变笨</li>
+<li><strong>Auto-record</strong>: Architectural decisions, pitfalls encountered, and consensus reached during the session</li>
+<li><strong>Auto-load</strong>: At the start of each new session, the AI automatically reads key knowledge from before</li>
+<li><strong>Per-project isolation</strong>: Memories from different projects don’t interfere with each other</li>
 </ul>
-<p>pi-atelier 的扩展补上了这些能力缺口：</p>
-<div class="feature-grid">
-<div class="feature-card">
-<h3 id="-记忆"><a class="header" href="#-记忆">🧠 记忆</a></h3>
-<p>让 AI 记住跨会话的知识</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-规划"><a class="header" href="#-规划">📋 规划</a></h3>
-<p>管理 Epic → Story → Task 三层路线图</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-守卫"><a class="header" href="#-守卫">🛡️ 守卫</a></h3>
-<p>给 AI 立规矩，防止犯错</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-诊断"><a class="header" href="#-诊断">🔍 诊断</a></h3>
-<p>控制上下文质量 + token 消耗分析</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-分析"><a class="header" href="#-分析">📊 分析</a></h3>
-<p>搜索和回溯历史会话</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-压缩"><a class="header" href="#-压缩">🗜️ 压缩</a></h3>
-<p>长会话中保持 AI 的聪明</p>
-</div>
-
-</div>
-
-<p>详细对比见下表：</p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>能力</th><th>扩展</th><th>一句话描述</th></tr>
-</thead>
-<tbody>
-<tr><td>记忆</td><td>pi-memory</td><td>让 AI 记住跨会话的知识</td></tr>
-<tr><td>规划</td><td>pi-roadmap</td><td>让 AI 管理 Epic → Story → Task</td></tr>
-<tr><td>守卫</td><td>pi-shepherd</td><td>给 AI 立规矩，防止犯错</td></tr>
-<tr><td>上下文与诊断</td><td>pi-context-manager</td><td>控制 AI 看到的信息质量 + token 消耗诊断</td></tr>
-<tr><td>日志</td><td>pi-journal</td><td>日志报告生成（git 活动 + 会话事件 + 记忆变更）</td></tr>
-<tr><td>分析</td><td>pi-session-analyzer</td><td>搜索和回溯历史会话</td></tr>
-<tr><td>压缩</td><td>pi-smart-compact</td><td>长会话中保持 AI 的聪明</td></tr>
-<tr><td>定时</td><td>pi-scheduler</td><td>定时提醒和周期任务</td></tr>
-<tr><td>工作流</td><td>pi-workflow</td><td>子代理编排，并行执行</td></tr>
-<tr><td>工具库</td><td>pi-shared-utils</td><td>扩展开发的公共工具函数</td></tr>
-</tbody>
-</table>
-</div>
-<h2 id="阅读路线"><a class="header" href="#阅读路线">阅读路线</a></h2>
-<h3 id="快速上手路线1-小时"><a class="header" href="#快速上手路线1-小时">快速上手路线（1 小时）</a></h3>
+<h3 id="how-it-works"><a class="header" href="#how-it-works">How It Works</a></h3>
+<pre><code>┌─────────────────────────────────────────┐
+│           AI Session                      │
+│                                          │
+│  ┌──────────┐     ┌──────────────────┐  │
+│  │ User      │ ──→ │ AI extracts      │  │
+│  │ Dialogue  │     │ knowledge points │  │
+│  └──────────┘     └────────┬─────────┘  │
+│                            │             │
+│                            ▼             │
+│                   ┌─────────────────┐    │
+│                   │  memory_update   │    │
+│                   │  Write memory    │    │
+│                   │  file            │    │
+│                   └─────────────────┘    │
+│                                          │
+│  ┌──────────┐     ┌──────────────────┐  │
+│  │ New      │ ──→ │ before_agent_start│  │
+│  │ Session  │     │ Auto-load memory │  │
+│  │ Start    │     │ index            │  │
+│  └──────────┘     └──────────────────┘  │
+└─────────────────────────────────────────┘
+</code></pre>
+<h3 id="auto-injection-memory-index-loaded-every-turn"><a class="header" href="#auto-injection-memory-index-loaded-every-turn">Auto-Injection: Memory Index Loaded Every Turn</a></h3>
+<p>At the start of each session (the <code>before_agent_start</code> event), pi-memory automatically does the following:</p>
 <ol>
-<li>第一章：一个 AI 的记忆 → 5 分钟装上 pi-memory</li>
-<li>第二章：从记忆到规划 → 学会用路线图管理任务</li>
-<li>第七章：自己动手做扩展 → 了解扩展机制</li>
+<li><strong>Reads <code>memory-prompt.md</code></strong> — Instructions for using the memory system (tells the AI there’s a memory feature and where the files are)</li>
+<li><strong>Reads the <code>MEMORY.md</code> index</strong> — Global <code>~/.pi/agent/memory/MEMORY.md</code> + project <code>.pi/memory/MEMORY.md</code></li>
+<li><strong>Injects into the system prompt</strong> — The AI can see all memory titles and keywords right at the start of every turn</li>
 </ol>
-<h3 id="全面了解路线3-小时"><a class="header" href="#全面了解路线3-小时">全面了解路线（3 小时）</a></h3>
-<p>按顺序读完所有章节。每章包含：</p>
-<ul>
-<li><strong>痛点</strong>：你一定会遇到的真实问题</li>
-<li><strong>原理</strong>：扩展是怎么工作的</li>
-<li><strong>案例</strong>：真实的使用场景</li>
-<li><strong>最佳实践</strong>：怎么用得更好</li>
-</ul>
-<h3 id="按需查阅路线"><a class="header" href="#按需查阅路线">按需查阅路线</a></h3>
-<p>遇到具体问题时，直接翻到对应章节。每章独立完整。</p>
-<h2 id="快速安装"><a class="header" href="#快速安装">快速安装</a></h2>
-<p>在 pi 的 <code>settings.json</code> 中添加你需要的扩展：</p>
-<pre><code class="language-json">{
-  "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-context-manager",
-    "pi-session-analyzer",
-    "pi-smart-compact",
-    "pi-scheduler"
-  ]
-}
-</code></pre>
-<p>或者全部安装（pi-workflow 和 pi-shared-utils 是开发库，一般用户不需要直接安装）：</p>
-<pre><code class="language-json">{
-  "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-context-manager",
-    "pi-session-analyzer",
-    "pi-smart-compact",
-    "pi-scheduler",
-    "pi-workflow",
-    "pi-shared-utils"
-  ]
-}
-</code></pre>
-<p>大部分扩展都是 <strong>开箱即用</strong>——安装后无需额外配置（但你可以按需定制）。</p>
+<p>This means the AI doesn’t need to actively “look up” memories — <strong>the memory index is already in its context</strong>. When the AI sees a title like <code>JS_replace_$陷阱</code>, it knows that memory exists and can use the <code>read</code> tool to get the full content when needed.</p>
 <blockquote>
-<p>💡 <strong>提示</strong>：pi-workflow 和 pi-shared-utils 是供其他扩展调用的开发库，一般用户不需要直接安装。</p>
+<p>⚠️ <strong>Only the index is injected, not the full content</strong>. MEMORY.md only contains titles and keywords, not complete memory content. The AI needs to <code>read</code> a specific file to get the details.</p>
 </blockquote>
-<h2 id="重要文件路径"><a class="header" href="#重要文件路径">重要文件路径</a></h2>
-<p>在开始之前，你需要知道 pi 的关键文件在哪里：</p>
+<p>The core structure of memory:</p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>文件</th><th>路径</th><th>说明</th></tr>
+<tr><th>Component</th><th>Role</th></tr>
 </thead>
 <tbody>
-<tr><td>全局配置</td><td><code>~/.pi/agent/settings.json</code></td><td>安装扩展、配置 provider</td></tr>
-<tr><td>项目配置</td><td><code>.pi/settings.json</code>（项目根目录）</td><td>项目级自定义配置（覆盖全局）</td></tr>
-<tr><td>项目指令</td><td><code>AGENTS.md</code>（项目根目录或 <code>.pi/agent/</code>）</td><td>注入给 AI 的项目规则</td></tr>
-<tr><td>扩展安装目录</td><td><code>~/.pi/agent/npm/node_modules/</code></td><td>npm 包安装位置</td></tr>
-<tr><td>记忆目录</td><td><code>.pi/memory/</code>（项目级）</td><td>项目级持久记忆</td></tr>
-<tr><td>全局记忆</td><td><code>~/.pi/agent/memory/</code></td><td>跨项目通用记忆</td></tr>
+<tr><td><code>MEMORY.md</code></td><td>Index file, lists all memory titles and keywords (auto-injected every turn)</td></tr>
+<tr><td>Memory files (<code>.md</code>)</td><td>One topic per file, contains specific knowledge (read on demand)</td></tr>
+<tr><td><code>memory_update</code> tool</td><td>AI uses to write/update memory files + auto-update MEMORY.md index</td></tr>
+<tr><td><code>memory_index</code> tool</td><td>AI uses to view existing memories (manual query)</td></tr>
+<tr><td><code>before_agent_start</code> hook</td><td>Auto-injects memory index into system prompt at session start</td></tr>
 </tbody>
 </table>
 </div>
-<blockquote>
-<p>💡 <strong>新手提示</strong>：<code>~</code> 指你的用户主目录。在 macOS/Linux 上是 <code>/home/你的用户名/</code>，Windows 上是 <code>C:\Users\你的用户名\</code>。</p>
-</blockquote>
-<h2 id="约定"><a class="header" href="#约定">约定</a></h2>
-<p>本书中的示例使用以下约定：</p>
+<h3 id="memory-file-format"><a class="header" href="#memory-file-format">Memory File Format</a></h3>
+<p>Each memory file follows a consistent format:</p>
+<pre><code class="language-markdown"># Title
+
+Keywords: `kw1` `kw2` `kw3` ...
+
+## Content
+
+- Knowledge point 1
+- Knowledge point 2
+- Decision record: why option A was chosen over option B
+</code></pre>
+<p>File naming convention: <code>topic--keyword1,keyword2,keyword3.md</code></p>
+<p>For example: <code>database-choice--DuckDB,embedded,ARM,column-store,analytical-queries.md</code></p>
+<h2 id="real-world-case-the-first-week-of-a-new-project"><a class="header" href="#real-world-case-the-first-week-of-a-new-project">Real-World Case: The First Week of a New Project</a></h2>
+<p>Let’s look at a real scenario. Say you’re developing a data analysis tool:</p>
+<h3 id="day-1-project-initialization"><a class="header" href="#day-1-project-initialization">Day 1: Project Initialization</a></h3>
+<p>You and the AI discussed tech choices and decided on Python + FastAPI + DuckDB. At the end of the session, the AI automatically wrote a memory:</p>
+<pre><code class="language-markdown"># Tech Stack Decision
+
+Keywords: `Python` `FastAPI` `DuckDB` `technology-choice`
+
+## Rationale
+
+- FastAPI: Good async support, auto-generates API documentation
+- DuckDB: Embedded analytical database, no separate deployment needed, suitable for single-machine analysis
+  - Not PostgreSQL: the project doesn't need concurrent writes; embedded is simpler
+- Python 3.12+: uses new type syntax
+</code></pre>
+<h3 id="day-3-hitting-a-pitfall"><a class="header" href="#day-3-hitting-a-pitfall">Day 3: Hitting a Pitfall</a></h3>
+<p>You ran into an issue with DuckDB’s date handling — the default timezone is UTC, but your users are in China. After the AI helped you solve it, it wrote a memory:</p>
+<pre><code class="language-markdown"># DuckDB Timezone Issue
+
+Keywords: `DuckDB` `timezone` `date` `UTC` `Asia/Shanghai`
+
+## Problem and Solution
+
+DuckDB uses UTC timezone by default. Running `SELECT NOW()` returns UTC time.
+
+Solution: Set `SET timezone = 'Asia/Shanghai'` when connecting.
+
+Note: Don't do timezone conversion at the SQL level — handle it in the Python layer with datetime for reliability.
+</code></pre>
+<h3 id="day-7-new-session-no-repetition-needed"><a class="header" href="#day-7-new-session-no-repetition-needed">Day 7: New Session, No Repetition Needed</a></h3>
+<p>You start a new session and say “add a CSV export feature to the analysis API.” The AI already knows:</p>
 <ul>
-<li><code>代码块</code>：命令、文件路径、代码片段</li>
-<li><strong>粗体</strong>：重要概念</li>
-<li>
-<blockquote>
-<p>💡 提示：实用技巧和注意事项</p>
-</blockquote>
-</li>
-<li>表格：快速对比和速查</li>
+<li>The project uses FastAPI + DuckDB</li>
+<li>Timezone is Asia/Shanghai</li>
+<li>Database queries are handled in the Python layer</li>
 </ul>
-<p>准备好开始了吗？翻开第一章，让我们从“记忆“开始。</p>
+<p>You don’t need to explain it all again.</p>
+<blockquote>
+<p>✨ <strong>This is the value of memory</strong>: it saves the 30 minutes you’d otherwise spend re-explaining every time.</p>
+</blockquote>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<h3 id="-what-to-remember"><a class="header" href="#-what-to-remember">✅ What to Remember</a></h3>
+<ul>
+<li><strong>Technical decisions</strong>: Why you chose A over B</li>
+<li><strong>Pitfalls encountered</strong>: The problem and the solution</li>
+<li><strong>Project conventions</strong>: Naming conventions, directory structure, deployment method</li>
+<li><strong>Architecture knowledge</strong>: Module relationships, data flow, key interfaces</li>
+</ul>
+<h3 id="-what-not-to-remember"><a class="header" href="#-what-not-to-remember">❌ What Not to Remember</a></h3>
+<ul>
+<li>Temporary debugging info (“this variable’s value is 42”)</li>
+<li>Outdated conclusions (remember to clean up periodically)</li>
+<li>General programming knowledge (the AI already knows how to write a for loop)</li>
+</ul>
+<h3 id="memory-file-management"><a class="header" href="#memory-file-management">Memory File Management</a></h3>
+<p>More memory isn’t always better. The system has multi-layer protection:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Threshold</th><th>Behavior</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>20 files</strong></td><td>Prompt to watch the count</td></tr>
+<tr><td><strong>25 files</strong></td><td>Warning: approaching limit, suggest cleanup/merge</td></tr>
+<tr><td><strong>40 files</strong></td><td><strong>Hard rejection on writes</strong> — must clean up first</td></tr>
+</tbody>
+</table>
+</div>
+<p>Cleanup methods:</p>
+<ol>
+<li><strong>Merge</strong>: Combine multiple files on the same topic into one</li>
+<li><strong>Archive</strong>: Outdated conclusions replaced by new ones — delete the old</li>
+<li><strong>Split</strong>: When a single file exceeds 200 lines, split by subtopic</li>
+</ol>
+<p>Additionally, the memory system has <strong>conflict detection</strong> — if a new file has the same topic or overlaps on 3+ keywords with an existing memory, the write is <strong>rejected outright</strong>, forcing the conflict to be resolved first (merge or overwrite).</p>
+<h2 id="configuration"><a class="header" href="#configuration">Configuration</a></h2>
+<p>Install pi-memory via pi’s <code>settings.json</code>:</p>
+<pre><code class="language-json">{
+  "packages": [
+    "pi-memory"
+  ]
+}
+</code></pre>
+<p>No additional configuration needed — ready to use on install. Memory files are stored in the project’s <code>.pi/memory/</code> directory.</p>
+<h3 id="memory-scope"><a class="header" href="#memory-scope">Memory Scope</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scope</th><th>Path</th><th>Usage</th></tr>
+</thead>
+<tbody>
+<tr><td>Project-level</td><td><code>.pi/memory/</code></td><td>Project-specific knowledge (architecture, decisions, pitfalls)</td></tr>
+<tr><td>Global</td><td><code>~/.pi/agent/memory/</code></td><td>Cross-project general knowledge (toolchain, coding discipline)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="advanced-scenarios-memory-cleanup-and-knowledge-evolution"><a class="header" href="#advanced-scenarios-memory-cleanup-and-knowledge-evolution">Advanced Scenarios: Memory Cleanup and Knowledge Evolution</a></h2>
+<h3 id="scenario-memory-fragmentation"><a class="header" href="#scenario-memory-fragmentation">Scenario: Memory Fragmentation</a></h3>
+<p>After a month of use, memory files pile up:</p>
+<pre><code>.pi/memory/
+├── database-choice--DuckDB,embedded,ARM.md
+├── db-choice--database,DuckDB,performance.md       ← Duplicate of above!
+├── deployment-issue--Docker,ARM,memory.md
+├── deployment-issue2--Docker,memory,OOM.md         ← Also duplicate!
+├── auth-bug--JWT,expiry,refresh.md
+├── fastapi-cors--CORS,FastAPI,cross-origin.md
+├── test-tricks--vitest,mock,testing.md
+├── ... (20 more files)
+</code></pre>
+<p>Before each write, the AI automatically runs <code>memory_index</code> to check. If it finds existing memories on the same topic, it merges first before writing. But if fragmentation has already happened, manual cleanup is needed.</p>
+<p><strong>Cleanup steps</strong>:</p>
+<ol>
+<li>Ask the AI to run <code>memory_index</code> to view all current memories</li>
+<li>Mark files on the same topic (3+ overlapping keywords)</li>
+<li>Ask the AI to read the marked files and merge them into one</li>
+<li>Use <code>memory_update</code> to <strong>overwrite an existing filename</strong> (not a new one, or conflict detection will reject the write)</li>
+<li>Delete the old fragmented files</li>
+</ol>
+<h3 id="scenario-old-conclusions-overturned"><a class="header" href="#scenario-old-conclusions-overturned">Scenario: Old Conclusions Overturned</a></h3>
+<p>A memory written last month says “use Express.js for the backend,” but this month the project decided to migrate to FastAPI. Every time the AI reads the old memory, it thinks in Express terms and gives bad suggestions.</p>
+<p><strong>Solution</strong>: Use <code>memory_update</code> to overwrite the old file with the new conclusion:</p>
+<pre><code class="language-markdown"># Backend Framework Decision
+
+Keywords: `FastAPI` `Python` `migration`
+
+## Current Decision
+
+2026-05: Migrated from Express.js to FastAPI.
+
+## Migration Reasons
+
+- Needed better async support
+- Python's data analysis ecosystem is richer
+- Express.js version has been archived and is no longer updated
+
+&gt; ⚠️ Old conclusion (deprecated): Use Express.js + TypeScript
+</code></pre>
+<p><strong>Key point</strong>: Don’t just delete the old file — clearly document both the new conclusion and how it relates to the old one, so the AI doesn’t “reinvent” the old approach in other contexts.</p>
+<h3 id="scenario-cross-project-knowledge-reuse"><a class="header" href="#scenario-cross-project-knowledge-reuse">Scenario: Cross-Project Knowledge Reuse</a></h3>
+<p>You hit a pitfall in project A and want to make sure project B doesn’t repeat the same mistake.</p>
+<p><strong>Solution</strong>: Write the general knowledge to global memory:</p>
+<pre><code>~/.pi/agent/memory/
+└── npm-file-ref-traps--npm,file-ref,node_modules,cache.md
+</code></pre>
+<p>Global memory is visible to all projects. This way, no matter which project you’re in, the AI will know “npm <code>file:</code> references have cache traps.”</p>
+<p><strong>Principle</strong>:</p>
+<ul>
+<li><strong>Project-specific</strong> knowledge (this project’s architecture, conventions) → project-level <code>.pi/memory/</code></li>
+<li><strong>General experience</strong> (toolchain pitfalls, coding discipline) → global <code>~/.pi/agent/memory/</code></li>
+</ul>
+<h2 id="next-steps"><a class="header" href="#next-steps">Next Steps</a></h2>
+<p>Now the AI has memory and can retain knowledge across sessions. But when faced with a large project, does it know what to do first, and what to do next?</p>
+<p>In the next chapter, we’ll look at how to teach the AI <strong>planning</strong>.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
 
-                            <a rel="next prefetch" href="chapter-1/memory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../chapter-2/roadmap.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -355,8 +436,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
 
-                    <a rel="next prefetch" href="chapter-1/memory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../chapter-2/roadmap.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
@@ -376,19 +460,19 @@
         </script>
 
 
-        <script src="elasticlunr-ef4e11c1.min.js"></script>
-        <script src="mark-09e88c2c.min.js"></script>
-        <script src="searcher-09f2665d.js"></script>
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
 
-        <script src="clipboard-1626706a.min.js"></script>
-        <script src="highlight-abc7f01d.js"></script>
-        <script src="book-c22b7243.js"></script>
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="theme/custom-f2c2f76d.js"></script>
+        <script src="../theme/custom-f2c2f76d.js"></script>
 
 
 
     </div>
-    <div style="position:fixed;bottom:10px;right:10px;background:var(--sidebar-bg);padding:8px 12px;border-radius:4px;z-index:100"><a href="./en/" style="color:var(--fg)">English</a></div></body>
+    </body>
 </html>

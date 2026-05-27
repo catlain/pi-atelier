@@ -1,0 +1,760 @@
+/* ============================================================
+   pi-atelier 开源书 — 自定义样式
+   ============================================================
+   注意：mdBook 0.4.x 版本给 HTML id 加了 mdbook- 前缀
+   （如 #mdbook-menu-bar, #mdbook-sidebar），但 index.hbs
+   中使用的是无前缀的 id（#menu-bar, #sidebar）。
+   因此这里必须用无前缀选择器来补充 mdBook 默认样式。
+   ============================================================ */
+
+/* ── CSS 变量覆盖（rust 主题基础上微调） ── */
+:root {
+  /* 字体 */
+  --font-body: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Source Code Pro', 'Cascadia Code', 'JetBrains Mono', Consolas, 'Ubuntu Mono', Menlo, monospace;
+
+  /* 导航栏高度 */
+  --menu-bar-height: 50px;
+
+  /* 侧边栏（用 min 动态公式，resize 拖动时 JS 会改 --sidebar-target-width） */
+  --sidebar-target-width: 300px;
+  --sidebar-width: min(var(--sidebar-target-width), 80vw);
+
+  /* 内容区 */
+  --content-max-width: 860px;
+
+  /* 滚动条 */
+  --scrollbar: #c1c1c1;
+  --sidebar-active: #e85d04;
+}
+
+/* ── 全局字体 ── */
+html {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   关键修复：菜单栏 sticky + z-index
+   mdBook 默认用 #mdbook-menu-bar，但我们的 id 是 #menu-bar
+   ============================================================ */
+
+/* 菜单栏占位符 — 让内容不被 sticky 菜单栏遮挡 */
+#menu-bar-hover-placeholder {
+  height: var(--menu-bar-height);
+}
+
+/* 菜单栏 sticky 定位 */
+#menu-bar.sticky,
+#menu-bar-hover-placeholder:hover + #menu-bar,
+#menu-bar:hover {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0 !important;
+  z-index: 100;
+}
+
+/* 侧边栏已恢复，内容在 index.hbs 的 <nav id="sidebar"> 中生成 */
+/* nav-wide-wrapper 导航按钮也已恢复 */
+
+/* 内容区也需要留出菜单栏空间 */
+#page-wrapper {
+  padding-top: 0;
+}
+
+/* ============================================================
+   顶部导航栏美化
+   ============================================================ */
+.menu-bar {
+  border-bottom: 1px solid var(--table-border-color);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.88);
+  height: var(--menu-bar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+html.ayu .menu-bar {
+  background: rgba(21, 21, 33, 0.88);
+}
+
+html.coal .menu-bar,
+html.navy .menu-bar {
+  background: rgba(27, 27, 27, 0.88);
+}
+
+.menu-bar .left-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.menu-bar .right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-bar .icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.menu-bar .icon-button:hover {
+  background: var(--sidebar-spacer);
+  transform: scale(1.05);
+}
+
+/* SVG 图标确保可见 */
+.menu-bar .fa-svg {
+  display: inline-flex;
+  align-items: center;
+  line-height: var(--menu-bar-height);
+}
+
+.menu-bar .fa-svg svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
+.menu-title {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  font-size: 1.1em;
+  color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 主题弹出菜单 */
+.theme-popup {
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--table-border-color);
+  overflow: hidden;
+}
+
+.theme-popup li {
+  margin: 0;
+}
+
+.theme-popup button {
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.theme-popup button:hover {
+  background: var(--sidebar-spacer);
+}
+
+/* 搜索栏 */
+#searchbar {
+  border-radius: 8px;
+  border: 1px solid var(--searchbar-border-color);
+  padding: 10px 14px;
+  font-size: 0.9em;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+#searchbar:focus {
+  outline: none;
+  border-color: var(--links);
+  box-shadow: 0 0 0 3px rgba(232, 93, 4, 0.15);
+}
+
+/* ============================================================
+   侧边栏美化
+   ============================================================ */
+.sidebar {
+  border-right: 1px solid var(--table-border-color);
+  background: var(--sidebar-bg);
+  width: var(--sidebar-width);
+  transition: transform 0.2s ease;
+}
+
+.sidebar .sidebar-scrollbox {
+  padding: 12px 0;
+  overflow-y: auto;
+}
+
+.sidebar .chapter {
+  padding: 6px 16px;
+  border-radius: 6px;
+  margin: 2px 8px;
+  transition: all 0.2s ease;
+  font-size: 0.9em;
+  line-height: 1.5;
+  color: var(--sidebar-fg);
+  text-decoration: none;
+  display: block;
+}
+
+.sidebar .chapter:hover {
+  background: var(--sidebar-spacer);
+  transform: translateX(2px);
+}
+
+.sidebar .chapter.active {
+  background: var(--sidebar-active);
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar .section {
+  padding: 4px 16px 4px 24px;
+  border-radius: 4px;
+  margin: 1px 8px;
+  font-size: 0.85em;
+  color: var(--sidebar-fg);
+  text-decoration: none;
+  display: block;
+}
+
+.sidebar .section:hover {
+  background: var(--sidebar-spacer);
+}
+
+.sidebar .part-title {
+  font-weight: 700;
+  font-size: 0.8em;
+  padding: 20px 16px 6px;
+  color: var(--sidebar-fg);
+  opacity: 0.5;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ============================================================
+   主内容区布局
+   ============================================================ */
+.content main {
+  max-width: var(--content-max-width);
+  padding: 0 2em;
+}
+
+/* ============================================================
+   底部章节导航条
+   ============================================================ */
+.nav-wrapper {
+  margin-top: 3em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--table-border-color);
+}
+
+.nav-chapters {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-fg);
+  text-decoration: none;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.nav-chapters:hover {
+  background: var(--sidebar-active);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-chapters .nav-label {
+  display: inline;
+}
+
+.nav-chapters.previous::before {
+  content: "← ";
+}
+
+.nav-chapters.next::after {
+  content: " →";
+}
+
+/* ============================================================
+   代码块美化
+   ============================================================ */
+pre {
+  border-radius: 10px;
+  padding: 1em 1.2em;
+  margin: 1.5em 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--table-border-color);
+  overflow-x: auto;
+  position: relative;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+pre code {
+  font-size: 0.875em;
+  line-height: 1.7;
+  border-radius: 0;
+  padding: 0;
+  background: transparent !important;
+}
+
+/* 行内代码 */
+:not(pre) > code {
+  background: var(--quote-bg);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 0.85em;
+  color: var(--inline-code-color);
+  border: 1px solid var(--quote-border);
+  font-weight: 500;
+}
+
+/* 代码语言标签 */
+.code-lang-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 3px 12px;
+  font-size: 0.7em;
+  font-weight: 600;
+  color: var(--fg);
+  background: var(--table-header-bg);
+  border-radius: 0 10px 0 6px;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  pointer-events: none;
+}
+
+/* 复制按钮美化 */
+pre .buttons {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+pre:hover .buttons {
+  opacity: 1;
+}
+
+pre .buttons button {
+  background: var(--table-header-bg);
+  border: 1px solid var(--table-border-color);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.75em;
+  color: var(--fg);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+pre .buttons button:hover {
+  background: var(--sidebar-spacer);
+}
+
+/* ============================================================
+   表格美化
+   ============================================================ */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--table-border-color);
+  margin: 1.5em 0;
+  width: 100%;
+  font-size: 0.92em;
+}
+
+thead {
+  background: var(--table-header-bg);
+}
+
+th {
+  font-weight: 600;
+  color: var(--fg);
+  padding: 12px 18px;
+  text-align: left;
+  font-size: 0.9em;
+}
+
+td {
+  padding: 10px 18px;
+  border-top: 1px solid var(--table-border-color);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--table-alternate-bg);
+}
+
+tbody tr:hover {
+  background: var(--quote-bg);
+  transition: background 0.2s;
+}
+
+/* ============================================================
+   引用块美化
+   ============================================================ */
+blockquote {
+  border-left: 4px solid var(--links);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 22px;
+  margin: 1.5em 0;
+  background: var(--quote-bg);
+  font-style: normal;
+}
+
+blockquote p {
+  margin: 0;
+}
+
+/* ============================================================
+   自定义提示框
+   ============================================================ */
+.pain-point {
+  background: #fff8e1;
+  border-left: 4px solid #ff9800;
+  padding: 16px 22px;
+  margin: 1.5em 0;
+  border-radius: 0 10px 10px 0;
+  color: #e65100;
+  box-shadow: 0 1px 4px rgba(255, 152, 0, 0.1);
+}
+
+.pain-point::before {
+  content: "🤔 ";
+  font-weight: 700;
+}
+
+.solution {
+  background: #e8f5e9;
+  border-left: 4px solid #4caf50;
+  padding: 16px 22px;
+  margin: 1.5em 0;
+  border-radius: 0 10px 10px 0;
+  color: #1b5e20;
+  box-shadow: 0 1px 4px rgba(76, 175, 80, 0.1);
+}
+
+.solution::before {
+  content: "✅ ";
+  font-weight: 700;
+}
+
+.tip {
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  padding: 16px 22px;
+  margin: 1.5em 0;
+  border-radius: 0 10px 10px 0;
+  color: #0d47a1;
+  box-shadow: 0 1px 4px rgba(33, 150, 243, 0.1);
+}
+
+.tip::before {
+  content: "💡 ";
+  font-weight: 700;
+}
+
+.warning {
+  background: #fbe9e7;
+  border-left: 4px solid #f44336;
+  padding: 16px 22px;
+  margin: 1.5em 0;
+  border-radius: 0 10px 10px 0;
+  color: #b71c1c;
+  box-shadow: 0 1px 4px rgba(244, 67, 54, 0.1);
+}
+
+.warning::before {
+  content: "⚠️ ";
+  font-weight: 700;
+}
+
+/* ============================================================
+   链接样式
+   ============================================================ */
+.content a {
+  color: var(--links);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--links);
+  transition: all 0.2s ease;
+}
+
+.content a:hover {
+  border-bottom-style: solid;
+  color: var(--sidebar-active);
+}
+
+/* ============================================================
+   标题层级
+   ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+h1 {
+  font-size: 2em;
+  margin-top: 0;
+  letter-spacing: -0.3px;
+}
+
+h2 {
+  font-size: 1.5em;
+  border-bottom: 2px solid var(--table-border-color);
+  padding-bottom: 0.3em;
+  margin-top: 2em;
+}
+
+h3 {
+  font-size: 1.25em;
+  margin-top: 1.5em;
+}
+
+/* ============================================================
+   页脚 — 最后更新时间
+   ============================================================ */
+.page-footer {
+  margin-top: 3em;
+  padding-top: 1em;
+  border-top: 1px solid var(--table-border-color);
+  text-align: right;
+  font-size: 0.8em;
+  color: var(--fg);
+  opacity: 0.5;
+}
+
+/* 导航文字标签 */
+.nav-text {
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+/* ============================================================
+   滚动条美化（Webkit）
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sidebar-active);
+}
+
+/* ============================================================
+   首页 Hero 区域
+   ============================================================ */
+.hero {
+  text-align: center;
+  padding: 2em 0;
+  margin-bottom: 2em;
+}
+
+.hero h1 {
+  font-size: 2.8em;
+  margin-bottom: 0.3em;
+  background: linear-gradient(135deg, #e85d04, #dc2f02);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero .subtitle {
+  font-size: 1.2em;
+  opacity: 0.7;
+  margin-bottom: 1.5em;
+}
+
+.hero .badges img {
+  margin: 0 4px;
+  vertical-align: middle;
+}
+
+/* ============================================================
+   卡片样式（首页特性展示）
+   ============================================================ */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.2em;
+  margin: 1.5em 0;
+}
+
+.feature-card {
+  padding: 1.2em;
+  border-radius: 10px;
+  border: 1px solid var(--table-border-color);
+  background: var(--quote-bg);
+  transition: all 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.feature-card h4 {
+  margin: 0 0 0.5em;
+  font-size: 1em;
+}
+
+.feature-card p {
+  margin: 0;
+  font-size: 0.88em;
+  opacity: 0.8;
+}
+
+/* ============================================================
+   图片美化
+   ============================================================ */
+.content img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: 1em 0;
+}
+
+/* ============================================================
+   移动端适配
+   ============================================================ */
+@media only screen and (max-width: 768px) {
+  :root {
+    --sidebar-target-width: 260px;
+    --sidebar-width: min(var(--sidebar-target-width), 80vw);
+  }
+
+  .nav-chapters {
+    padding: 10px 16px;
+    font-size: 0.85em;
+  }
+
+  h1 { font-size: 1.6em; }
+  h2 { font-size: 1.3em; }
+
+  table { font-size: 0.85em; }
+  th, td { padding: 8px 10px; }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 2em;
+  }
+
+  .content main {
+    padding: 0 1em;
+  }
+
+  .menu-title {
+    font-size: 0.95em;
+  }
+}
+
+/* ============================================================
+   打印优化
+   ============================================================ */
+@media print {
+  .nav-chapters, .sidebar, #searchbar, #menu-bar,
+  .page-footer, #sidebar-toggle, .theme-popup {
+    display: none !important;
+  }
+
+  .content {
+    max-width: 100%;
+  }
+
+  pre {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
+
+/* === 底部导航标签 === */
+.nav-wrapper .nav-chapters {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-fg);
+  text-decoration: none;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-wrapper .nav-chapters:hover {
+  background: var(--sidebar-active);
+  color: var(--sidebar-fg);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.nav-wrapper .nav-chapters.previous {
+  float: left;
+}
+
+.nav-wrapper .nav-chapters.next {
+  float: right;
+}
+
+.nav-label {
+  pointer-events: none;
+}
+
+/* === 页脚最后更新 === */
+.page-footer {
+  margin-top: 2em;
+  padding-top: 1em;
+  border-top: 1px solid var(--table-border-color);
+  color: var(--fg-muted);
+  font-size: 0.85em;
+  text-align: center;
+}

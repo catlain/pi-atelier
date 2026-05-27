@@ -1,44 +1,44 @@
 <!DOCTYPE HTML>
-<html lang="zh-CN" class="rust sidebar-visible" dir="ltr">
+<html lang="en" class="rust sidebar-visible" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>pi-atelier：让 AI 编程助手变得专业 - pi-atelier: AI Agent 工具链实战指南</title>
+        <title>Chapter 5: Long Session Survival Guide - pi-atelier: AI Agent Toolkit Practical Guide</title>
 
 
         <!-- Custom HTML head -->
 
-        <meta name="description" content="从零教会用户使用 pi-atelier 扩展生态，让 AI 编程助手从&#x27;会写代码&#x27;进化到&#x27;会管理项目&#x27;">
+        <meta name="description" content="A practical guide to using the pi-atelier extension ecosystem, evolving AI coding assistants from &#x27;can write code&#x27; to &#x27;can manage projects&#x27;">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="favicon-3a9d0890.svg">
-        <link rel="stylesheet" href="css/variables-8adf115d.css">
-        <link rel="stylesheet" href="css/general-0392ca55.css">
-        <link rel="stylesheet" href="css/chrome-fc474251.css">
-        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon-3a9d0890.svg">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="fonts/fonts-35116d2a.css">
+        <link rel="stylesheet" href="../fonts/fonts-35116d2a.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="theme/custom-4ec21217.css">
+        <link rel="stylesheet" href="../theme/custom-4ec21217.css">
 
 
         <!-- Provide site root and default themes to javascript -->
         <script>
-            const path_to_root = "";
+            const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "searchindex-c0f8faa3.js";
+            window.path_to_searchindex_js = "../searchindex-b25d7f3f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4d4df149.js"></script>
+        <script src="../toc-11716e09.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -105,7 +105,7 @@
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
-                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
             <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -137,16 +137,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">pi-atelier: AI Agent 工具链实战指南</h1>
+                    <h1 class="menu-title">pi-atelier: AI Agent Toolkit Practical Guide</h1>
 
                     <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
                             <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
-                        <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/introduction.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                        <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/en/src/en/chapter-5/long-session.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
                             <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
                         </a>
 
@@ -180,172 +180,225 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <div class="hero">
-<h1 id="pi-atelier让-ai-编程助手变得专业"><a class="header" href="#pi-atelier让-ai-编程助手变得专业">pi-atelier：让 AI 编程助手变得专业</a></h1>
-<div class="subtitle">从零教会你使用 pi-atelier 扩展生态，让 AI 编程助手从「会写代码」进化到「会管理项目」</div>
-
-</div>
-
-<h2 id="这本书是给谁看的"><a class="header" href="#这本书是给谁看的">这本书是给谁看的？</a></h2>
-<p>如果你在做以下任何一件事，这本书适合你：</p>
+                        <h1 id="a-survival-guide-for-long-sessions"><a class="header" href="#a-survival-guide-for-long-sessions">A Survival Guide for Long Sessions</a></h1>
+<h2 id="youve-probably-been-here"><a class="header" href="#youve-probably-been-here">You’ve Probably Been Here</a></h2>
+<p>You start a long session with pi, and the AI helps you through a lot of work. By the 50th turn, you notice:</p>
 <ul>
-<li>用 AI 编程助手（如 pi、Cursor、Copilot）写代码</li>
-<li>觉得 AI 助手“差一点“就能做得更好</li>
-<li>想让 AI 从“问答工具“进化成“项目搭档“</li>
+<li>The AI starts asking questions you’ve already answered before</li>
+<li>It re-proposes a solution that was already rejected</li>
+<li>Its code quality noticeably declines — missing error handling, missing type definitions</li>
+<li>Sometimes it even starts “hallucinating” — inventing functions and files that don’t exist</li>
 </ul>
-<h2 id="什么是-pi-atelier"><a class="header" href="#什么是-pi-atelier">什么是 pi-atelier？</a></h2>
-<p>pi-atelier 是一组 <strong>pi 扩展</strong>，让 AI 编程助手具备项目管理能力。</p>
-<p>普通 AI 助手能写代码，但：</p>
-<ul>
-<li>每次开会话都忘光之前的事</li>
-<li>做大任务容易跑偏</li>
-<li>没有规矩，容易犯低级错误</li>
-<li>会话一长就变笨</li>
-</ul>
-<p>pi-atelier 的扩展补上了这些能力缺口：</p>
-<div class="feature-grid">
-<div class="feature-card">
-<h3 id="-记忆"><a class="header" href="#-记忆">🧠 记忆</a></h3>
-<p>让 AI 记住跨会话的知识</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-规划"><a class="header" href="#-规划">📋 规划</a></h3>
-<p>管理 Epic → Story → Task 三层路线图</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-守卫"><a class="header" href="#-守卫">🛡️ 守卫</a></h3>
-<p>给 AI 立规矩，防止犯错</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-诊断"><a class="header" href="#-诊断">🔍 诊断</a></h3>
-<p>控制上下文质量 + token 消耗分析</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-分析"><a class="header" href="#-分析">📊 分析</a></h3>
-<p>搜索和回溯历史会话</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-压缩"><a class="header" href="#-压缩">🗜️ 压缩</a></h3>
-<p>长会话中保持 AI 的聪明</p>
-</div>
-
-</div>
-
-<p>详细对比见下表：</p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>能力</th><th>扩展</th><th>一句话描述</th></tr>
-</thead>
-<tbody>
-<tr><td>记忆</td><td>pi-memory</td><td>让 AI 记住跨会话的知识</td></tr>
-<tr><td>规划</td><td>pi-roadmap</td><td>让 AI 管理 Epic → Story → Task</td></tr>
-<tr><td>守卫</td><td>pi-shepherd</td><td>给 AI 立规矩，防止犯错</td></tr>
-<tr><td>上下文与诊断</td><td>pi-context-manager</td><td>控制 AI 看到的信息质量 + token 消耗诊断</td></tr>
-<tr><td>日志</td><td>pi-journal</td><td>日志报告生成（git 活动 + 会话事件 + 记忆变更）</td></tr>
-<tr><td>分析</td><td>pi-session-analyzer</td><td>搜索和回溯历史会话</td></tr>
-<tr><td>压缩</td><td>pi-smart-compact</td><td>长会话中保持 AI 的聪明</td></tr>
-<tr><td>定时</td><td>pi-scheduler</td><td>定时提醒和周期任务</td></tr>
-<tr><td>工作流</td><td>pi-workflow</td><td>子代理编排，并行执行</td></tr>
-<tr><td>工具库</td><td>pi-shared-utils</td><td>扩展开发的公共工具函数</td></tr>
-</tbody>
-</table>
-</div>
-<h2 id="阅读路线"><a class="header" href="#阅读路线">阅读路线</a></h2>
-<h3 id="快速上手路线1-小时"><a class="header" href="#快速上手路线1-小时">快速上手路线（1 小时）</a></h3>
+<p>The worst case: The AI throws an error — “context window exceeded”, and the entire session crashes.</p>
+<blockquote>
+<p>💡 <strong>This is the “context bloat” problem</strong>: The AI’s “working memory” has a fixed capacity, and when it’s overloaded, things spill over.</p>
+</blockquote>
+<h2 id="root-cause"><a class="header" href="#root-cause">Root Cause</a></h2>
+<p>The AI’s context window is a fixed-size “workbench”:</p>
+<pre><code>Context Window (e.g., 128K tokens)
+┌──────────────────────────────────────┐
+│ System Prompt              ≈ 5K      │
+│ Tool Definitions           ≈ 8K      │
+│ Memory Injection           ≈ 2K      │
+│ ─────────────────────────────        │
+│ Conversation History       ≈ 80K     │ ← Main source of bloat
+│ (previous 50 turns)                  │
+│ Tool Results               ≈ 30K     │ ← Tool returns can be large
+│ ─────────────────────────────        │
+│ Remaining Space            ≈ 3K      │ ← Almost full!
+└──────────────────────────────────────┘
+</code></pre>
+<p>The problem:</p>
 <ol>
-<li>第一章：一个 AI 的记忆 → 5 分钟装上 pi-memory</li>
-<li>第二章：从记忆到规划 → 学会用路线图管理任务</li>
-<li>第七章：自己动手做扩展 → 了解扩展机制</li>
+<li><strong>Conversation history only grows</strong>: Each turn adds content to the context and never removes anything</li>
+<li><strong>Tool results can be massive</strong>: <code>read</code> on a 1000-line file can take up 5K tokens</li>
+<li><strong>Duplicate information accumulates</strong>: The AI reads the same file multiple times, each time consuming space</li>
 </ol>
-<h3 id="全面了解路线3-小时"><a class="header" href="#全面了解路线3-小时">全面了解路线（3 小时）</a></h3>
-<p>按顺序读完所有章节。每章包含：</p>
-<ul>
-<li><strong>痛点</strong>：你一定会遇到的真实问题</li>
-<li><strong>原理</strong>：扩展是怎么工作的</li>
-<li><strong>案例</strong>：真实的使用场景</li>
-<li><strong>最佳实践</strong>：怎么用得更好</li>
-</ul>
-<h3 id="按需查阅路线"><a class="header" href="#按需查阅路线">按需查阅路线</a></h3>
-<p>遇到具体问题时，直接翻到对应章节。每章独立完整。</p>
-<h2 id="快速安装"><a class="header" href="#快速安装">快速安装</a></h2>
-<p>在 pi 的 <code>settings.json</code> 中添加你需要的扩展：</p>
-<pre><code class="language-json">{
-  "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-context-manager",
-    "pi-session-analyzer",
-    "pi-smart-compact",
-    "pi-scheduler"
-  ]
-}
-</code></pre>
-<p>或者全部安装（pi-workflow 和 pi-shared-utils 是开发库，一般用户不需要直接安装）：</p>
-<pre><code class="language-json">{
-  "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-context-manager",
-    "pi-session-analyzer",
-    "pi-smart-compact",
-    "pi-scheduler",
-    "pi-workflow",
-    "pi-shared-utils"
-  ]
-}
-</code></pre>
-<p>大部分扩展都是 <strong>开箱即用</strong>——安装后无需额外配置（但你可以按需定制）。</p>
-<blockquote>
-<p>💡 <strong>提示</strong>：pi-workflow 和 pi-shared-utils 是供其他扩展调用的开发库，一般用户不需要直接安装。</p>
-</blockquote>
-<h2 id="重要文件路径"><a class="header" href="#重要文件路径">重要文件路径</a></h2>
-<p>在开始之前，你需要知道 pi 的关键文件在哪里：</p>
+<h2 id="two-tools-smart-compact-and-context-manager"><a class="header" href="#two-tools-smart-compact-and-context-manager">Two Tools: Smart Compact and Context Manager</a></h2>
+<p>You might ask: do I need to install both packages? The answer is: <strong>yes, both are recommended</strong> — they solve different problems:</p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>文件</th><th>路径</th><th>说明</th></tr>
+<tr><th>Dimension</th><th>pi-smart-compact</th><th>pi-context-manager</th></tr>
 </thead>
 <tbody>
-<tr><td>全局配置</td><td><code>~/.pi/agent/settings.json</code></td><td>安装扩展、配置 provider</td></tr>
-<tr><td>项目配置</td><td><code>.pi/settings.json</code>（项目根目录）</td><td>项目级自定义配置（覆盖全局）</td></tr>
-<tr><td>项目指令</td><td><code>AGENTS.md</code>（项目根目录或 <code>.pi/agent/</code>）</td><td>注入给 AI 的项目规则</td></tr>
-<tr><td>扩展安装目录</td><td><code>~/.pi/agent/npm/node_modules/</code></td><td>npm 包安装位置</td></tr>
-<tr><td>记忆目录</td><td><code>.pi/memory/</code>（项目级）</td><td>项目级持久记忆</td></tr>
-<tr><td>全局记忆</td><td><code>~/.pi/agent/memory/</code></td><td>跨项目通用记忆</td></tr>
+<tr><td><strong>What it does</strong></td><td>Compresses conversation history</td><td>Diagnoses token consumption + compresses tool results</td></tr>
+<tr><td><strong>Active/Passive</strong></td><td>Fully automatic</td><td>Diagnosis needs you to ask AI, distill is automatic</td></tr>
+<tr><td><strong>What it solves</strong></td><td>“Conversation history is too long”</td><td>“Too many tool results” + “Why is it so slow”</td></tr>
+<tr><td><strong>Can they replace each other?</strong></td><td>❌ No</td><td>❌ No</td></tr>
 </tbody>
 </table>
 </div>
 <blockquote>
-<p>💡 <strong>新手提示</strong>：<code>~</code> 指你的用户主目录。在 macOS/Linux 上是 <code>/home/你的用户名/</code>，Windows 上是 <code>C:\Users\你的用户名\</code>。</p>
+<p>💡 <strong>One-sentence summary</strong>: context-manager helps you <strong>find the problem</strong> (where are the tokens going), smart-compact helps you <strong>automatically fix it</strong> (compress history). Best used together.</p>
 </blockquote>
-<h2 id="约定"><a class="header" href="#约定">约定</a></h2>
-<p>本书中的示例使用以下约定：</p>
+<h3 id="pi-smart-compact--smart-compression"><a class="header" href="#pi-smart-compact--smart-compression">pi-smart-compact — Smart Compression</a></h3>
+<p>Smart Compact automatically “compresses” conversation history when the context is nearly full:</p>
+<pre><code>Before compression (80K tokens of conversation history):
+┌─────────────────────────────────┐
+│ User: Help me look at auth.ts   │
+│ AI: I read auth.ts... (500 words)│
+│ User: Add a null check          │
+│ AI: OK, I modified... (300 words)│
+│ User: Run the tests             │
+│ AI: Test results... (200 words) │
+│ ... 50 turns repeated ...        │
+└─────────────────────────────────┘
+
+After compression (15K tokens summary):
+┌─────────────────────────────────┐
+│ Summary:                        │
+│ - Added null check in auth.ts   │
+│ - Modified corresponding test   │
+│ - All tests passed               │
+│ - Used JWT authentication scheme│
+│ ... Key information preserved ...│
+└─────────────────────────────────┘
+</code></pre>
+<p>Two-phase compression strategy:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Phase</th><th>Method</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Phase 1</td><td>Extract key information (decisions, file changes, conclusions)</td><td>Traverse conversation, generate structured intent summary</td></tr>
+<tr><td>Phase 2</td><td>Discard low-value information (repeated file reads, intermediate debug output)</td><td>Let LLM judge tool results batch by batch</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="pi-context-manager--diagnostic-tool"><a class="header" href="#pi-context-manager--diagnostic-tool">pi-context-manager — Diagnostic Tool</a></h3>
+<p>pi-context-manager provides the <code>payload_analyze</code> tool to help you see exactly where your tokens are going:</p>
+<pre><code>📊 Token Budget Analysis
+
+System Prompt:    4,200 tokens ( 3.2%)
+Tool Definitions: 8,100 tokens ( 6.2%)
+Memory Injection: 2,300 tokens ( 1.8%)
+Conversation:    52,400 tokens (40.0%)
+Tool Results:    64,800 tokens (49.5%)  ← The big one!
+──────────────────────────────────────
+Total:          131,800 / 128,000      ← Over budget!
+
+Top 3 most expensive tool calls:
+1. read(src/database/schema.ts)  — 8,200 tokens
+2. code_graph_module_overview    — 6,400 tokens
+3. grep("TODO|FIXME")           — 4,100 tokens
+</code></pre>
+<h2 id="real-world-case-diagnosing-a-context-crash"><a class="header" href="#real-world-case-diagnosing-a-context-crash">Real-World Case: Diagnosing a Context Crash</a></h2>
+<h3 id="real-scenario-review"><a class="header" href="#real-scenario-review">Real Scenario Review</a></h3>
+<p>Once, a session crashed at only <strong>34.8%</strong> context usage. It seemed unlikely — only a third used?</p>
+<p>Using pi-context-manager’s <code>budget</code> mode for analysis, the root cause was found:</p>
+<pre><code>Root cause:
+34.8% of tool results were error output
+→ Lots of repeated "Command not found" error messages
+→ Each error consumed tokens without providing valuable information
+→ Accumulated and prematurely exhausted the context
+</code></pre>
+<p><strong>Solution</strong>: Added an <code>after_bash</code> hook in shepherd rules to automatically truncate error output from failed commands, preventing wasteful token consumption.</p>
+<h3 id="using-growth-mode-for-trends"><a class="header" href="#using-growth-mode-for-trends">Using growth Mode for Trends</a></h3>
+<pre><code>📈 Context Growth Trend
+
+Request #1:  15K  ████
+Request #5:  28K  ███████
+Request #10: 45K  ████████████
+Request #15: 72K  ████████████████████
+Request #20: 98K  ██████████████████████████  ← Approaching limit
+Request #23: 💥 Crash!
+</code></pre>
+<p><strong>Key finding</strong>: The fastest growth was between turns 10-15, when extensive file searching was happening.</p>
+<p><strong>Optimization</strong>: Using <code>code_graph_semantic_code_search</code> (compact mode, returns only signatures and locations) instead of <code>grep</code> (returns full matching lines) reduced token consumption by 70%.</p>
+<h2 id="configuring-smart-compact"><a class="header" href="#configuring-smart-compact">Configuring Smart Compact</a></h2>
+<p>Install via <code>settings.json</code>:</p>
+<pre><code class="language-json">{
+  "packages": ["pi-smart-compact"]
+}
+</code></pre>
+<p>It takes effect automatically after installation — no additional configuration needed.</p>
+<h3 id="optional-advanced-configuration"><a class="header" href="#optional-advanced-configuration">Optional Advanced Configuration</a></h3>
+<p>In <code>.pi/settings.json</code>:</p>
+<pre><code class="language-json">{
+  "smart-compact": {
+    "auto": "auto"
+  }
+}
+</code></pre>
 <ul>
-<li><code>代码块</code>：命令、文件路径、代码片段</li>
-<li><strong>粗体</strong>：重要概念</li>
-<li>
-<blockquote>
-<p>💡 提示：实用技巧和注意事项</p>
-</blockquote>
-</li>
-<li>表格：快速对比和速查</li>
+<li><code>auto</code>: Automatic trigger (default, recommended)</li>
+<li><code>manual</code>: Only responds to the <code>/smart-compact</code> command</li>
 </ul>
-<p>准备好开始了吗？翻开第一章，让我们从“记忆“开始。</p>
+<p>Manual trigger: Type <code>/smart-compact</code> in the conversation.
+View configuration: Type <code>/smart-compact-config</code>.</p>
+<h2 id="payload-analyzer-common-commands"><a class="header" href="#payload-analyzer-common-commands">Payload Analyzer Common Commands</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Purpose</th><th>When to Use</th></tr>
+</thead>
+<tbody>
+<tr><td><code>budget</code></td><td>Token budget analysis (system/tools/history composition)</td><td>“Where are my tokens going?”</td></tr>
+<tr><td><code>growth</code></td><td>Context growth trend (token curve over requests)</td><td>“Why is it getting slower?”</td></tr>
+<tr><td><code>expensive</code></td><td>Most expensive tool calls (Top N sorted)</td><td>“Which tool consumes the most tokens?”</td></tr>
+<tr><td><code>overview</code></td><td>Per-message detailed analysis (includes distill events)</td><td>“Pinpoint a specific point in time”</td></tr>
+<tr><td><code>messages</code></td><td>Locate messages by index/range/keyword</td><td>“What did message 10 say?”</td></tr>
+<tr><td><code>chain</code></td><td>Track the same tool call across payloads</td><td>“What happened to this call later?”</td></tr>
+<tr><td><code>chain-tcid</code></td><td>Track the same toolCallId across payloads</td><td>“Verify distill behavior”</td></tr>
+<tr><td><code>diff</code></td><td>Compare differences between two payloads</td><td>“What’s different between these two requests?”</td></tr>
+<tr><td><code>stats</code></td><td>Aggregate statistics on distill/processor hit rate</td><td>“How efficient is the compression?”</td></tr>
+<tr><td><code>single</code></td><td>Analyze a single payload file</td><td>“Deep dive into one recording file”</td></tr>
+<tr><td><code>list</code></td><td>List all recording files</td><td>“What’s available for analysis?”</td></tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>💡 <strong>Diagnosis workflow</strong>: Start with <code>list</code> to see available recordings → <code>budget</code> for overall distribution → <code>expensive</code> to find the heavy hitters → <code>messages</code> for precise targeting.</p>
+</blockquote>
+<h2 id="context-managers-aging-and-processor"><a class="header" href="#context-managers-aging-and-processor">Context Manager’s Aging and Processor</a></h2>
+<p>Beyond Distill, pi-context-manager offers two additional helper mechanisms:</p>
+<h3 id="aging"><a class="header" href="#aging">Aging</a></h3>
+<p>Automatically evicts old tool outputs that haven’t been referenced for a long time. Use <code>/aging-config</code> to set the eviction rounds.</p>
+<p>Special exemption: Skill file (SKILL.md) content is never evicted by aging, ensuring the AI always sees the currently loaded skills.</p>
+<h3 id="tool-result-processor"><a class="header" href="#tool-result-processor">Tool Result Processor</a></h3>
+<p>Formats and trims specific types of tool output (e.g., code-graph AST search results, MCP JSON output). Use <code>/processor-config</code> to set thresholds.</p>
+<h3 id="context-tui-panel"><a class="header" href="#context-tui-panel">/context TUI Panel</a></h3>
+<p>Type <code>/context</code> to open a visual panel for browsing context content by category and manually marking content for deletion.</p>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<h3 id="-habits-for-healthy-long-sessions"><a class="header" href="#-habits-for-healthy-long-sessions">✅ Habits for Healthy Long Sessions</a></h3>
+<ol>
+<li><strong>Use compact mode for search</strong>: <code>code_graph_semantic_code_search(compact: true)</code> saves 70% tokens over <code>grep</code></li>
+<li><strong>Compress early</strong>: Don’t wait until it crashes — trigger compression when the context approaches its limit</li>
+<li><strong>Avoid repeated reads</strong>: Use memory to remember file content instead of repeatedly <code>read</code>ing the same file</li>
+<li><strong>Read large files in chunks</strong>: Use <code>offset/limit</code> to read only the parts you need, not the whole file</li>
+<li><strong>Configure aging wisely</strong>: Set 8-12 rounds for eviction to automatically clean up stale content</li>
+<li><strong>Run payload_analyze checkups regularly</strong>: Run <code>budget</code> once during a long session to catch problems early</li>
+</ol>
+<h3 id="-diagnostic-priority"><a class="header" href="#-diagnostic-priority">✅ Diagnostic Priority</a></h3>
+<pre><code>When context has issues:
+  1. payload_analyze budget → Check total distribution
+  2. payload_analyze expensive → Find the most expensive calls
+  3. payload_analyze growth → Look at growth trends
+  4. Targeted optimization (switch tools, add filters, adjust strategy)
+</code></pre>
+<h3 id="-common-misconceptions"><a class="header" href="#-common-misconceptions">❌ Common Misconceptions</a></h3>
+<ul>
+<li>“I still have 50% context left, nothing to worry about” → Wrong, tool results can suddenly balloon</li>
+<li>“Compression will lose important information” → Smart Compact prioritizes preserving decisions and conclusions</li>
+<li>“Just restart the session” → Treats the symptom, not the root cause — you’ll run into the same problem again</li>
+</ul>
+<h2 id="next-steps"><a class="header" href="#next-steps">Next Steps</a></h2>
+<p>Now the AI has memory, planning, rules, review, and compression — it’s already quite a capable assistant. But it’s still “passive” — it only acts when you ask.</p>
+<p>Can the AI work proactively? For example, automatically check code quality every day, or automatically run a research analysis?</p>
+<p>In the next chapter, we’ll look at how to make the AI <strong>automate work</strong>.</p>
+<p>Original: /home/lain/.pi/agent/distill/processor/read-ed6e48fc-1779884015234.txt</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter-4/session-analyzer.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
 
-                            <a rel="next prefetch" href="chapter-1/memory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../chapter-5/smart-compact.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -355,8 +408,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter-4/session-analyzer.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
 
-                    <a rel="next prefetch" href="chapter-1/memory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../chapter-5/smart-compact.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
@@ -376,19 +432,19 @@
         </script>
 
 
-        <script src="elasticlunr-ef4e11c1.min.js"></script>
-        <script src="mark-09e88c2c.min.js"></script>
-        <script src="searcher-09f2665d.js"></script>
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
 
-        <script src="clipboard-1626706a.min.js"></script>
-        <script src="highlight-abc7f01d.js"></script>
-        <script src="book-c22b7243.js"></script>
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="theme/custom-f2c2f76d.js"></script>
+        <script src="../theme/custom-f2c2f76d.js"></script>
 
 
 
     </div>
-    <div style="position:fixed;bottom:10px;right:10px;background:var(--sidebar-bg);padding:8px 12px;border-radius:4px;z-index:100"><a href="./en/" style="color:var(--fg)">English</a></div></body>
+    </body>
 </html>

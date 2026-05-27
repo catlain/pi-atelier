@@ -1,44 +1,44 @@
 <!DOCTYPE HTML>
-<html lang="zh-CN" class="rust sidebar-visible" dir="ltr">
+<html lang="en" class="rust sidebar-visible" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>pi-atelier：让 AI 编程助手变得专业 - pi-atelier: AI Agent 工具链实战指南</title>
+        <title>Chapter 2: From Memory to Planning - pi-atelier: AI Agent Toolkit Practical Guide</title>
 
 
         <!-- Custom HTML head -->
 
-        <meta name="description" content="从零教会用户使用 pi-atelier 扩展生态，让 AI 编程助手从&#x27;会写代码&#x27;进化到&#x27;会管理项目&#x27;">
+        <meta name="description" content="A practical guide to using the pi-atelier extension ecosystem, evolving AI coding assistants from &#x27;can write code&#x27; to &#x27;can manage projects&#x27;">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="favicon-3a9d0890.svg">
-        <link rel="stylesheet" href="css/variables-8adf115d.css">
-        <link rel="stylesheet" href="css/general-0392ca55.css">
-        <link rel="stylesheet" href="css/chrome-fc474251.css">
-        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="../favicon-3a9d0890.svg">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="fonts/fonts-35116d2a.css">
+        <link rel="stylesheet" href="../fonts/fonts-35116d2a.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="theme/custom-4ec21217.css">
+        <link rel="stylesheet" href="../theme/custom-4ec21217.css">
 
 
         <!-- Provide site root and default themes to javascript -->
         <script>
-            const path_to_root = "";
+            const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "searchindex-c0f8faa3.js";
+            window.path_to_searchindex_js = "../searchindex-b25d7f3f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4d4df149.js"></script>
+        <script src="../toc-11716e09.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -105,7 +105,7 @@
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
-                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
             <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -137,16 +137,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">pi-atelier: AI Agent 工具链实战指南</h1>
+                    <h1 class="menu-title">pi-atelier: AI Agent Toolkit Practical Guide</h1>
 
                     <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
                             <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
-                        <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/introduction.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                        <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/en/src/en/chapter-2/roadmap.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
                             <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
                         </a>
 
@@ -180,172 +180,229 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <div class="hero">
-<h1 id="pi-atelier让-ai-编程助手变得专业"><a class="header" href="#pi-atelier让-ai-编程助手变得专业">pi-atelier：让 AI 编程助手变得专业</a></h1>
-<div class="subtitle">从零教会你使用 pi-atelier 扩展生态，让 AI 编程助手从「会写代码」进化到「会管理项目」</div>
-
-</div>
-
-<h2 id="这本书是给谁看的"><a class="header" href="#这本书是给谁看的">这本书是给谁看的？</a></h2>
-<p>如果你在做以下任何一件事，这本书适合你：</p>
+                        <h1 id="from-memory-to-planning"><a class="header" href="#from-memory-to-planning">From Memory to Planning</a></h1>
+<h2 id="youve-probably-encountered-this"><a class="header" href="#youve-probably-encountered-this">You’ve Probably Encountered This</a></h2>
+<p>You ask an AI to do a large task like “migrate the project from JavaScript to TypeScript.”</p>
+<p>Everything goes well for the first 30 minutes — the AI migrates configuration files, type definitions, and core modules as planned. But by the 5th file, the AI starts to “drift”:</p>
 <ul>
-<li>用 AI 编程助手（如 pi、Cursor、Copilot）写代码</li>
-<li>觉得 AI 助手“差一点“就能做得更好</li>
-<li>想让 AI 从“问答工具“进化成“项目搭档“</li>
+<li>It forgets earlier conventions and starts using a different naming style</li>
+<li>It skips migrating test files</li>
+<li>It begins a “refactor while you’re at it” that you never asked for</li>
+<li>When you remind it to get back on track, it can’t remember what the first 3 steps of the original plan were</li>
 </ul>
-<h2 id="什么是-pi-atelier"><a class="header" href="#什么是-pi-atelier">什么是 pi-atelier？</a></h2>
-<p>pi-atelier 是一组 <strong>pi 扩展</strong>，让 AI 编程助手具备项目管理能力。</p>
-<p>普通 AI 助手能写代码，但：</p>
+<blockquote>
+<p>💡 <strong>Goldfish memory is solved, but there’s still an “attention deficit” problem</strong>: The AI can remember knowledge, but it can’t manage tasks.</p>
+</blockquote>
+<h2 id="roadmap-teaching-ai-to-manage-complex-tasks"><a class="header" href="#roadmap-teaching-ai-to-manage-complex-tasks">Roadmap: Teaching AI to Manage Complex Tasks</a></h2>
+<p>pi-roadmap gives the AI a “project management brain”:</p>
 <ul>
-<li>每次开会话都忘光之前的事</li>
-<li>做大任务容易跑偏</li>
-<li>没有规矩，容易犯低级错误</li>
-<li>会话一长就变笨</li>
+<li><strong>Structured breakdown</strong>: Decomposes large goals into Epic → Story → Task three layers</li>
+<li><strong>Progress tracking</strong>: Each task has a clear status (todo / doing / done / blocked)</li>
+<li><strong>Persistence</strong>: Roadmaps are saved in files, so new sessions can continue where you left off</li>
+<li><strong>Priority sorting</strong>: Automatically recommends what to do next</li>
 </ul>
-<p>pi-atelier 的扩展补上了这些能力缺口：</p>
-<div class="feature-grid">
-<div class="feature-card">
-<h3 id="-记忆"><a class="header" href="#-记忆">🧠 记忆</a></h3>
-<p>让 AI 记住跨会话的知识</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-规划"><a class="header" href="#-规划">📋 规划</a></h3>
-<p>管理 Epic → Story → Task 三层路线图</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-守卫"><a class="header" href="#-守卫">🛡️ 守卫</a></h3>
-<p>给 AI 立规矩，防止犯错</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-诊断"><a class="header" href="#-诊断">🔍 诊断</a></h3>
-<p>控制上下文质量 + token 消耗分析</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-分析"><a class="header" href="#-分析">📊 分析</a></h3>
-<p>搜索和回溯历史会话</p>
-</div>
-
-<div class="feature-card">
-<h3 id="-压缩"><a class="header" href="#-压缩">🗜️ 压缩</a></h3>
-<p>长会话中保持 AI 的聪明</p>
-</div>
-
-</div>
-
-<p>详细对比见下表：</p>
+<h3 id="why-a-three-layer-structure"><a class="header" href="#why-a-three-layer-structure">Why a Three-Layer Structure?</a></h3>
+<pre><code>Epic (Big direction)
+ └── Story (Deliverable work chunk)
+      └── Task (Smallest executable unit)
+</code></pre>
+<p>This structure comes from agile development practices, with some adaptations:</p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>能力</th><th>扩展</th><th>一句话描述</th></tr>
+<tr><th>Concept</th><th>Traditional Agile</th><th>pi-roadmap</th><th>Rationale</th></tr>
 </thead>
 <tbody>
-<tr><td>记忆</td><td>pi-memory</td><td>让 AI 记住跨会话的知识</td></tr>
-<tr><td>规划</td><td>pi-roadmap</td><td>让 AI 管理 Epic → Story → Task</td></tr>
-<tr><td>守卫</td><td>pi-shepherd</td><td>给 AI 立规矩，防止犯错</td></tr>
-<tr><td>上下文与诊断</td><td>pi-context-manager</td><td>控制 AI 看到的信息质量 + token 消耗诊断</td></tr>
-<tr><td>日志</td><td>pi-journal</td><td>日志报告生成（git 活动 + 会话事件 + 记忆变更）</td></tr>
-<tr><td>分析</td><td>pi-session-analyzer</td><td>搜索和回溯历史会话</td></tr>
-<tr><td>压缩</td><td>pi-smart-compact</td><td>长会话中保持 AI 的聪明</td></tr>
-<tr><td>定时</td><td>pi-scheduler</td><td>定时提醒和周期任务</td></tr>
-<tr><td>工作流</td><td>pi-workflow</td><td>子代理编排，并行执行</td></tr>
-<tr><td>工具库</td><td>pi-shared-utils</td><td>扩展开发的公共工具函数</td></tr>
+<tr><td>Epic</td><td>2-8 weeks</td><td>A complete project direction</td><td>AI sessions don’t span weeks</td></tr>
+<tr><td>Story</td><td>1-3 days</td><td>Completable in 1-3 sessions</td><td>Adapted to AI’s working rhythm</td></tr>
+<tr><td>Task</td><td>0.5-1 day</td><td>30 min - 2 hours</td><td>Granularity AI can focus on at once</td></tr>
 </tbody>
 </table>
 </div>
-<h2 id="阅读路线"><a class="header" href="#阅读路线">阅读路线</a></h2>
-<h3 id="快速上手路线1-小时"><a class="header" href="#快速上手路线1-小时">快速上手路线（1 小时）</a></h3>
+<h3 id="how-it-works"><a class="header" href="#how-it-works">How It Works</a></h3>
+<pre><code>User describes goal
+     │
+     ▼
+┌──────────────────────────────────┐
+│         roadmap_plan             │
+│  AI analyzes goal → breaks into  │
+│  three-layer structure           │
+│  compares with existing roadmap  │
+│  → incremental update            │
+└──────────────┬───────────────────┘
+               │
+               ▼
+┌──────────────────────────────────┐
+│  ~/.pi/roadmap/&lt;id&gt;.roadmap.json │
+│  Global storage, cross-session   │
+│  and cross-project access        │
+│  + Project-level                 │
+│    .pi/roadmap/roadmap.json      │
+│    (auto-synced derivation)      │
+└──────────────┬───────────────────┘
+               │
+     ┌─────────┼─────────┐
+     ▼         ▼         ▼
+ roadmap_list  roadmap_show  roadmap_next
+  List all     Show detail   Recommend next
+</code></pre>
+<h2 id="real-world-example-migrating-a-multi-package-project"><a class="header" href="#real-world-example-migrating-a-multi-package-project">Real-World Example: Migrating a Multi-Package Project</a></h2>
+<p>Let’s look at a real scenario — upgrading documentation across 12 npm packages simultaneously:</p>
+<h3 id="step-1-create-a-roadmap"><a class="header" href="#step-1-create-a-roadmap">Step 1: Create a Roadmap</a></h3>
+<p>You say: “Help me plan documentation work for all packages.”</p>
+<p>The AI calls <code>roadmap_plan</code>, which automatically decomposes:</p>
+<pre><code class="language-json">{
+  "roadmapId": "package-docs",
+  "title": "Package Documentation Upgrade",
+  "epics": [
+    {
+      "id": "E0",
+      "title": "Define template and validate",
+      "stories": [
+        {
+          "id": "E0.S0",
+          "title": "Analyze best practices, distill template",
+          "tasks": [
+            { "id": "E0.S0.T0", "title": "Research GitHub documentation standards" },
+            { "id": "E0.S0.T1", "title": "Distill README template" },
+            { "id": "E0.S0.T2", "title": "Validate template with first package" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E1",
+      "title": "Batch upgrade all packages",
+      "stories": [
+        { "id": "E1.S0", "title": "Core extensions (4 packages)" },
+        { "id": "E1.S1", "title": "Tool extensions (4 packages)" },
+        { "id": "E1.S2", "title": "Utility extensions (4 packages)" }
+      ]
+    }
+  ]
+}
+</code></pre>
+<h3 id="step-2-advance-according-to-plan"><a class="header" href="#step-2-advance-according-to-plan">Step 2: Advance According to Plan</a></h3>
+<p>In each new session, you say “continue.” The AI calls <code>roadmap_next</code>:</p>
+<pre><code>📊 Recommended next task:
+
+E0.S0.T1 — Distill README template (high priority)
+  Part of: E0 Define template and validate &gt; S0 Analyze best practices
+
+Start?
+</code></pre>
+<h3 id="step-3-mark-completion"><a class="header" href="#step-3-mark-completion">Step 3: Mark Completion</a></h3>
+<p>After completing a task, the AI calls <code>roadmap_done</code>:</p>
+<pre><code>✅ E0.S0.T1 Completed
+    Output: templates/README-template.md
+</code></pre>
+<h3 id="step-4-encountering-blockers"><a class="header" href="#step-4-encountering-blockers">Step 4: Encountering Blockers</a></h3>
+<p>If source code for a package is missing, the AI can mark the task as blocked:</p>
+<pre><code>⚠️ E1.S1.T3 Blocked
+    Reason: pi-journal's API documentation is incomplete; source code comments need to be added first
+</code></pre>
+<h2 id="roadmap-vs-memory-whats-the-relationship"><a class="header" href="#roadmap-vs-memory-whats-the-relationship">Roadmap vs Memory: What’s the Relationship?</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Dimension</th><th>Memory (pi-memory)</th><th>Roadmap (pi-roadmap)</th></tr>
+</thead>
+<tbody>
+<tr><td>What it stores</td><td>Knowledge, decisions, pitfalls</td><td>Tasks, progress, plans</td></tr>
+<tr><td>Granularity</td><td>Free-form text</td><td>Structured JSON</td></tr>
+<tr><td>Query method</td><td>Keywords</td><td>Status / priority</td></tr>
+<tr><td>Lifecycle</td><td>Long-term retention</td><td>Can be archived when project ends</td></tr>
+</tbody>
+</table>
+</div>
+<p>Simply put:</p>
+<ul>
+<li><strong>Memory</strong> is “what I know”</li>
+<li><strong>Roadmap</strong> is “what I need to do and how far along I am”</li>
+</ul>
+<p>The two complement each other: memory helps the AI remember knowledge, the roadmap helps the AI remember tasks.</p>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<h3 id="-good-epic-breakdown"><a class="header" href="#-good-epic-breakdown">✅ Good Epic Breakdown</a></h3>
+<pre><code>Epic: Publish npm package
+  Story: Prepare release environment
+    Task: Configure package.json exports field
+    Task: Add bundledDependencies configuration
+    Task: Configure tsconfig declaration output
+  Story: Write documentation
+    Task: Complete README.md
+    Task: Add CHANGELOG.md
+</code></pre>
+<h3 id="-bad-breakdown"><a class="header" href="#-bad-breakdown">❌ Bad Breakdown</a></h3>
+<pre><code>Epic: Do everything                     ← Too vague, no direction
+  Story: Do the first step              ← Doesn't say what to do
+    Task: Start working                  ← Not actionable
+</code></pre>
+<h3 id="golden-rules-of-breakdown"><a class="header" href="#golden-rules-of-breakdown">Golden Rules of Breakdown</a></h3>
 <ol>
-<li>第一章：一个 AI 的记忆 → 5 分钟装上 pi-memory</li>
-<li>第二章：从记忆到规划 → 学会用路线图管理任务</li>
-<li>第七章：自己动手做扩展 → 了解扩展机制</li>
+<li><strong>Epic titles should be verb phrases</strong>: “Publish npm package” instead of “npm”</li>
+<li><strong>Stories should have clear deliverables</strong>: “Complete README” instead of “Write docs”</li>
+<li><strong>Tasks should be executable within 30 minutes</strong>: “Configure package.json name field” instead of “Configure build”</li>
+<li><strong>Items at the same level should have the same granularity</strong>: Don’t have one Story with 2 tasks and another with 20</li>
 </ol>
-<h3 id="全面了解路线3-小时"><a class="header" href="#全面了解路线3-小时">全面了解路线（3 小时）</a></h3>
-<p>按顺序读完所有章节。每章包含：</p>
-<ul>
-<li><strong>痛点</strong>：你一定会遇到的真实问题</li>
-<li><strong>原理</strong>：扩展是怎么工作的</li>
-<li><strong>案例</strong>：真实的使用场景</li>
-<li><strong>最佳实践</strong>：怎么用得更好</li>
-</ul>
-<h3 id="按需查阅路线"><a class="header" href="#按需查阅路线">按需查阅路线</a></h3>
-<p>遇到具体问题时，直接翻到对应章节。每章独立完整。</p>
-<h2 id="快速安装"><a class="header" href="#快速安装">快速安装</a></h2>
-<p>在 pi 的 <code>settings.json</code> 中添加你需要的扩展：</p>
-<pre><code class="language-json">{
-  "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-context-manager",
-    "pi-session-analyzer",
-    "pi-smart-compact",
-    "pi-scheduler"
-  ]
-}
+<h2 id="advanced-scenarios-plan-adjustment--progress-tracking"><a class="header" href="#advanced-scenarios-plan-adjustment--progress-tracking">Advanced Scenarios: Plan Adjustment &amp; Progress Tracking</a></h2>
+<h3 id="scenario-when-direction-needs-to-change"><a class="header" href="#scenario-when-direction-needs-to-change">Scenario: When Direction Needs to Change</a></h3>
+<p>Plans change. The roadmap you laid out yesterday may no longer fit today’s requirements. You don’t need to start over — just update with <code>roadmap_plan</code>:</p>
+<pre><code>You: Yesterday's refactoring plan is too big. I want to start with just the auth module.
+
+AI calls roadmap_plan(action="update"):
+  → Compares current roadmap with your new requirements
+  → Keeps completed tasks untouched
+  → Marks unnecessary tasks as dropped
+  → Adds new tasks
 </code></pre>
-<p>或者全部安装（pi-workflow 和 pi-shared-utils 是开发库，一般用户不需要直接安装）：</p>
-<pre><code class="language-json">{
-  "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-context-manager",
-    "pi-session-analyzer",
-    "pi-smart-compact",
-    "pi-scheduler",
-    "pi-workflow",
-    "pi-shared-utils"
-  ]
-}
+<p><strong>Key principle</strong>: <code>roadmap_plan</code> is incremental, not overwriting. Tasks already marked <code>done</code> are never rolled back.</p>
+<h3 id="scenario-tracking-who-did-what"><a class="header" href="#scenario-tracking-who-did-what">Scenario: Tracking Who Did What</a></h3>
+<p>In multi-session collaboration, you often wonder “which session completed this task?” The roadmap tracks this automatically:</p>
+<pre><code>roadmap_show(roadmapId="package-docs")
+
+Result:
+  E0.S0.T0 Research GitHub documentation standards ✅ by: 8740-8fce3e7af232
+  E0.S0.T1 Distill README template ✅ by: b8b5-85516ead6253
+  E0.S0.T2 Validate template with first package ✅ by: b8b5-85516ead6253
+  E1.S0.T0 Core extension - pi-shepherd 🔄 doing by: aa55-a4860e851afb
 </code></pre>
-<p>大部分扩展都是 <strong>开箱即用</strong>——安装后无需额外配置（但你可以按需定制）。</p>
-<blockquote>
-<p>💡 <strong>提示</strong>：pi-workflow 和 pi-shared-utils 是供其他扩展调用的开发库，一般用户不需要直接安装。</p>
-</blockquote>
-<h2 id="重要文件路径"><a class="header" href="#重要文件路径">重要文件路径</a></h2>
-<p>在开始之前，你需要知道 pi 的关键文件在哪里：</p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>文件</th><th>路径</th><th>说明</th></tr>
-</thead>
-<tbody>
-<tr><td>全局配置</td><td><code>~/.pi/agent/settings.json</code></td><td>安装扩展、配置 provider</td></tr>
-<tr><td>项目配置</td><td><code>.pi/settings.json</code>（项目根目录）</td><td>项目级自定义配置（覆盖全局）</td></tr>
-<tr><td>项目指令</td><td><code>AGENTS.md</code>（项目根目录或 <code>.pi/agent/</code>）</td><td>注入给 AI 的项目规则</td></tr>
-<tr><td>扩展安装目录</td><td><code>~/.pi/agent/npm/node_modules/</code></td><td>npm 包安装位置</td></tr>
-<tr><td>记忆目录</td><td><code>.pi/memory/</code>（项目级）</td><td>项目级持久记忆</td></tr>
-<tr><td>全局记忆</td><td><code>~/.pi/agent/memory/</code></td><td>跨项目通用记忆</td></tr>
-</tbody>
-</table>
-</div>
-<blockquote>
-<p>💡 <strong>新手提示</strong>：<code>~</code> 指你的用户主目录。在 macOS/Linux 上是 <code>/home/你的用户名/</code>，Windows 上是 <code>C:\Users\你的用户名\</code>。</p>
-</blockquote>
-<h2 id="约定"><a class="header" href="#约定">约定</a></h2>
-<p>本书中的示例使用以下约定：</p>
-<ul>
-<li><code>代码块</code>：命令、文件路径、代码片段</li>
-<li><strong>粗体</strong>：重要概念</li>
-<li>
-<blockquote>
-<p>💡 提示：实用技巧和注意事项</p>
-</blockquote>
-</li>
-<li>表格：快速对比和速查</li>
-</ul>
-<p>准备好开始了吗？翻开第一章，让我们从“记忆“开始。</p>
+<p>The <code>by: xxxx-xxxxxxxxxxxx</code> suffix after each completed task is the short form of the session ID (last two segments of the UUID). You can use this ID to search for the specific session:</p>
+<pre><code>session_search(action="grep", query="8740-8fce3e7af232")
+
+→ Find the session, then use session_analyze(action="summary") to view details
+</code></pre>
+<h3 id="scenario-archiving-completed-epics"><a class="header" href="#scenario-archiving-completed-epics">Scenario: Archiving Completed Epics</a></h3>
+<p>When a project is finished, you don’t want completed Epics cluttering your view:</p>
+<pre><code>roadmap_archive(roadmapId="package-docs")
+
+→ Auto-archives all completed Epics
+→ Hidden by default, view with show_archived=true
+</code></pre>
+<h3 id="scenario-not-sure-what-to-do-next"><a class="header" href="#scenario-not-sure-what-to-do-next">Scenario: Not Sure What to Do Next</a></h3>
+<p>When you open pi and have no idea what to continue:</p>
+<pre><code>roadmap_next()
+
+Result:
+  📊 Recommended next task (sorted by priority):
+  
+  1. E1.S0.T3 — Configure package.json files whitelist (high, todo)
+  2. E1.S1.T0 — Tool extension - pi-roadmap (medium, todo)
+  3. E2.S0.T0 — Research mdBook theme customization (low, todo)
+</code></pre>
+<p><code>roadmap_next</code> automatically sorts by doing → todo, high → medium → low, telling you exactly what deserves your attention.</p>
+<h2 id="next-steps"><a class="header" href="#next-steps">Next Steps</a></h2>
+<p>The AI now has memory (to remember knowledge) and a roadmap (to manage tasks). But sometimes, the AI still “makes mistakes” — modifying files it shouldn’t, using approaches it shouldn’t.</p>
+<p>In the next chapter, we’ll look at how to <strong>set rules</strong> for the AI.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter-1/memory.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
 
-                            <a rel="next prefetch" href="chapter-1/memory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../chapter-3/rules.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -355,8 +412,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter-1/memory.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
 
-                    <a rel="next prefetch" href="chapter-1/memory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../chapter-3/rules.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
@@ -376,19 +436,19 @@
         </script>
 
 
-        <script src="elasticlunr-ef4e11c1.min.js"></script>
-        <script src="mark-09e88c2c.min.js"></script>
-        <script src="searcher-09f2665d.js"></script>
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
 
-        <script src="clipboard-1626706a.min.js"></script>
-        <script src="highlight-abc7f01d.js"></script>
-        <script src="book-c22b7243.js"></script>
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="theme/custom-f2c2f76d.js"></script>
+        <script src="../theme/custom-f2c2f76d.js"></script>
 
 
 
     </div>
-    <div style="position:fixed;bottom:10px;right:10px;background:var(--sidebar-bg);padding:8px 12px;border-radius:4px;z-index:100"><a href="./en/" style="color:var(--fg)">English</a></div></body>
+    </body>
 </html>
