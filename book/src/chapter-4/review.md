@@ -15,35 +15,9 @@
 
 > 💡 **AI 做了很多事，但没有人记录"为什么这样做"**。git 只记了改了什么，没记思考过程。
 
-## 两件工具：Journal 和 Session Analyzer
+## 核心工具：pi-session-analyzer
 
-pi-atelier 提供了两个互补的工具来解决这个问题：
-
-### pi-journal — 自动记录
-
-Journal（日志）在后台默默记录每个会话的关键事件：
-
-- 哪些文件被读取了
-- 哪些文件被修改了
-- AI 做了哪些关键决策
-- 会话的起止时间
-
-```
-┌─────────────────────────────────────┐
-│           AI 会话进行中               │
-│                                      │
-│  读取 src/auth.ts    → Journal 记录  │
-│  修改 src/auth.ts    → Journal 记录  │
-│  运行 npm test       → Journal 记录  │
-│  提交 git commit     → Journal 记录  │
-│                                      │
-│  会话结束 → 生成当日摘要              │
-└─────────────────────────────────────┘
-```
-
-### pi-session-analyzer — 深度回溯
-
-Session Analyzer（会话分析器）让你搜索和分析历史会话：
+pi-atelier 提供了 Session Analyzer（会话分析器）来搜索和分析历史会话：
 
 | 功能 | 说明 |
 |------|------|
@@ -52,6 +26,10 @@ Session Analyzer（会话分析器）让你搜索和分析历史会话：
 | 时间线视图 | 按时间顺序查看一个会话的完整过程 |
 | 摘要生成 | 自动总结一个会话做了什么 |
 | 分支分析 | 分析 `/tree` 产生的平行分支 |
+| 接手报告 | 5 维度上下文，帮 AI 快速恢复工作 |
+| 审计检查 | 检查会话中是否有违规操作 |
+
+> ⚠️ **关于 pi-journal**：pi-journal 是计划中的日志扩展，但目前**功能尚未完成**（`tools=[], commands=[]`，核心功能未注册到 pi）。当前版本中，请使用 pi-session-analyzer 来回溯历史会话。
 
 ## 实际案例：找到上周的 bug 修复
 
@@ -105,36 +83,19 @@ AI 调用 `session_search` 的 `file` 模式：
 3. 05-18 09:15 — 初始创建（你）
 ```
 
-## Journal 的输出格式
+## Session Analyzer 的 compact 模式
 
-Journal 生成的日志存储在 `.pi/journal/` 目录下：
+`entries` 动作支持 `compact` 参数，精简输出适合快速浏览大会话：
 
 ```
-.pi/journal/
-├── 2026-05-22.md        # 当日日志
-├── 2026-05-21.md
-└── summaries/
-    ├── weekly-2026-W21.md  # 周总结
-    └── daily/              # 每日摘要
-```
+# 标准模式
+session_analyze(action="entries")
+→ 完整的每条记录（含时间戳、类型、完整内容）
 
-每日日志的内容示例：
-
-```markdown
-# 2026-05-22 工作日志
-
-## 会话 1：DuckDB 时区修复（19:36 - 19:44）
-
-- 修改：src/db/connection.ts
-- 修改：tests/db/connection.test.ts
-- 决策：在连接层设置时区，不在 SQL 层
-- 测试：全部通过
-
-## 会话 2：API 文档编写（20:15 - 21:30）
-
-- 创建：docs/api/auth.md
-- 创建：docs/api/users.md
-- 修改：docs/api/index.md
+# Compact 模式
+session_analyze(action="entries", compact=true)
+→ 去掉 type 列、时间只保留 HH:MM、预览 60 字符
+→ 适合 100+ 条记录的大会话
 ```
 
 ## Session Analyzer 的分析维度
@@ -167,22 +128,18 @@ Journal 生成的日志存储在 `.pi/journal/` 目录下：
 
 ## 最佳实践
 
-### ✅ 让 Journal 发挥最大价值
-
-- **频繁提交**：AI 在 Journal 中记录的事件粒度跟 git commit 一致
-- **定期回顾**：每周用 `session_search` 回顾本周做了什么
-- **结合记忆**：Journal 记录"做了什么"，Memory 记录"学到了什么"
-
 ### ✅ Session Analyzer 的高效用法
 
 - **`grep` 模式**：跨所有会话搜索关键词（比翻 git log 快得多）
 - **`file` 模式**：找到所有动过某个文件的会话（代码审查利器）
 - **`takeover` 模式**：接手别人的工作时，先生成接手报告
+- **`compact` 模式**：大会话快速浏览，精简输出
+- **`audit` 模式**：定期检查 AI 是否有违规操作
 
 ### ❌ 常见误区
 
-- 不要把 Journal 当 Memory 用——Journal 是日志（发生了什么），Memory 是知识（学到了什么）
-- 不要在 Journal 里找代码内容——Journal 只记录操作，不记录代码全文
+- 不要用 `session_search` 代替记忆——搜索是回溯（过去做了什么），记忆是知识（学到了什么）
+- 不要期望找到代码全文——会话记录是摘要，不是完整备份
 
 ## 下一步
 

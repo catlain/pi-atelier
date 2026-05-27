@@ -188,6 +188,9 @@ export function activate(context: ExtensionContext) {
 | `paths` | 统一路径处理 | 需要找文件位置 |
 | `json` | 安全的 JSON 读写 | 需要操作 JSON 文件 |
 | `validator` | 参数校验 | 需要验证工具参数 |
+| `settings-backup` | settings.json 备份与回滚 | 需要安全写入配置 |
+| `file-lock` | 文件锁（proper-lockfile 封装） | 需要防竞态写入 |
+| `config` | 三层配置合并（defaults → 全局 → 项目） | 扩展需要可配置参数 |
 
 ### 使用示例
 
@@ -205,6 +208,18 @@ await storage.write('config.json', { theme: 'dark' });
 // 路径
 const projectRoot = paths.getProjectRoot();
 const memoryDir = paths.getMemoryDir();
+```
+
+### 配置 API 示例
+
+如果你的扩展需要用户可配置的参数：
+
+```typescript
+import { getEffectiveConfig } from 'pi-shared-utils';
+
+const defaults = { threshold: 1000, enabled: true };
+const config = getEffectiveConfig('my-extension', defaults, cwd);
+// config = 三层合并后的最终配置
 ```
 
 ## 调试你的扩展
@@ -329,9 +344,10 @@ context.registerTool({
 ### registerHook
 
 ```typescript
+// 注册事件钩子——在 AI 工作流的关键节点注入自定义逻辑
 context.registerHook({
-  event: 'before_edit' | 'after_edit' | 'before_bash' | 'after_bash' | 'agent_end',
-  handler: (context) => HookResult
+  event: string,    // 事件名：如 'tool_call', 'tool_result', 'agent_end', 'session_start', 'before_provider_request'
+  handler: (payload) => HookResult  // HookResult 可以是 void、提示文本、或工具调用改写
 });
 ```
 
@@ -344,15 +360,17 @@ context.injectPrompt({
 });
 ```
 
+> 📖 详细的 API 文档请参考 pi SDK 的类型定义和 [pi 扩展开发文档](https://github.com/catlain/pi-atelier)。
+
 ## 恭喜你读完了！
 
 现在你已经了解了 pi-atelier 的全部核心概念：
 
 1. **记忆**（pi-memory）— 让 AI 记住知识
 2. **规划**（pi-roadmap）— 让 AI 管理任务
-3. **规矩**（pi-shepherd + pi-context-manager）— 让 AI 遵守规则
-4. **复盘**（pi-journal + pi-session-analyzer）— 让 AI 记录工作
-5. **压缩与诊断**（pi-smart-compact + pi-context-manager）— 让 AI 保持聪明
+3. **规矩**（pi-shepherd + pi-context-manager）— 让 AI 遵守规则、控制信息质量
+4. **复盘**（pi-session-analyzer）— 让 AI 记录和回溯工作
+5. **压缩与诊断**（pi-smart-compact + pi-context-manager）— 让 AI 在长会话中保持聪明
 6. **自动化**（pi-scheduler + pi-workflow）— 让 AI 主动工作
 7. **扩展**（pi-shared-utils + 你自己的扩展）— 让 AI 无所不能
 

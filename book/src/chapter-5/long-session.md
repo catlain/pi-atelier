@@ -153,31 +153,57 @@ Top 3 最贵的工具调用：
 
 ### 可选的高级配置
 
-在 `.pi/config.json` 中：
+在 `.pi/settings.json` 中：
 
 ```json
 {
   "smart-compact": {
-    "phase1_threshold": 0.6,
-    "phase2_threshold": 0.8,
-    "preserve_patterns": [
-      "决策.*：",
-      "选择了.*方案",
-      "约定.*："
-    ]
+    "auto": "auto"
   }
 }
 ```
+
+- `auto`：自动触发（默认，推荐）
+- `manual`：只响应 `/smart-compact` 命令
+
+手动触发：在对话中输入 `/smart-compact`。
+配置查看：输入 `/smart-compact-config`。
 
 ## Payload Analyzer 的常用命令
 
 | 命令 | 用途 | 何时用 |
 |------|------|--------|
-| `budget` | Token 预算分析 | "token 都花哪了" |
-| `growth` | 上下文增长趋势 | "为什么越来越慢" |
-| `expensive` | 最贵的工具调用 | "哪个工具最吃 token" |
-| `overview` | 逐消息详细分析 | "精确诊断某个时间点" |
-| `stats` | 聚合统计 | "整体效率如何" |
+| `budget` | Token 预算分析（system/tools/history 构成） | "token 都花哪了" |
+| `growth` | 上下文增长趋势（token 随请求变化曲线） | "为什么越来越慢" |
+| `expensive` | 最贵的工具调用（Top N 排序） | "哪个工具最吃 token" |
+| `overview` | 逐消息详细分析（含 distill 事件） | "精确诊断某个时间点" |
+| `messages` | 按索引/范围/关键词定位消息 | "看看第 10 条消息说了什么" |
+| `chain` | 跨 payload 追踪同一个工具调用 | "这个调用后来怎么样了" |
+| `chain-tcid` | 跨 payload 追踪同一个 toolCallId | "验证 distill 行为" |
+| `diff` | 对比两个 payload 的差异 | "这两次请求有什么不同" |
+| `stats` | 聚合统计 distill/processor 命中率 | "压缩效率如何" |
+| `single` | 分析单个 payload 文件 | "深入看一个录制文件" |
+| `list` | 列出所有录制文件 | "有哪些可以分析的" |
+
+> 💡 **诊断流程**：先用 `list` 看有哪些录制文件 → `budget` 看整体分布 → `expensive` 找大户 → `messages` 精确定位。
+
+## Context Manager 的 Aging 和 Processor
+
+除了 Distill，pi-context-manager 还提供了两个辅助机制：
+
+### Aging（老化淘汰）
+
+自动淘汰长期未被引用的旧工具输出。通过 `/aging-config` 设置淘汰轮数。
+
+特殊豁免：技能文件（SKILL.md）内容不会被 aging 淘汰，确保 AI 始终能看到当前加载的技能。
+
+### Tool Result Processor（后处理器）
+
+对特定类型的工具输出做格式化精简（如 code-graph 的 AST 搜索结果、MCP JSON 输出）。通过 `/processor-config` 设置阈值。
+
+### /context TUI 面板
+
+输入 `/context` 可以打开可视化面板，分类浏览上下文内容，手动标记不需要的内容进行删除。
 
 ## 最佳实践
 
@@ -187,6 +213,8 @@ Top 3 最贵的工具调用：
 2. **及时压缩**：不要等到崩溃才处理，60% 时就应该触发压缩
 3. **避免重复读取**：用记忆记住文件内容，不要反复 `read` 同一个文件
 4. **大文件分块读**：用 `offset/limit` 只读需要的部分，而不是整个文件
+5. **合理配置 aging**：设置 8-12 轮淘汰，自动清理过时内容
+6. **定期用 payload_analyze 体检**：长会话中途跑一次 `budget`，提前发现问题
 
 ### ✅ 诊断的优先级
 

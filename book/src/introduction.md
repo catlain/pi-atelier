@@ -80,7 +80,7 @@ pi-atelier 的扩展补上了这些能力缺口：
 | 规划 | pi-roadmap | 让 AI 管理 Epic → Story → Task |
 | 守卫 | pi-shepherd | 给 AI 立规矩，防止犯错 |
 | 上下文与诊断 | pi-context-manager | 控制 AI 看到的信息质量 + token 消耗诊断 |
-| 日志 | pi-journal | 自动记录每个会话做了什么 |
+| 日志 | pi-journal | ⚠️ 开发中，功能尚未完成 |
 | 分析 | pi-session-analyzer | 搜索和回溯历史会话 |
 | 压缩 | pi-smart-compact | 长会话中保持 AI 的聪明 |
 | 定时 | pi-scheduler | 定时提醒和周期任务 |
@@ -118,16 +118,14 @@ pi-atelier 的扩展补上了这些能力缺口：
     "pi-roadmap",
     "pi-shepherd",
     "pi-context-manager",
-    "pi-journal",
     "pi-session-analyzer",
     "pi-smart-compact",
-    "pi-scheduler",
-    "pi-workflow"
+    "pi-scheduler"
   ]
 }
 ```
 
-或者全部安装：
+或者全部安装（pi-workflow 和 pi-shared-utils 是开发库，一般用户不需要直接安装）：
 
 ```json
 {
@@ -136,7 +134,6 @@ pi-atelier 的扩展补上了这些能力缺口：
     "pi-roadmap",
     "pi-shepherd",
     "pi-context-manager",
-    "pi-journal",
     "pi-session-analyzer",
     "pi-smart-compact",
     "pi-scheduler",
@@ -146,7 +143,9 @@ pi-atelier 的扩展补上了这些能力缺口：
 }
 ```
 
-全部扩展都是 **开箱即用**——安装后无需额外配置（但你可以按需定制）。
+大部分扩展都是 **开箱即用**——安装后无需额外配置（但你可以按需定制）。
+
+> ⚠️ **注意**：pi-journal 目前还在开发中（核心功能未注册），暂不推荐使用。pi-workflow 和 pi-shared-utils 是供其他扩展调用的开发库，一般用户不需要直接安装。
 
 ## 重要文件路径
 
@@ -154,9 +153,9 @@ pi-atelier 的扩展补上了这些能力缺口：
 
 | 文件 | 路径 | 说明 |
 |------|------|------|
-| 全局配置 | `~/.pi/settings.json` | 安装扩展、配置 provider |
-| 项目配置 | `.pi/config.json`（项目根目录） | 项目级自定义配置 |
-| 项目指令 | `.pi/agent/AGENTS.md`（项目根目录） | 注入给 AI 的项目规则 |
+| 全局配置 | `~/.pi/agent/settings.json` | 安装扩展、配置 provider |
+| 项目配置 | `.pi/settings.json`（项目根目录） | 项目级自定义配置（覆盖全局） |
+| 项目指令 | `AGENTS.md`（项目根目录或 `.pi/agent/`） | 注入给 AI 的项目规则 |
 | 扩展安装目录 | `~/.pi/agent/npm/node_modules/` | npm 包安装位置 |
 | 记忆目录 | `.pi/memory/`（项目级） | 项目级持久记忆 |
 | 全局记忆 | `~/.pi/agent/memory/` | 跨项目通用记忆 |
