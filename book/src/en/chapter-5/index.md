@@ -1,3 +1,0 @@
-# Chapter 5: Long Session Survival Guide
-
-> This chapter is a work in progress...

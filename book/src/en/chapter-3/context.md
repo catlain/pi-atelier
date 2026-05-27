@@ -1,120 +1,152 @@
-# 3.3 How pi-context-manager Works: Information Quality Control & Token Diagnostics
+# 3.3 pi-context-manager: Information Quality Control & Token Diagnostics
 
-> pi-context-manager is the merger of the original pi-context and pi-payload-analyzer, providing unified context quality management.
+> pi-context-manager is the merger of the original pi-context and pi-payload-analyzer, providing unified management of context quality and token diagnostics.
 
-## Two Core Capabilities
+## Three Core Capabilities
 
-### Distill: Compressing Voluminous Tool Output
+### 1. Distill: Compressing the Flood of Tool Output
 
-When a tool returns a large amount of content (e.g., reading a 1000-line file), pi-context-manager automatically compresses it, retaining only the essential information:
+When a tool returns a large amount of content (e.g., reading a 1000-line file), pi-context-manager automatically compresses it, keeping only essential information:
 
 ```
-Raw Tool Output (50KB)
+Raw tool output (50KB)
      │
      ▼
 ┌────────────────────────┐
-│   Distill Processor    │
-│   Extract Key Lines    │
-│   + Summary            │
+│   Distill Processor     │
+│   Extract key lines +   │
+│   summary               │
 └────────────────────────┘
      │
      ▼
-Compressed Output (~5KB)
+Compressed output (~5KB)
      │
      ▼
-AI Sees Refined Information
+AI sees refined information
 ```
 
-**Distill is enabled by default.** Once pi-context-manager is installed, large tool outputs are automatically compressed — no manual configuration required.
+**Distill is enabled by default.** Two key parameters:
 
-If you need a custom compression strategy, you can configure it in `.pi/config.json` at your project root:
+| Config | Command | Description |
+|--------|---------|-------------|
+| `distillThreshold` | `/distill-config` | Tool outputs exceeding this token count will be compressed |
+| `firstSeenCap` | `/distill-config --cap` | Maximum token cap for first-encountered tool output (0 = no limit) |
 
-```json
-{
-  "context-manager": {
-    "distill": {
-      "max_output_tokens": 5000,
-      "preserve_file_paths": true,
-      "compress_json": true,
-      "keep_full_lines_for_patterns": [
-        "import ",
-        "export ",
-        "function ",
-        "class ",
-        "interface ",
-        "type "
-      ]
-    }
-  }
-}
+> 💡 **Purpose of firstSeenCap**: Some tools return massive results on first use (e.g., `ls` listing a large directory), but you don't need all of it. `firstSeenCap` limits the initial output size; subsequent requests may further compress the result through distill.
+
+### 2. Tool Result Processor: Smart Formatting & Trimming
+
+The Tool Result Processor performs structured trimming on specific tool outputs, more precise than distill:
+
+- **Code Graph output trimming**: Auto-compresses AST search results, preserving only key signatures and locations
+- **MCP JSON output trimming**: Compresses verbose JSON returned by MCP tools
+- **Error output trimming**: Truncates overly long error stack traces
+- **Web search output trimming**: Keeps only key information from search results
+
+Use the `/processor-config` command to view or adjust processing thresholds.
+
+### 3. Aging: Phasing Out Stale Content
+
+In long sessions, early tool outputs may no longer be relevant. The Aging mechanism automatically phases out "outdated" content:
+
+```
+Round 1:  Tool Output A (fresh 🟢)
+Round 5:  Tool Output A (a bit old 🟡)
+Round 10: Tool Output A (too old 🔴 → auto-deleted)
 ```
 
-| Config | Description | Default |
-|--------|-------------|---------|
-| `max_output_tokens` | Max tokens after compression | 5000 |
-| `preserve_file_paths` | Preserve file path info | true |
-| `compress_json` | Compress JSON output | true |
-| `keep_full_lines_for_patterns` | Lines matching these prefixes are kept in full | `["import ", "export ", ...]` |
+**Aging Smart Exemptions**: Certain content types are protected from aging:
+- Skill files (SKILL.md) content
+- User-flagged content
+- Content most recently referenced by the AI
 
-> 💡 **Frontend project tip**: If you're using React/Vue, consider adding `"export default "` and `"const Component"` to `keep_full_lines_for_patterns` to ensure component definitions are never compressed away.
+Use `/aging-config` to set the eviction round count, or `/aging-config off` to disable.
 
-### Payload Analysis: Diagnosing Context Issues with Data
+### 4. Payload Analysis: Diagnosing Context Issues with Data
 
-Is the AI getting dumber after a long session? Use `payload_analyze` to find out why.
+Is the AI getting dumber as the session grows long? Use `payload_analyze` to find out.
 
-> ⚠️ **Important**: `payload_analyze` is an **AI tool**, not a terminal command. You ask the AI in your pi chat to execute it. For example, just tell the AI:
+> ⚠️ **Important**: `payload_analyze` is an **AI tool**, not a terminal command. You ask the AI to run it in your pi chat. For example:
 >
 > ```
-> Run payload_analyze to check current token usage
+> Help me check the current token usage with payload_analyze
 > ```
 >
-> Or be more specific:
->
+> Or more precisely:
 > ```
 > Run payload_analyze action="budget"
 > ```
 
-| Analysis Mode | How to Ask the AI | What to Look At |
-|---------------|-------------------|-----------------|
-| `budget` | "Analyze token budget distribution" | Token share of system/tools/history |
-| `growth` | "Check token growth trend" | How tokens balloon as the session progresses |
-| `expensive` | "Find the most token-expensive tool calls" | Top N most expensive tool calls |
+| Analysis Mode | How to Ask the AI | What It Shows |
+|---------------|-------------------|---------------|
+| `budget` | "Analyze token budget distribution" | Token ratio of system/tools/history sections |
+| `growth` | "Show token growth trend" | How tokens expand over the course of a session |
+| `expensive` | "Find the most token-hungry tool calls" | Top N most expensive tool calls |
 | `overview` | "Detailed payload analysis" | Per-message token breakdown |
+| `messages` | "View message #5" | Pinpoint messages by index/range/keywords |
+| `chain` | "Trace this tool call" | Track a single tool call across payloads |
+| `diff` | "Compare two payloads" | Find differences between two requests |
+| `stats` | "Show distill/processor hit rate" | Aggregate compression efficiency statistics |
 
-**Hands-on: Diagnose Your First Long Session**
+> 💡 **Start with budget, then dive deeper**: When facing context issues, first use `budget` for an overview, then `expensive` to pinpoint the heavy hitters, and finally `messages` to examine a specific message.
 
-Suppose your session has been running for 40 turns and the AI is getting dumber:
+## /context TUI Panel
+
+pi-context-manager also provides a TUI (Terminal User Interface) panel for visually browsing context content:
 
 ```
-Step 1: Diagnose token distribution
-You: "Run payload_analyze to analyze the token budget"
-AI calls payload_analyze(action="budget")
-
-Step 2: Review results
-If Tool Results > 40% → tools are returning too much content
-If Error Output > 30% → the AI is making repeated mistakes
-If Conversation > 50% → the conversation itself is too long
-
-Step 3: Pinpoint the issue
-"Find the most token-expensive tool calls"
-AI calls payload_analyze(action="expensive")
-
-Step 4: Fix the problem
-→ Install pi-smart-compact (see Chapter 5) to auto-compress history
-→ Tweak distill config to compress specific tool outputs
-→ Split sessions (open a new session for independent tasks)
+/context command
+     │
+     ▼
+┌─────────────────────────────────────┐
+│  📊 Context Panel                    │
+│                                      │
+│  [Categories] [Tool Details]         │
+│  [Mark for Deletion]                 │
+│                                      │
+│  ├─ System Prompt    4.2K tokens     │
+│  ├─ Tool Definitions 8.1K tokens     │
+│  ├─ Memory           2.3K tokens     │
+│  ├─ History          52K tokens      │
+│  │   ├─ Rounds 1-10  (marked delete) │
+│  │   ├─ Rounds 11-20                 │
+│  │   └─ Rounds 21-30                 │
+│  └─ Tool Results     64K tokens      │
+│      ├─ read(schema.ts)  8.2K 🔴     │
+│      └─ grep("TODO")    4.1K 🟡     │
+└─────────────────────────────────────┘
 ```
 
-> 💡 **Chicken-and-egg problem**: If the AI is already too dumb to execute payload_analyze correctly, open a new session to analyze the old session's recording files. payload_analyze supports analyzing historical recordings (`action="list"` lists all recordings).
+In the panel you can:
+- **Browse by category**: View context content by type
+- **Tool details**: See full content returned by each tool
+- **Mark for deletion**: Manually flag unwanted content for exclusion in the next request
+
+## Complete Command Reference
+
+| Command | Purpose | Behavior without args |
+|---------|---------|----------------------|
+| `/record [on\|off]` | Toggle payload recording | Toggle on/off |
+| `/context` | Open TUI visualization panel | — |
+| `/distill-config [N]` | View/set distill threshold | Show current config + usage |
+| `/distill-config --cap [N]` | View/set firstSeenCap | Show current config + usage |
+| `/processor-config [N\|off]` | View/set processor threshold | Show current config + usage |
+| `/aging-config [N\|off]` | View/set aging round count | Show current config + usage |
+| `/context-clean [sessionId]` | Clean persistent data | Clean all data |
 
 ## Best Practices
 
-| Problem You Encounter | Step 1 | Step 2 | Solution |
-|-----------------------|--------|--------|----------|
-| AI gets dumber after 30 turns | `payload_analyze(action="growth")` | Check where tokens exploded | Lower distill threshold / Install smart compression |
-| AI ignores certain file content | Check distill config | Distill may be over-compressing | Whitelist key files in `keep_full_lines_for_patterns` |
-| Every tool call is very slow | `payload_analyze(action="expensive")` | Find Top N most expensive calls | Limit large file reads or split files |
+| Issue You're Facing | First Step | Next Step | Solution |
+|--------------------|-----------|-----------|----------|
+| AI gets dumber after 30 rounds | `payload_analyze(action="growth")` | Check which phase tokens spike | Lower distill threshold / install smart compact |
+| AI ignores certain file content | Check distill config | May be over-compressed by distill | Adjust `distillThreshold` |
+| Every tool call is painfully slow | `payload_analyze(action="expensive")` | Find the most expensive calls | Limit large file reads or split files |
+| Old tool outputs consume space | Run `/aging-config` | Set appropriate eviction rounds | Aging auto-evicition + manual `/context` panel cleanup |
+| First tool output is too large | Set `/distill-config --cap` | Limit initial full-text output | `firstSeenCap` limits first output size |
 
-## Next Up
+## Next Steps
 
-In the next chapter, we'll explore how to teach the AI to **review its own work** — automatically logging session events for easy backtracking at any time.
+In the next chapter, we'll explore how to teach the AI to **review** — automatically record session events and revisit history at any time.
+
+
+Original: /home/lain/.pi/agent/distill/processor/read-b63ebc90-1779883939893.txt

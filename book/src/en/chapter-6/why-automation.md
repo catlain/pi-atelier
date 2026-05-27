@@ -1,3 +1,0 @@
-# 6.1 Pain Points: Repeating the Same Operations Every Day
-
-> This section is under construction...

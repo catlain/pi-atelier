@@ -1,3 +1,0 @@
-# 1.1 Why AI Needs Persistent Memory
-
-> This section is under construction...

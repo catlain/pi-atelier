@@ -1,3 +1,0 @@
-# Appendix C: pi Internal Mechanisms at a Glance
-
-> This chapter is a work in progress...

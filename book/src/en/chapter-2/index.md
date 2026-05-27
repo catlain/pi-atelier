@@ -1,3 +1,0 @@
-# Chapter 2: From Memory to Planning
-
-> This chapter is a work in progress...

@@ -20,191 +20,270 @@ pi-atelier provides two layers of protection:
 
 ### First Line: pi-shepherd — The Behavior Guard
 
-Shepherd checks AI actions before they execute — think of it as a security guard.
+Shepherd is a **rule-driven event hook engine** that checks AI actions before and after key moments — think of it as a security guard.
 
 ```
-AI about to execute an action
+AI about to execute an action (tool call)
      │
      ▼
-┌──────────────────┐
-│  Shepherd Hook   │
-│  Check: Should   │
-│  this be allowed?│
-└──────┬───────────┘
+┌──────────────────────────────────┐
+│     Shepherd tool_call hook      │
+│   Check: Should it be done?      │
+│          How should it be done?  │
+└──────┬───────────────────────────┘
        │
-   ┌───┴───┐
-   │       │
-  Allow  Block + Show Reason
+   ┌───┴────┐
+   │        │
+  Allow   Rewrite/Block + Show Reason
+
+... tool executes ...
+
+┌──────────────────────────────────┐
+│    Shepherd tool_result hook     │
+│    Check: Any follow-up needed?  │
+└──────┬───────────────────────────┘
+       │
+   Inject reminder / Append action
 ```
 
-Available hook timings:
+Supported hook timings:
 
 | Hook | When It Triggers | Typical Use Case |
 |------|-----------------|-----------------|
-| `before_edit` | Before AI edits a file | Check if it's modifying protected files |
-| `before_write` | Before AI creates a new file | Validate file path is reasonable |
-| `before_bash` | Before AI executes a command | Block dangerous commands (`rm -rf /`) |
-| `after_bash` | After command execution | Auto-format, lint checking |
-| `agent_end` | Before session ends | Remind to commit code, update docs |
+| `tool_call` | **Before** AI calls a tool | Rewrite commands, block dangerous operations |
+| `tool_result` | **After** tool execution | Auto-remind to run tests, lint checks |
+| `agent_end` | **When** AI finishes a conversation | Remind to commit code, update memory |
+| `session_shutdown` | **When** a session closes | Clean up temporary data |
+
+Shepherd's four actions:
+
+| Action | Effect | Typical Use Case |
+|--------|--------|-----------------|
+| `block` | Prevents tool execution | Block dangerous operations |
+| `notify` | Injects a reminder into AI context | "You edited a TS file, remember to run tests" |
+| `steer` | Silently injects guidance (not visible to user) | Guide the AI to consult documentation |
+| `rewrite` | Modifies tool call parameters | Auto-prepend prefix to commands |
 
 ### Second Line: pi-context-manager — Information Quality & Diagnostics
 
-Context Manager controls not only what the AI sees, but also helps you diagnose token consumption issues.
+Context Manager controls what information the AI sees, and also helps you diagnose token consumption issues.
 
-The AI's "intelligence" directly depends on the quality of its context. If the context contains noise (stale logs, irrelevant file content), the AI will make wrong decisions.
+Core capabilities:
 
-pi-context-manager's core capabilities:
-
-- **Distill**: Compress large tool outputs down to key information
-- **Filter**: Block irrelevant content based on rules
-- **Priority Sort**: Put important information first
-- **Token Diagnostics**: Data-driven analysis — see exactly where tokens are being spent
+- **Distill**: Automatically compresses large tool outputs, preserving key information
+- **Tool Result Processor**: Formats and simplifies output from specific tools
+- **Aging**: Automatically evicts old tool outputs that haven't been referenced in a while
+- **Payload Analysis**: Diagnoses where tokens are being spent with data
 
 ```
 Tool returns large output (potentially 50KB)
      │
      ▼
-┌──────────────────┐
-│  Context Distill │
-│  Compress to 5KB │
-│  Key Information │
-└──────────────────┘
+┌────────────────────────┐
+│   Context Manager       │
+│   Distill + Processor   │
+│   Compress to ~5KB      │
+│   key information       │
+└────────────────────────┘
      │
      ▼
 AI sees refined information and makes better decisions
 ```
 
+For detailed principles, see [3.3 Context Manager Deep Dive](./context.md).
+
 ## Real-World Examples: Preventing AI Mistakes
 
-### Scenario 1: Protect System Files
+### Scenario 1: Auto-Remind to Run Tests After Edit
 
 ```json
 {
-  "rules": [
-    {
-      "id": "no-system-files",
-      "hook": "before_edit",
-      "condition": "filePath matches '.pi/memory/.*'",
-      "action": "deny",
-      "message": "Memory files can only be modified through the memory_update tool, not by direct editing"
-    }
-  ]
+	"comment": "[TypeScript] Must run tests after editing",
+	"hook": "tool_result",
+	"tool": "edit",
+	"action": "notify",
+	"conditions": [
+		{ "field": "path", "pattern": "\\.ts$", "flags": "" }
+	],
+	"reason": "Edited a TypeScript file. You must run unit tests covering this code (add tests if none exist) and fix all test issues to ensure they pass.",
+	"enabled": true
 }
 ```
 
-When the AI tries to use the `edit` tool to directly modify a memory file, shepherd intercepts and tells it the proper way.
+When the AI edits a `.ts` file, Shepherd automatically reminds the AI to run tests.
 
-### Scenario 2: Session-End Reminder
+### Scenario 2: Session-End Reminder to Commit Code
 
 ```json
 {
-  "rules": [
-    {
-      "id": "commit-reminder",
-      "hook": "agent_end",
-      "action": "inject",
-      "message": "Check for uncommitted changes. If any exist, commit and push to the remote repository."
-    }
-  ]
+	"comment": "[Wrap-up] Remind to commit + update memory + summary after edits",
+	"hook": "agent_end",
+	"action": "notify",
+	"check": "has_edits",
+	"reason": "Detected file edits. Perform wrap-up:\n1️⃣ Git commit...\n2️⃣ Update memory...\n3️⃣ Session summary",
+	"stopReason": ["stop"],
+	"enabled": true
 }
 ```
 
-The AI automatically checks git status before the session ends, ensuring nothing is left uncommitted.
+`check: "has_edits"` means it only triggers when the session actually edited files. `stopReason: ["stop"]` means it only triggers when the AI ends normally (not when interrupted).
 
-### Scenario 3: Auto Lint
+### Scenario 3: Auto-Rewrite Commands
 
 ```json
 {
-  "rules": [
-    {
-      "id": "auto-lint",
-      "hook": "after_bash",
-      "condition": "command matches 'edit|write'",
-      "action": "run",
-      "command": "npx eslint {filePath}"
-    }
-  ]
+	"comment": "[rtk] Auto-proxy frequent bash commands",
+	"tool": "bash",
+	"action": "rewrite",
+	"pattern": "^(git\\s+(status|log|diff)|cargo\\s+(test|build|clippy)|pytest)\\b",
+	"flags": "",
+	"reason": "rtk command rewrite: auto prepend rtk prefix to compress output",
+	"enabled": true
 }
 ```
 
-Every time the AI edits a file, lint runs automatically to maintain code quality.
+When the AI tries to run commands like `git status`, Shepherd automatically rewrites it as `rtk git status` (rtk is an output compression tool).
 
-## Configuring Shepherd Rules
-
-Rules are stored in `shepherd/rules.json`. Each rule contains:
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| `id` | Unique rule identifier | `"no-system-files"` |
-| `hook` | Trigger timing | `"before_edit"` |
-| `condition` | Trigger condition (optional) | `"filePath matches 'src/.*'"` |
-| `action` | Action to take | `"deny"` / `"inject"` / `"run"` |
-| `message` | Prompt message | `"Do not directly edit memory files"` |
-
-### Common Rule Templates
+### Scenario 4: Code Style Check
 
 ```json
 {
-  "rules": [
-    {
-      "id": "protect-config",
-      "hook": "before_edit",
-      "condition": "filePath matches '(package\\.json|tsconfig\\.json)$'",
-      "action": "warn",
-      "message": "You are about to modify a configuration file — please confirm this is intentional"
-    },
-    {
-      "id": "no-force-push",
-      "hook": "before_bash",
-      "condition": "command matches 'push.*--force'",
-      "action": "deny",
-      "message": "Force push is prohibited — it overwrites remote history"
-    },
-    {
-      "id": "test-reminder",
-      "hook": "agent_end",
-      "action": "inject",
-      "message": "Run tests to confirm everything passes before committing"
-    }
-  ]
+	"comment": "[TS] No space indentation - TS files must use Tab",
+	"hook": "tool_call",
+	"tool": "edit",
+	"action": "notify",
+	"conditions": [
+		{ "field": "path", "pattern": "\\.ts$", "flags": "" },
+		{ "field": "text", "pattern": "\\n  [\\S ]", "flags": "" }
+	],
+	"reason": "❌ TS files require Tab indentation, not spaces. Please rewrite the code using Tab indentation.",
+	"enabled": true
+}
+```
+
+**Both conditions must be met** to trigger: the file is `.ts` and the code contains space indentation.
+
+### Scenario 5: Remind to Check Memory After Repeated Errors
+
+```json
+{
+	"comment": "[debug] Remind to check memory when tools repeatedly fail",
+	"hook": "tool_result",
+	"action": "steer",
+	"state": { "countKind": "errors", "gte": 5 },
+	"reason": "🔍 **Tools repeatedly failing**: Multiple consecutive failures. Check memory files under .pi/memory/ to see if there are existing records of this pitfall.",
+	"enabled": true,
+	"subagent": false
+}
+```
+
+`state` implements **state tracking** — Shepherd remembers the error count and only triggers when it reaches the threshold. `subagent: false` means this rule does not trigger in sub-agents.
+
+## Shepherd Rule Configuration Reference
+
+### Rule File Locations
+
+| Level | Path | Description |
+|-------|------|-------------|
+| Global default | `rules.json` inside the extension package | Built-in rule set for Shepherd |
+| Project-level | `.pi/shepherd-rules-*.json` (project root) | Custom project rules, can create multiple files |
+
+After modifying rule files, run `/reload` to apply changes — no need to restart pi.
+
+### Rule Fields Reference
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `comment` | ✅ | Rule comment for readability |
+| `hook` | ✅ | Trigger timing: `tool_call` / `tool_result` / `agent_end` / `session_shutdown` (default: `tool_call`) |
+| `tool` | ❌ | Restrict to a specific tool (e.g. `"edit"`, `"bash"`, `"grep"`; default: `"bash"`) |
+| `action` | ✅ | Action: `block` / `notify` / `rewrite` / `steer` (default: `block`) |
+| `conditions` | ❌ | Array of conditions — all conditions must be met to trigger |
+| `pattern` | ❌ | Regex match (matches tool parameters or command content) |
+| `reason` | ✅ | Prompt text injected into AI context (for `notify`/`steer` actions) |
+| `state` | ❌ | State tracking (e.g. cumulative error count) |
+| `check` | ❌ | agent_end/session_shutdown specific checks: `has_edits` / `git_uncommitted` / `always` |
+| `stopReason` | ❌ | Restrict AI stop reasons (e.g. `["stop"]` only triggers on normal end) |
+| `subagent` | ❌ | Whether to trigger in sub-agents (default: `true`) |
+| `requireSuccess` | ❌ | Whether to trigger only on tool success (default: `false`) |
+| `requiresTools` | ❌ | Restrict to trigger only when certain MCP tools are available |
+| `enabled` | ✅ | Whether the rule is enabled |
+
+### Condition Matching
+
+Each element in the `conditions` array:
+
+```json
+{
+	"field": "path",     // Which field to match: path (file path) or text (tool parameter content)
+	"pattern": "\\.ts$", // Regex pattern
+	"flags": ""          // Regex flags (e.g. "i" for case-insensitive, "s" for single-line mode)
+}
+```
+
+### Three-Layer Config Merge
+
+Shepherd's configuration (e.g. `projectRulesPattern`, `maxWarnings`) uses pi-shared-utils' `getEffectiveConfig` for three-layer merging:
+
+```
+defaults → global ~/.pi/agent/settings.json → project .pi/settings.json
+```
+
+You can override Shepherd's configuration in `.pi/settings.json`:
+
+```json
+{
+	"shepherd": {
+		"projectRulesPattern": "my-rules-",
+		"maxWarnings": 3
+	}
 }
 ```
 
 ## Configuring Context
 
-pi-context-manager is installed via the `packages` field in `settings.json` (package name: `"pi-context-manager"`). It provides by default:
+pi-context-manager provides the following commands:
 
-- Automatic distill of large tool outputs
-- Priority-ordered context
-- `payload_analyze` tool — analyze token budget, growth trends, most expensive tool calls
-- Global prompt injection via AGENTS.md
+| Command | Purpose |
+|---------|---------|
+| `/record [on\|off]` | Toggle payload recording |
+| `/context` | TUI panel: visualize context usage |
+| `/distill-config [N]` | View/set distill token threshold |
+| `/distill-config --cap [N]` | View/set first-seen full text cap (`firstSeenCap`, 0 = no cap) |
+| `/processor-config [N\|off]` | View/set tool-result-processor threshold |
+| `/aging-config [N\|off]` | View/set aging eviction rounds |
+| `/context-clean [sessionId]` | Clean up persistent data |
 
-Advanced users can customize filter rules in `.pi/config.json`.
+> 💡 **All commands show current config and usage when called without arguments.** For example, entering `/distill-config` directly displays the current threshold and usage instructions.
+
+For detailed principles, see [3.3 Context Manager Deep Dive](./context.md).
 
 ## Best Practices
 
 ### ✅ Good Rule Design
 
-- **Precise conditions**: Only intercept what needs intercepting — don't use a sledgehammer
+- **Precise conditions**: Use `conditions` to narrow the trigger scope — don't use a sledgehammer
 - **Clear messaging**: Tell the AI "why it's not allowed" and "what to do instead"
-- **Layered protection**: Use `deny` (enforced) for important matters, `warn` (advisory) for minor ones
+- **Layered protection**: Use `block` (enforced) for important matters, `notify` (advisory) for minor ones, `steer` (silent) for internal guidance
+- **Make use of state tracking**: Reminding after 3 consecutive errors is more effective than reminding every single time
 
 ### ❌ Bad Rule Design
 
-- **Too broad**: `"condition": "always"` blocks everything — the AI can't do anything
-- **Too draconian**: Blocking all `bash` commands means the AI can't even run `ls`
-- **Vague messaging**: `"message": "Caution"` — caution about what?
+- **Too frequent**: `notify` on every tool call — the AI would be flooded with reminders
+- **Too draconian**: `deny` all `bash` commands — the AI can't even run `ls`
+- **Vague messaging**: `"reason": "Caution"` — caution about what?
+- **Ignoring sub-agents**: Some rules should use `"subagent": false` to exclude sub-agent scenarios and avoid interfering with independent tasks
 
 ### Rule Priority
 
 When multiple rules match simultaneously:
 
-1. `deny` > `warn` > `inject`
-2. At the same priority, rules defined later take effect first
-3. `agent_end` hooks execute in definition order
+1. `block` > `notify` > `steer` (block > remind > silent guidance)
+2. At the same priority, rules execute in definition order within the rule file
+3. In the `agent_end` hook, rules whose `check` condition is not met are skipped
 
 ## Next Up
 
 With memory, planning, and rules in place, the AI is already a reliable assistant. But after a session accomplishes many things — how do you know exactly what it did? Which files were changed? What decisions were made?
 
-The next chapter shows you how to teach the AI to **review its own work**.
+In the next chapter, we'll look at how to teach the AI to **review its own work**.

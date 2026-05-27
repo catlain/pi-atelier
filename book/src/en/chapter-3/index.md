@@ -1,3 +1,0 @@
-# Chapter 3: Setting Rules for AI
-
-> This chapter is a work in progress...

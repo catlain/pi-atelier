@@ -1,3 +1,0 @@
-# 4.4 Hands-On: Retrospecting Last Week's Bug Fix
-
-> This section is under construction...

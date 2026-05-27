@@ -1,3 +1,0 @@
-# 2.2 How pi-roadmap Works: Three-Layer Decomposition
-
-> This section is a work in progress...

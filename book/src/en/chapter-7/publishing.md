@@ -1,3 +1,0 @@
-# 7.4 Publishing to npm
-
-> This section is under construction...

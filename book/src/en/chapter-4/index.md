@@ -1,3 +1,0 @@
-# Chapter 4: Teaching AI to Review
-
-> This chapter is under construction...

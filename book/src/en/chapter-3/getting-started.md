@@ -1,3 +1,0 @@
-# 3.4 Hands-On: Configuring Guard Rules
-
-> This section is a work in progress...

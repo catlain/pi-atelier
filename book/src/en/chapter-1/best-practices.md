@@ -1,3 +1,0 @@
-# 1.4 Advanced: Memory Best Practices
-
-> This section is under construction...

@@ -1,14 +1,14 @@
-# Building Extensions Yourself
+# Write Your Own Extensions
 
 ## Why Write Your Own Extension?
 
-pi-atelier provides 11 extensions covering core scenarios like memory, planning, rules, review, compaction, and automation. But every project has its own specific needs:
+pi-atelier provides 10 extensions covering core scenarios like memory, planning, rules, retrospective, compression, and automation. But every project has its own special needs:
 
-- Your team uses Feishu instead of Slack — you need a Feishu notification extension
-- You're doing game development — you need an extension to auto-manage the assets directory
-- You're writing academic papers — you need a LaTeX compilation + citation checking extension
+- Your team uses Feishu instead of Slack, so you need a Feishu notification extension
+- You're doing game development and need an extension to automatically manage the assets directory
+- You're writing academic papers and need an extension for LaTeX compilation + citation checking
 
-> 💡 **An extension is essentially giving the AI new tools and new knowledge.**
+> 💡 **At its core, an extension is about giving AI new tools and new knowledge.**
 
 ## Extension Architecture
 
@@ -16,11 +16,11 @@ pi-atelier provides 11 extensions covering core scenarios like memory, planning,
 
 ```
 pi-xxx/
-├── package.json        # Package metadata + pi extension config
+├── package.json        # Package metadata + pi extension configuration
 ├── index.ts            # Entry point, registers tools and hooks
 ├── lib/                # Tool implementations
 │   └── tools-xxx.ts
-├── prompts/            # Prompt templates (what the AI sees)
+├── prompts/            # Prompt templates (descriptions visible to AI)
 │   └── xxx-description.md
 └── README.md           # Documentation
 ```
@@ -29,10 +29,10 @@ pi-xxx/
 
 | Concept | Description | Analogy |
 |---------|-------------|---------|
-| **Tool** | A function the AI can call | Give the AI a new hammer |
-| **Hook** | Logic that runs at specific moments | Give the AI an alarm clock |
-| **Prompt** | Tool description (what the AI reads) | Tell the AI how to use the hammer |
-| **Config** | User-configurable parameters | The hammer's power adjustment |
+| **Tool** | A function AI can call | Giving AI a new hammer |
+| **Hook** | Logic executed at specific moments | Giving AI an alarm clock |
+| **Prompt** | Description of the tool (what AI sees) | Telling AI how to use this hammer |
+| **Config** | User-configurable parameters | The hammer's force adjustment |
 
 ### Extension Lifecycle
 
@@ -46,14 +46,14 @@ pi-xxx/
 3. Install/update extensions (npm or git)
      │
      ▼
-4. Execute extension's activate() function
+4. Execute extension entry function `export default function(pi)`
      │
-     ├── Register tools (registerTool)
-     ├── Register hooks (registerHook)
-     └── Inject prompts (injectPrompt)
+     ├── Register tools (pi.registerTool)
+     ├── Register commands (pi.registerCommand)
+     └── Listen to events (pi.on)
      │
      ▼
-5. AI can call the new tools during sessions
+5. AI session can now call the new tools
 ```
 
 ## Hands-On: Writing a "Code Stats" Extension from Scratch
@@ -75,10 +75,11 @@ Modify `package.json`:
   "name": "pi-code-stats",
   "version": "0.1.0",
   "main": "index.ts",
-  "piExtension": true,
-  "activationEvents": ["onTool:code_stats"]
+  "piExtension": true
 }
 ```
+
+> 💡 `"piExtension": true` tells pi this is an extension package. `"main"` points to the entry file (TypeScript or JavaScript — both work; pi uses jiti to load them).
 
 ### Step 2: Write the Tool Implementation
 
@@ -111,18 +112,21 @@ export function countLines(directory: string, extension: string): {
 `index.ts`:
 
 ```typescript
+import type { ExtensionAPI } from '@earendil-works/pi-coding-agent';
 import { countLines } from './lib/tools-stats';
 
-export function activate(context: ExtensionContext) {
-  context.registerTool({
+export default function (pi: ExtensionAPI) {
+  pi.registerTool({
     name: 'code_stats',
-    description: 'Count lines of code in a project',
+    label: 'Code Stats',
+    description: 'Count lines of code in a project. Use when the user says "count code" or "how many lines of code".',
+    promptSnippet: 'Count lines of code in a project.',
     parameters: {
       type: 'object',
       properties: {
         directory: {
           type: 'string',
-          description: 'Directory path to scan'
+          description: 'The directory path to count'
         },
         extension: {
           type: 'string',
@@ -131,8 +135,8 @@ export function activate(context: ExtensionContext) {
       },
       required: ['directory']
     },
-    handler: async (args) => {
-      const result = countLines(args.directory, args.extension || 'ts');
+    async execute(_toolCallId: string, params: any): Promise<any> {
+      const result = countLines(params.directory, params.extension || 'ts');
       return {
         totalLines: result.total,
         fileCount: result.files.length,
@@ -148,11 +152,11 @@ export function activate(context: ExtensionContext) {
 `prompts/stats-description.md`:
 
 ```markdown
-Count lines of code for a specific file type in a directory.
+Count lines of code in a project.
 
 Parameters:
-- directory (required): Directory path to scan
-- extension (optional): File extension, defaults to "ts"
+- directory (required): The directory path to count
+- extension (optional): File extension, defaults to ts
 
 Returns:
 - totalLines: Total line count
@@ -175,45 +179,56 @@ Example:
 }
 ```
 
-Restart pi, and the AI can now use the `code_stats` tool.
+Restart pi, and the AI will be able to use the `code_stats` tool.
 
 ## pi-shared-utils: Your Toolbox
 
-When writing extensions, you don't have to start from scratch. `pi-shared-utils` provides a set of commonly used utility functions:
+When writing extensions, you don't have to start from scratch every time. `pi-shared-utils` provides a set of common utility functions:
 
-| Module | Feature | When to Use |
-|--------|---------|-------------|
-| `logger` | Unified logging format | Printing debug info |
-| `storage` | Cross-session persistent storage | Saving config or state |
-| `paths` | Unified path handling | Finding file locations |
-| `json` | Safe JSON read/write | Working with JSON files |
-| `validator` | Parameter validation | Validating tool arguments |
+| Module | Function | When to Use |
+|--------|----------|-------------|
+| `logger` | Unified logging format | When you need to print debug info |
+| `storage` | Cross-session persistent storage | When you need to save configuration or state |
+| `paths` | Unified path handling | When you need to find file locations |
+| `json` | Safe JSON read/write | When you need to manipulate JSON files |
+| `validator` | Parameter validation | When you need to validate tool parameters |
+| `settings-backup` | settings.json backup and rollback | When you need to safely write config |
+| `file-lock` | File locks (proper-lockfile wrapper) | When you need to prevent race conditions |
+| `config` | Three-layer config merging (defaults → global → project) | When your extension needs configurable parameters |
 
 ### Usage Example
 
 ```typescript
-import { logger, storage, paths } from 'pi-shared-utils';
+import { logger, storage, paths } from '@pi-atelier/shared-utils';
 
 // Logging
 logger.info('Extension activated');
-logger.warn('Config file missing, using defaults');
-
-// Storage
-const config = await storage.read('config.json');
-await storage.write('config.json', { theme: 'dark' });
+logger.warn('Missing configuration file, using defaults');
 
 // Paths
 const projectRoot = paths.getProjectRoot();
 const memoryDir = paths.getMemoryDir();
 ```
 
+### Configuration API Example
+
+If your extension needs user-configurable parameters:
+
+```typescript
+import { getEffectiveConfig } from '@pi-atelier/shared-utils';
+
+const defaults = { threshold: 1000, enabled: true };
+const config = getEffectiveConfig('my-extension', defaults, cwd);
+// config = final configuration after three-layer merge
+```
+
 ## Debugging Your Extension
 
-Common issues during extension development: tools are registered but the AI doesn't call them, the handler throws errors without visible logs, or the return value isn't what you expected.
+Common issues during extension development: the tool is registered but AI doesn't call it, errors occur in the handler without visible logs, or the returned result isn't what was expected.
 
 ### Viewing Log Output
 
-Output from `logger.info()` and `console.log()` in your extension appears in pi's **terminal window** (not the chat window). Debug steps:
+Output from `logger.info()` and `console.log()` in your extension appears in pi's **terminal window** (not the chat window). Debugging steps:
 
 ```bash
 # Start pi in the terminal (not in the background) to see all log output
@@ -223,44 +238,44 @@ pi
 # The terminal will display the log output
 ```
 
-### Confirm Tool Registration
+### Confirming Tool Registration
 
-Ask the AI directly in the pi chat:
+In the pi chat, directly ask the AI:
 
 ```
 What tools do you have available? Can you see code_stats?
 ```
 
 If the AI can't see your tool, check:
-- `"piExtension": true` is set in `package.json`
-- The package path in `settings.json` is correct
-- The `activate()` function is properly exported
+- Does `package.json` have `"piExtension": true`?
+- Is the package path in `settings.json` correct?
+- Is the entry function exported correctly (`export default function(pi)`)?
 
-### Common Issues
+### Common Issue Troubleshooting
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
 | AI can't see the tool | Missing `piExtension` field | Add `"piExtension": true` to package.json |
-| Tool call throws an error | Exception inside handler | Check the error stack in terminal logs |
-| AI won't call the tool | Description is too vague | Make the description more specific, include parameter docs and examples |
-| Empty return value | Async operation not awaited | Add `async` to handler and `await` to calls |
+| Tool call errors | Exception in handler | Check the error stack in terminal logs |
+| AI doesn't call the tool | Description is too vague | Make the tool description more specific, include parameter details and examples |
+| Empty return value | Async operation not awaited | Add `async` to handler, add `await` to calls |
 | Path not found | Relative path issues | Use `paths.getProjectRoot()` to get absolute paths |
 
-> 💡 **Tip**: When developing an extension, you can add `console.log(JSON.stringify(args, null, 2))` in the handler to print the arguments first and confirm what the AI is passing in.
+> 💡 **Tip**: During extension development, you can add `console.log(JSON.stringify(args, null, 2))` at the beginning of your handler to print the parameters and see what the AI is passing in.
 
 ## Publishing Your Extension
 
 ### Publishing to npm
 
 ```bash
-# 1. Make sure package.json info is complete
+# 1. Confirm package.json info is complete
 npm version patch  # 0.1.0 → 0.1.1
 
 # 2. Publish
 npm publish --access public
 ```
 
-### Installation After Publishing
+### Installing After Publishing
 
 Other users can add your package name to their `settings.json`:
 
@@ -272,32 +287,32 @@ Other users can add your package name to their `settings.json`:
 }
 ```
 
-### Pre-Publish Checklist
+### Pre-Publishing Checklist
 
 - [ ] `package.json` has a complete `description` and `keywords`
-- [ ] `README.md` is filled out using the template (install, usage, config, examples)
+- [ ] `README.md` is written following the template (installation, usage, configuration, examples)
 - [ ] Has a `LICENSE` file
 - [ ] Has a `CHANGELOG.md`
-- [ ] Code includes basic error handling
-- [ ] Tool descriptions (`prompts/*.md`) are clear and complete
+- [ ] Code has basic error handling
+- [ ] Tool descriptions (prompts/*.md) are clear and complete
 
 ## Extension Development Best Practices
 
 ### ✅ Good Extension Design
 
-1. **Single Responsibility**: One extension does one thing — don't cram everything into one package
-2. **Description is Documentation**: Write tool descriptions clearly enough that the AI doesn't need to guess
-3. **Parameter Validation**: Validate arguments in the handler and provide meaningful error messages
+1. **Single Responsibility**: One extension does one thing — don't cram all functionality into a single package
+2. **Description as Documentation**: Write tool descriptions clearly enough that the AI doesn't have to guess
+3. **Parameter Validation**: Validate parameters in the handler and provide meaningful error messages
 4. **Idempotent Operations**: Same input should produce the same output — avoid side effects
 
 ### ✅ Writing Good Tool Descriptions
 
 ```markdown
 # Good description
-Count lines of code for a specific file type in a directory.
+Count lines of code for a specific file type in a given directory.
 Parameters:
-- directory (required): Directory path
-- extension (optional): File extension, defaults to "ts"
+- directory (required): directory path
+- extension (optional): file suffix, defaults to "ts"
 Returns: { totalLines, fileCount, topFiles }
 ```
 
@@ -309,8 +324,8 @@ Count code
 ### ❌ Common Mistakes
 
 - Tool name too generic: `analyze` → should be `code_stats`
-- Description too short: AI doesn't know how to use it and will pass wrong parameters
-- Forgetting error handling: crashes when a file doesn't exist
+- Description too brief: AI doesn't know how to use it and will pass wrong parameters
+- Forgetting error handling: crashes when file doesn't exist
 - Return value too large: returning the entire file content → should return a summary
 
 ## Appendix: pi Extension API Quick Reference
@@ -318,42 +333,72 @@ Count code
 ### registerTool
 
 ```typescript
-context.registerTool({
-  name: string,           // Tool name (unique identifier)
-  description: string,    // Tool description (what the AI sees)
-  parameters: JSONSchema, // JSON Schema for parameters
-  handler: (args) => any  // Execution function
+pi.registerTool({
+  name: string,           // Tool name (unique identifier, AI uses this to call it)
+  label: string,          // Display name (optional, shown in TUI)
+  description: string,    // Tool description (what AI sees, determines when AI calls it)
+  promptSnippet: string,  // Short description (injected into AI system prompt)
+  promptGuidelines: string[],  // AI usage guidelines (optional)
+  parameters: TypeBox.Object({...}) | JSONSchema,  // Parameter definition
+  async execute(
+    toolCallId: string,   // Tool call ID
+    params: any,          // Parameters passed by AI
+    signal?: AbortSignal, // Cancel signal (optional)
+    onUpdate?: Function,  // Streaming update callback (optional)
+    ctx?: any             // Execution context (optional)
+  ): Promise<ToolResult>
 });
 ```
 
-### registerHook
+> 💡 The `execute` return value is directly passed back to AI as the tool result. Format: `{ content: [{ type: "text", text: "..." }], details: {} }`.
+
+### registerCommand
 
 ```typescript
-context.registerHook({
-  event: 'before_edit' | 'after_edit' | 'before_bash' | 'after_bash' | 'agent_end',
-  handler: (context) => HookResult
+pi.registerCommand(name: string, {
+  description: string,    // Command description
+  handler: async (args: string, ctx) => {
+    // args: text entered by user (text after /command)
+    // ctx.ui.notify(message, level): Show notification
+  }
 });
 ```
 
-### injectPrompt
+### Event Listeners
 
 ```typescript
-context.injectPrompt({
-  target: 'system' | 'tool_description',
-  content: string
+// Listen to pi lifecycle events
+pi.on('agent_start', (event, ctx) => { ... });
+pi.on('agent_end', (event, ctx) => { ... });
+pi.on('tool_call', (event, ctx) => { ... });    // Before tool call
+pi.on('tool_result', (event, ctx) => { ... });  // After tool returns
+pi.on('session_start', (event, ctx) => { ... });
+pi.on('session_shutdown', (event, ctx) => { ... });
+pi.on('before_provider_request', (event, ctx) => {
+  // Inject additional info before sending AI request
+  // event.messages.push({ role: 'user', content: '...' })
 });
 ```
+
+### Helper Methods
+
+```typescript
+pi.appendEntry(role: string, content: string);  // Append a message to the session
+ctx.ui.notify(message: string, level: 'info' | 'warning' | 'error');  // Show notification
+```
+
+> 📖 For detailed API documentation, refer to the pi SDK type definitions and [pi extension development docs](https://github.com/catlain/pi-atelier).
 
 ## Congratulations, You've Made It!
 
 Now you understand all the core concepts of pi-atelier:
 
-1. **Memory** (pi-memory) — Let the AI remember knowledge
-2. **Planning** (pi-roadmap) — Let the AI manage tasks
-3. **Rules** (pi-shepherd + pi-context-manager) — Let the AI follow rules
-4. **Review** (pi-journal + pi-session-analyzer) — Let the AI record its work
-5. **Compaction & Diagnosis** (pi-smart-compact + pi-context-manager) — Keep the AI sharp
-6. **Automation** (pi-scheduler + pi-workflow) — Let the AI work proactively
-7. **Extensions** (pi-shared-utils + your own extensions) — Make the AI omnipotent
+1. **Memory** (pi-memory) — Let AI remember knowledge
+2. **Planning** (pi-roadmap) — Let AI manage tasks
+3. **Rules** (pi-shepherd + pi-context-manager) — Let AI follow rules and control information quality
+4. **Retrospective** (pi-session-analyzer + pi-journal) — Let AI record and review work
+5. **Compression & Diagnostics** (pi-smart-compact + pi-context-manager) — Keep AI smart in long sessions
+6. **Automation** (pi-scheduler + pi-workflow) — Let AI work proactively
+7. **Extensions** (pi-shared-utils + your own extensions) — Make AI capable of anything
 
-Feel free to submit Issues and PRs on [GitHub](https://github.com/catlain/pi-atelier) to help make this AI coding assistant even better!
+Feel free to submit Issues and PRs on [GitHub](https://github.com/catlain/pi-atelier) — let's make the AI coding assistant better together!

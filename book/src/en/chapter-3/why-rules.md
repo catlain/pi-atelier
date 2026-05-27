@@ -1,3 +1,0 @@
-# 3.1 The Pain: When AI Gets Too Clever
-
-> This section is a work in progress...

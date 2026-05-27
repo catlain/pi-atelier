@@ -1,3 +1,0 @@
-# 7.1 Understanding the pi Extension Architecture
-
-> This section is under construction...

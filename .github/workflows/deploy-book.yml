@@ -21,13 +21,45 @@ jobs:
           mkdir -p bin
           curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.5.3/mdbook-v0.5.3-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=bin
           echo "$PWD/bin" >> $GITHUB_PATH
-      - name: Build book
+
+      # Build Chinese version (default)
+      - name: Build Chinese book
         run: |
           cd book
           mdbook build
+
+      # Build English version (swap book.toml)
+      - name: Build English book
+        run: |
+          cd book
+          cp book.toml book.toml.zh
+          cp en-book.toml book.toml
+          mdbook build
+          cp book.toml.zh book.toml
+          rm book.toml.zh
+
+      # Merge: Chinese at root, English at /en/
+      - name: Merge both versions
+        run: |
+          mkdir -p merged/en
+          cp -r book/book/* merged/
+          cp -r book/book-en/* merged/en/
+
+      # Add language switcher
+      - name: Add language links
+        run: |
+          # Add link to English in Chinese index
+          if [ -f merged/index.html ]; then
+            sed -i 's|</body>|<div style="position:fixed;bottom:10px;right:10px;background:var(--sidebar-bg);padding:8px 12px;border-radius:4px;z-index:100"><a href="./en/" style="color:var(--fg)">English</a></div></body>|' merged/index.html
+          fi
+          # Add link to Chinese in English index
+          if [ -f merged/en/index.html ]; then
+            sed -i 's|</body>|<div style="position:fixed;bottom:10px;right:10px;background:var(--sidebar-bg);padding:8px 12px;border-radius:4px;z-index:100"><a href="../" style="color:var(--fg)">中文</a></div></body>|' merged/en/index.html
+          fi
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: book/book
+          publish_dir: merged
           publish_branch: gh-pages

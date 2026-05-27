@@ -5,3 +5,5 @@ package-lock.json
 .cartog.db
 .code-graph/
 book/book/
+book/book-en/
+book/book/
