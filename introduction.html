@@ -21,7 +21,6 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
@@ -89,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html" class="active"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></li><li class="chapter-item expanded "><a href="chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></li><li class="chapter-item expanded "><a href="chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></li><li class="chapter-item expanded "><a href="chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></li><li class="chapter-item expanded "><a href="chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></li><li class="chapter-item expanded "><a href="chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></li><li class="chapter-item expanded "><a href="chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></li><li class="chapter-item expanded "><a href="chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></li><li class="chapter-item expanded "><a href="appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></span></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -121,7 +120,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -149,7 +148,7 @@
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <i id="git-repository-button" class="fa fab-github"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/introduction.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
@@ -176,13 +175,15 @@
                         <div class="hero">
 <h1 id="pi-atelier让-ai-编程助手变得专业"><a class="header" href="#pi-atelier让-ai-编程助手变得专业">pi-atelier：让 AI 编程助手变得专业</a></h1>
 <div class="subtitle">从零教会你使用 pi-atelier 扩展生态，让 AI 编程助手从「会写代码」进化到「会管理项目」</div>
+
 </div>
+
 <h2 id="这本书是给谁看的"><a class="header" href="#这本书是给谁看的">这本书是给谁看的？</a></h2>
 <p>如果你在做以下任何一件事，这本书适合你：</p>
 <ul>
 <li>用 AI 编程助手（如 pi、Cursor、Copilot）写代码</li>
-<li>觉得 AI 助手"差一点"就能做得更好</li>
-<li>想让 AI 从"问答工具"进化成"项目搭档"</li>
+<li>觉得 AI 助手“差一点“就能做得更好</li>
+<li>想让 AI 从“问答工具“进化成“项目搭档“</li>
 </ul>
 <h2 id="什么是-pi-atelier"><a class="header" href="#什么是-pi-atelier">什么是 pi-atelier？</a></h2>
 <p>pi-atelier 是一组 <strong>pi 扩展</strong>，让 AI 编程助手具备项目管理能力。</p>
@@ -199,29 +200,41 @@
 <h3 id="-记忆"><a class="header" href="#-记忆">🧠 记忆</a></h3>
 <p>让 AI 记住跨会话的知识</p>
 </div>
+
 <div class="feature-card">
 <h3 id="-规划"><a class="header" href="#-规划">📋 规划</a></h3>
 <p>管理 Epic → Story → Task 三层路线图</p>
 </div>
+
 <div class="feature-card">
 <h3 id="-守卫"><a class="header" href="#-守卫">🛡️ 守卫</a></h3>
 <p>给 AI 立规矩，防止犯错</p>
 </div>
+
 <div class="feature-card">
 <h3 id="-诊断"><a class="header" href="#-诊断">🔍 诊断</a></h3>
 <p>控制上下文质量 + token 消耗分析</p>
 </div>
+
 <div class="feature-card">
 <h3 id="-分析"><a class="header" href="#-分析">📊 分析</a></h3>
 <p>搜索和回溯历史会话</p>
 </div>
+
 <div class="feature-card">
 <h3 id="-压缩"><a class="header" href="#-压缩">🗜️ 压缩</a></h3>
 <p>长会话中保持 AI 的聪明</p>
 </div>
+
 </div>
+
 <p>详细对比见下表：</p>
-<div class="table-wrapper"><table><thead><tr><th>能力</th><th>扩展</th><th>一句话描述</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>能力</th><th>扩展</th><th>一句话描述</th></tr>
+</thead>
+<tbody>
 <tr><td>记忆</td><td>pi-memory</td><td>让 AI 记住跨会话的知识</td></tr>
 <tr><td>规划</td><td>pi-roadmap</td><td>让 AI 管理 Epic → Story → Task</td></tr>
 <tr><td>守卫</td><td>pi-shepherd</td><td>给 AI 立规矩，防止犯错</td></tr>
@@ -232,7 +245,8 @@
 <tr><td>定时</td><td>pi-scheduler</td><td>定时提醒和周期任务</td></tr>
 <tr><td>工作流</td><td>pi-workflow</td><td>子代理编排，并行执行</td></tr>
 <tr><td>工具库</td><td>pi-shared-utils</td><td>扩展开发的公共工具函数</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="阅读路线"><a class="header" href="#阅读路线">阅读路线</a></h2>
 <h3 id="快速上手路线1-小时"><a class="header" href="#快速上手路线1-小时">快速上手路线（1 小时）</a></h3>
@@ -286,14 +300,20 @@
 </blockquote>
 <h2 id="重要文件路径"><a class="header" href="#重要文件路径">重要文件路径</a></h2>
 <p>在开始之前，你需要知道 pi 的关键文件在哪里：</p>
-<div class="table-wrapper"><table><thead><tr><th>文件</th><th>路径</th><th>说明</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>文件</th><th>路径</th><th>说明</th></tr>
+</thead>
+<tbody>
 <tr><td>全局配置</td><td><code>~/.pi/agent/settings.json</code></td><td>安装扩展、配置 provider</td></tr>
 <tr><td>项目配置</td><td><code>.pi/settings.json</code>（项目根目录）</td><td>项目级自定义配置（覆盖全局）</td></tr>
 <tr><td>项目指令</td><td><code>AGENTS.md</code>（项目根目录或 <code>.pi/agent/</code>）</td><td>注入给 AI 的项目规则</td></tr>
 <tr><td>扩展安装目录</td><td><code>~/.pi/agent/npm/node_modules/</code></td><td>npm 包安装位置</td></tr>
 <tr><td>记忆目录</td><td><code>.pi/memory/</code>（项目级）</td><td>项目级持久记忆</td></tr>
 <tr><td>全局记忆</td><td><code>~/.pi/agent/memory/</code></td><td>跨项目通用记忆</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>💡 <strong>新手提示</strong>：<code>~</code> 指你的用户主目录。在 macOS/Linux 上是 <code>/home/你的用户名/</code>，Windows 上是 <code>C:\Users\你的用户名\</code>。</p>
@@ -310,7 +330,7 @@
 </li>
 <li>表格：快速对比和速查</li>
 </ul>
-<p>准备好开始了吗？翻开第一章，让我们从"记忆"开始。</p>
+<p>准备好开始了吗？翻开第一章，让我们从“记忆“开始。</p>
 
                     </main>
 
@@ -319,7 +339,7 @@
                         <a rel="prev" href="" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                             <i class="fa fa-angle-left"></i>
                         </a>
-                        <a rel="next" href="" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <a rel="next" href="chapter-1/memory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                             <i class="fa fa-angle-right"></i>
                         </a>
 
@@ -332,7 +352,7 @@
                 <a rel="prev" href="" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                     <i class="fa fa-angle-left"></i>
                 </a>
-                <a rel="next" href="" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                <a rel="next" href="chapter-1/memory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                     <i class="fa fa-angle-right"></i>
                 </a>
             </nav>

@@ -21,7 +21,6 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
@@ -89,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></li><li class="chapter-item expanded "><a href="../chapter-1/memory.html" class="active"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></li><li class="chapter-item expanded "><a href="../chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></li><li class="chapter-item expanded "><a href="../chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></li><li class="chapter-item expanded "><a href="../chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></li><li class="chapter-item expanded "><a href="../chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></li><li class="chapter-item expanded "><a href="../chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></li><li class="chapter-item expanded "><a href="../chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></li><li class="chapter-item expanded "><a href="../appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></span></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -121,7 +120,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -149,7 +148,7 @@
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <i id="git-repository-button" class="fa fab-github"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/chapter-1/memory.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
@@ -185,10 +184,10 @@
 <p>AI 听懂了，帮你写了完美的代码。</p>
 <p>第二天，你开了一个新会话，AI 全忘了。它又开始建议你用 Express.js、连 PostgreSQL、用 Session 认证……</p>
 <blockquote>
-<p>💡 <strong>这就是 AI 的"金鱼记忆"问题</strong>：每次新会话都是一张白纸。</p>
+<p>💡 <strong>这就是 AI 的“金鱼记忆“问题</strong>：每次新会话都是一张白纸。</p>
 </blockquote>
 <h2 id="记忆让-ai-拥有跨会话的知识"><a class="header" href="#记忆让-ai-拥有跨会话的知识">记忆：让 AI 拥有跨会话的知识</a></h2>
-<p>pi-memory 就是来解决这个问题的。它给 AI 装上了一个"笔记本"：</p>
+<p>pi-memory 就是来解决这个问题的。它给 AI 装上了一个“笔记本“：</p>
 <ul>
 <li><strong>自动记录</strong>：AI 在会话中做出的架构决策、踩过的坑、达成的共识</li>
 <li><strong>自动加载</strong>：每次新会话开始时，AI 自动读取之前的关键知识</li>
@@ -215,12 +214,18 @@
 └─────────────────────────────────────────┘
 </code></pre>
 <p>记忆的核心结构：</p>
-<div class="table-wrapper"><table><thead><tr><th>组件</th><th>作用</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>组件</th><th>作用</th></tr>
+</thead>
+<tbody>
 <tr><td><code>MEMORY.md</code></td><td>索引文件，列出所有记忆的标题和关键词</td></tr>
 <tr><td>记忆文件（<code>.md</code>）</td><td>每个文件一个主题，包含具体知识点</td></tr>
 <tr><td><code>memory_update</code> 工具</td><td>AI 用来写入/更新记忆</td></tr>
 <tr><td><code>memory_index</code> 工具</td><td>AI 用来查看已有记忆</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="记忆文件的格式"><a class="header" href="#记忆文件的格式">记忆文件的格式</a></h3>
 <p>每个记忆文件遵循统一格式：</p>
@@ -266,7 +271,7 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 注意：不要在 SQL 层面做时区转换，在 Python 层用 datetime 处理更可靠。
 </code></pre>
 <h3 id="第-7-天新会话无需重复解释"><a class="header" href="#第-7-天新会话无需重复解释">第 7 天：新会话，无需重复解释</a></h3>
-<p>你开了一个新会话说"给分析接口加个导出 CSV 的功能"。AI 已经知道：</p>
+<p>你开了一个新会话说“给分析接口加个导出 CSV 的功能“。AI 已经知道：</p>
 <ul>
 <li>项目用 FastAPI + DuckDB</li>
 <li>时区用 Asia/Shanghai</li>
@@ -286,7 +291,7 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 </ul>
 <h3 id="-不应该记住的内容"><a class="header" href="#-不应该记住的内容">❌ 不应该记住的内容</a></h3>
 <ul>
-<li>临时调试信息（"这个变量值是 42"）</li>
+<li>临时调试信息（“这个变量值是 42”）</li>
 <li>已经过时的结论（记得定期清理）</li>
 <li>通用编程知识（AI 本来就知道怎么写 for 循环）</li>
 </ul>
@@ -308,10 +313,16 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 </code></pre>
 <p>无需额外配置，安装即用。记忆文件存储在项目的 <code>.pi/memory/</code> 目录下。</p>
 <h3 id="记忆的作用域"><a class="header" href="#记忆的作用域">记忆的作用域</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>作用域</th><th>路径</th><th>用途</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>作用域</th><th>路径</th><th>用途</th></tr>
+</thead>
+<tbody>
 <tr><td>项目级</td><td><code>.pi/memory/</code></td><td>项目特有的知识（架构、决策、坑）</td></tr>
 <tr><td>全局</td><td><code>~/.pi/agent/memory/</code></td><td>跨项目通用的知识（工具链、编码纪律）</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
 <p>现在 AI 有了记忆，能记住过去的知识。但面对一个大项目，它知道第一步该做什么、第二步该做什么吗？</p>
@@ -321,10 +332,10 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        <a rel="prev" href="../" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <a rel="prev" href="../introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                             <i class="fa fa-angle-left"></i>
                         </a>
-                        <a rel="next" href="../" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <a rel="next" href="../chapter-2/roadmap.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                             <i class="fa fa-angle-right"></i>
                         </a>
 
@@ -334,10 +345,10 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                <a rel="prev" href="../" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                <a rel="prev" href="../introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                     <i class="fa fa-angle-left"></i>
                 </a>
-                <a rel="next" href="../" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                <a rel="next" href="../chapter-2/roadmap.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                     <i class="fa fa-angle-right"></i>
                 </a>
             </nav>

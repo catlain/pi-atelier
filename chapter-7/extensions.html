@@ -21,7 +21,6 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
@@ -89,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></li><li class="chapter-item expanded "><a href="../chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></li><li class="chapter-item expanded "><a href="../chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></li><li class="chapter-item expanded "><a href="../chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></li><li class="chapter-item expanded "><a href="../chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></li><li class="chapter-item expanded "><a href="../chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></li><li class="chapter-item expanded "><a href="../chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></li><li class="chapter-item expanded "><a href="../chapter-7/extensions.html" class="active"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></li><li class="chapter-item expanded "><a href="../appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></span></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -121,7 +120,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -149,7 +148,7 @@
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <i id="git-repository-button" class="fa fab-github"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/chapter-7/extensions.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
@@ -196,12 +195,18 @@
 └── README.md           # 文档
 </code></pre>
 <h3 id="核心概念"><a class="header" href="#核心概念">核心概念</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>概念</th><th>说明</th><th>类比</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>概念</th><th>说明</th><th>类比</th></tr>
+</thead>
+<tbody>
 <tr><td><strong>Tool</strong></td><td>AI 可以调用的函数</td><td>给 AI 一把新锤子</td></tr>
 <tr><td><strong>Hook</strong></td><td>在特定时机执行的逻辑</td><td>给 AI 一个闹钟</td></tr>
 <tr><td><strong>Prompt</strong></td><td>工具的描述（AI 看到的说明）</td><td>告诉 AI 这把锤子怎么用</td></tr>
 <tr><td><strong>Config</strong></td><td>用户可配置的参数</td><td>锤子的力度调节</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="扩展的生命周期"><a class="header" href="#扩展的生命周期">扩展的生命周期</a></h3>
 <pre><code>1. pi 启动
@@ -222,7 +227,7 @@
      ▼
 5. AI 会话中可以调用新工具
 </code></pre>
-<h2 id="实战从零写一个代码统计扩展"><a class="header" href="#实战从零写一个代码统计扩展">实战：从零写一个"代码统计"扩展</a></h2>
+<h2 id="实战从零写一个代码统计扩展"><a class="header" href="#实战从零写一个代码统计扩展">实战：从零写一个“代码统计“扩展</a></h2>
 <p>让我们一步步写一个简单的扩展——统计项目代码行数。</p>
 <h3 id="第-1-步创建项目"><a class="header" href="#第-1-步创建项目">第 1 步：创建项目</a></h3>
 <pre><code class="language-bash">mkdir pi-code-stats
@@ -321,7 +326,12 @@ export function activate(context: ExtensionContext) {
 <p>重启 pi，AI 就能用 <code>code_stats</code> 工具了。</p>
 <h2 id="pi-shared-utils你的工具箱"><a class="header" href="#pi-shared-utils你的工具箱">pi-shared-utils：你的工具箱</a></h2>
 <p>写扩展时，不用什么都从零开始。<code>pi-shared-utils</code> 提供了一组常用工具函数：</p>
-<div class="table-wrapper"><table><thead><tr><th>模块</th><th>功能</th><th>什么时候用</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>模块</th><th>功能</th><th>什么时候用</th></tr>
+</thead>
+<tbody>
 <tr><td><code>logger</code></td><td>统一日志格式</td><td>需要打印调试信息</td></tr>
 <tr><td><code>storage</code></td><td>跨会话持久存储</td><td>需要保存配置或状态</td></tr>
 <tr><td><code>paths</code></td><td>统一路径处理</td><td>需要找文件位置</td></tr>
@@ -330,7 +340,8 @@ export function activate(context: ExtensionContext) {
 <tr><td><code>settings-backup</code></td><td>settings.json 备份与回滚</td><td>需要安全写入配置</td></tr>
 <tr><td><code>file-lock</code></td><td>文件锁（proper-lockfile 封装）</td><td>需要防竞态写入</td></tr>
 <tr><td><code>config</code></td><td>三层配置合并（defaults → 全局 → 项目）</td><td>扩展需要可配置参数</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="使用示例"><a class="header" href="#使用示例">使用示例</a></h3>
 <pre><code class="language-typescript">import { logger, storage, paths } from 'pi-shared-utils';
@@ -376,13 +387,19 @@ pi
 <li><code>activate()</code> 函数是否正确导出</li>
 </ul>
 <h3 id="常见问题排查"><a class="header" href="#常见问题排查">常见问题排查</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>问题</th><th>原因</th><th>解决方案</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>问题</th><th>原因</th><th>解决方案</th></tr>
+</thead>
+<tbody>
 <tr><td>AI 看不到工具</td><td><code>piExtension</code> 字段缺失</td><td>在 package.json 加 <code>"piExtension": true</code></td></tr>
 <tr><td>工具调用报错</td><td>handler 内部异常</td><td>查看终端日志中的错误栈</td></tr>
 <tr><td>AI 不调用工具</td><td>description 太模糊</td><td>让工具描述更具体，包含参数说明和示例</td></tr>
 <tr><td>返回值为空</td><td>异步操作未 await</td><td>handler 加 <code>async</code>，调用加 <code>await</code></td></tr>
 <tr><td>路径找不到</td><td>相对路径问题</td><td>用 <code>paths.getProjectRoot()</code> 获取绝对路径</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>💡 <strong>技巧</strong>：开发扩展时，可以在 handler 里先 <code>console.log(JSON.stringify(args, null, 2))</code> 打印参数，确认 AI 传了什么进来。</p>
@@ -405,18 +422,12 @@ npm publish --access public
 </code></pre>
 <h3 id="发布前的检查清单"><a class="header" href="#发布前的检查清单">发布前的检查清单</a></h3>
 <ul>
-<li><input disabled="" type="checkbox"/>
-<code>package.json</code> 有完整的 <code>description</code> 和 <code>keywords</code></li>
-<li><input disabled="" type="checkbox"/>
-<code>README.md</code> 按模板写完（安装、使用、配置、示例）</li>
-<li><input disabled="" type="checkbox"/>
-有 <code>LICENSE</code> 文件</li>
-<li><input disabled="" type="checkbox"/>
-有 <code>CHANGELOG.md</code></li>
-<li><input disabled="" type="checkbox"/>
-代码有基本的错误处理</li>
-<li><input disabled="" type="checkbox"/>
-工具描述（prompts/*.md）清晰完整</li>
+<li><input disabled="" type="checkbox"> <code>package.json</code> 有完整的 <code>description</code> 和 <code>keywords</code></li>
+<li><input disabled="" type="checkbox"> <code>README.md</code> 按模板写完（安装、使用、配置、示例）</li>
+<li><input disabled="" type="checkbox"> 有 <code>LICENSE</code> 文件</li>
+<li><input disabled="" type="checkbox"> 有 <code>CHANGELOG.md</code></li>
+<li><input disabled="" type="checkbox"> 代码有基本的错误处理</li>
+<li><input disabled="" type="checkbox"> 工具描述（prompts/*.md）清晰完整</li>
 </ul>
 <h2 id="扩展开发的最佳实践"><a class="header" href="#扩展开发的最佳实践">扩展开发的最佳实践</a></h2>
 <h3 id="-好的扩展设计"><a class="header" href="#-好的扩展设计">✅ 好的扩展设计</a></h3>
@@ -486,10 +497,10 @@ context.registerHook({
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        <a rel="prev" href="../" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <a rel="prev" href="../chapter-6/automation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                             <i class="fa fa-angle-left"></i>
                         </a>
-                        <a rel="next" href="../" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <a rel="next" href="../appendix/reference.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                             <i class="fa fa-angle-right"></i>
                         </a>
 
@@ -499,10 +510,10 @@ context.registerHook({
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                <a rel="prev" href="../" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                <a rel="prev" href="../chapter-6/automation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                     <i class="fa fa-angle-left"></i>
                 </a>
-                <a rel="next" href="../" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                <a rel="next" href="../appendix/reference.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                     <i class="fa fa-angle-right"></i>
                 </a>
             </nav>

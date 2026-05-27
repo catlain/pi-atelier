@@ -22,7 +22,6 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
@@ -90,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></li><li class="chapter-item expanded "><a href="chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></li><li class="chapter-item expanded "><a href="chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></li><li class="chapter-item expanded "><a href="chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></li><li class="chapter-item expanded "><a href="chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></li><li class="chapter-item expanded "><a href="chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></li><li class="chapter-item expanded "><a href="chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></li><li class="chapter-item expanded "><a href="chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></li><li class="chapter-item expanded "><a href="appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></span></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -122,7 +121,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -150,7 +149,7 @@
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <i id="git-repository-button" class="fa fab-github"></i>
                         </a>
 
                     </div>
@@ -174,13 +173,15 @@
                         <div class="hero">
 <h1 id="pi-atelier让-ai-编程助手变得专业"><a class="header" href="#pi-atelier让-ai-编程助手变得专业">pi-atelier：让 AI 编程助手变得专业</a></h1>
 <div class="subtitle">从零教会你使用 pi-atelier 扩展生态，让 AI 编程助手从「会写代码」进化到「会管理项目」</div>
+
 </div>
+
 <h2 id="这本书是给谁看的"><a class="header" href="#这本书是给谁看的">这本书是给谁看的？</a></h2>
 <p>如果你在做以下任何一件事，这本书适合你：</p>
 <ul>
 <li>用 AI 编程助手（如 pi、Cursor、Copilot）写代码</li>
-<li>觉得 AI 助手"差一点"就能做得更好</li>
-<li>想让 AI 从"问答工具"进化成"项目搭档"</li>
+<li>觉得 AI 助手“差一点“就能做得更好</li>
+<li>想让 AI 从“问答工具“进化成“项目搭档“</li>
 </ul>
 <h2 id="什么是-pi-atelier"><a class="header" href="#什么是-pi-atelier">什么是 pi-atelier？</a></h2>
 <p>pi-atelier 是一组 <strong>pi 扩展</strong>，让 AI 编程助手具备项目管理能力。</p>
@@ -197,29 +198,41 @@
 <h3 id="-记忆"><a class="header" href="#-记忆">🧠 记忆</a></h3>
 <p>让 AI 记住跨会话的知识</p>
 </div>
+
 <div class="feature-card">
 <h3 id="-规划"><a class="header" href="#-规划">📋 规划</a></h3>
 <p>管理 Epic → Story → Task 三层路线图</p>
 </div>
+
 <div class="feature-card">
 <h3 id="-守卫"><a class="header" href="#-守卫">🛡️ 守卫</a></h3>
 <p>给 AI 立规矩，防止犯错</p>
 </div>
+
 <div class="feature-card">
 <h3 id="-诊断"><a class="header" href="#-诊断">🔍 诊断</a></h3>
 <p>控制上下文质量 + token 消耗分析</p>
 </div>
+
 <div class="feature-card">
 <h3 id="-分析"><a class="header" href="#-分析">📊 分析</a></h3>
 <p>搜索和回溯历史会话</p>
 </div>
+
 <div class="feature-card">
 <h3 id="-压缩"><a class="header" href="#-压缩">🗜️ 压缩</a></h3>
 <p>长会话中保持 AI 的聪明</p>
 </div>
+
 </div>
+
 <p>详细对比见下表：</p>
-<div class="table-wrapper"><table><thead><tr><th>能力</th><th>扩展</th><th>一句话描述</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>能力</th><th>扩展</th><th>一句话描述</th></tr>
+</thead>
+<tbody>
 <tr><td>记忆</td><td>pi-memory</td><td>让 AI 记住跨会话的知识</td></tr>
 <tr><td>规划</td><td>pi-roadmap</td><td>让 AI 管理 Epic → Story → Task</td></tr>
 <tr><td>守卫</td><td>pi-shepherd</td><td>给 AI 立规矩，防止犯错</td></tr>
@@ -230,7 +243,8 @@
 <tr><td>定时</td><td>pi-scheduler</td><td>定时提醒和周期任务</td></tr>
 <tr><td>工作流</td><td>pi-workflow</td><td>子代理编排，并行执行</td></tr>
 <tr><td>工具库</td><td>pi-shared-utils</td><td>扩展开发的公共工具函数</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="阅读路线"><a class="header" href="#阅读路线">阅读路线</a></h2>
 <h3 id="快速上手路线1-小时"><a class="header" href="#快速上手路线1-小时">快速上手路线（1 小时）</a></h3>
@@ -284,14 +298,20 @@
 </blockquote>
 <h2 id="重要文件路径"><a class="header" href="#重要文件路径">重要文件路径</a></h2>
 <p>在开始之前，你需要知道 pi 的关键文件在哪里：</p>
-<div class="table-wrapper"><table><thead><tr><th>文件</th><th>路径</th><th>说明</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>文件</th><th>路径</th><th>说明</th></tr>
+</thead>
+<tbody>
 <tr><td>全局配置</td><td><code>~/.pi/agent/settings.json</code></td><td>安装扩展、配置 provider</td></tr>
 <tr><td>项目配置</td><td><code>.pi/settings.json</code>（项目根目录）</td><td>项目级自定义配置（覆盖全局）</td></tr>
 <tr><td>项目指令</td><td><code>AGENTS.md</code>（项目根目录或 <code>.pi/agent/</code>）</td><td>注入给 AI 的项目规则</td></tr>
 <tr><td>扩展安装目录</td><td><code>~/.pi/agent/npm/node_modules/</code></td><td>npm 包安装位置</td></tr>
 <tr><td>记忆目录</td><td><code>.pi/memory/</code>（项目级）</td><td>项目级持久记忆</td></tr>
 <tr><td>全局记忆</td><td><code>~/.pi/agent/memory/</code></td><td>跨项目通用记忆</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>💡 <strong>新手提示</strong>：<code>~</code> 指你的用户主目录。在 macOS/Linux 上是 <code>/home/你的用户名/</code>，Windows 上是 <code>C:\Users\你的用户名\</code>。</p>
@@ -308,8 +328,9 @@
 </li>
 <li>表格：快速对比和速查</li>
 </ul>
-<p>准备好开始了吗？翻开第一章，让我们从"记忆"开始。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="一个-ai-的记忆"><a class="header" href="#一个-ai-的记忆">一个 AI 的记忆</a></h1>
+<p>准备好开始了吗？翻开第一章，让我们从“记忆“开始。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="一个-ai-的记忆"><a class="header" href="#一个-ai-的记忆">一个 AI 的记忆</a></h1>
 <h2 id="你可能遇到过这种情况"><a class="header" href="#你可能遇到过这种情况">你可能遇到过这种情况</a></h2>
 <p>你正在用 AI 编程助手开发一个项目。第一天的会话里，你花了半小时向 AI 解释：</p>
 <ul>
@@ -321,10 +342,10 @@
 <p>AI 听懂了，帮你写了完美的代码。</p>
 <p>第二天，你开了一个新会话，AI 全忘了。它又开始建议你用 Express.js、连 PostgreSQL、用 Session 认证……</p>
 <blockquote>
-<p>💡 <strong>这就是 AI 的"金鱼记忆"问题</strong>：每次新会话都是一张白纸。</p>
+<p>💡 <strong>这就是 AI 的“金鱼记忆“问题</strong>：每次新会话都是一张白纸。</p>
 </blockquote>
 <h2 id="记忆让-ai-拥有跨会话的知识"><a class="header" href="#记忆让-ai-拥有跨会话的知识">记忆：让 AI 拥有跨会话的知识</a></h2>
-<p>pi-memory 就是来解决这个问题的。它给 AI 装上了一个"笔记本"：</p>
+<p>pi-memory 就是来解决这个问题的。它给 AI 装上了一个“笔记本“：</p>
 <ul>
 <li><strong>自动记录</strong>：AI 在会话中做出的架构决策、踩过的坑、达成的共识</li>
 <li><strong>自动加载</strong>：每次新会话开始时，AI 自动读取之前的关键知识</li>
@@ -351,12 +372,18 @@
 └─────────────────────────────────────────┘
 </code></pre>
 <p>记忆的核心结构：</p>
-<div class="table-wrapper"><table><thead><tr><th>组件</th><th>作用</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>组件</th><th>作用</th></tr>
+</thead>
+<tbody>
 <tr><td><code>MEMORY.md</code></td><td>索引文件，列出所有记忆的标题和关键词</td></tr>
 <tr><td>记忆文件（<code>.md</code>）</td><td>每个文件一个主题，包含具体知识点</td></tr>
 <tr><td><code>memory_update</code> 工具</td><td>AI 用来写入/更新记忆</td></tr>
 <tr><td><code>memory_index</code> 工具</td><td>AI 用来查看已有记忆</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="记忆文件的格式"><a class="header" href="#记忆文件的格式">记忆文件的格式</a></h3>
 <p>每个记忆文件遵循统一格式：</p>
@@ -402,7 +429,7 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 注意：不要在 SQL 层面做时区转换，在 Python 层用 datetime 处理更可靠。
 </code></pre>
 <h3 id="第-7-天新会话无需重复解释"><a class="header" href="#第-7-天新会话无需重复解释">第 7 天：新会话，无需重复解释</a></h3>
-<p>你开了一个新会话说"给分析接口加个导出 CSV 的功能"。AI 已经知道：</p>
+<p>你开了一个新会话说“给分析接口加个导出 CSV 的功能“。AI 已经知道：</p>
 <ul>
 <li>项目用 FastAPI + DuckDB</li>
 <li>时区用 Asia/Shanghai</li>
@@ -422,7 +449,7 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 </ul>
 <h3 id="-不应该记住的内容"><a class="header" href="#-不应该记住的内容">❌ 不应该记住的内容</a></h3>
 <ul>
-<li>临时调试信息（"这个变量值是 42"）</li>
+<li>临时调试信息（“这个变量值是 42”）</li>
 <li>已经过时的结论（记得定期清理）</li>
 <li>通用编程知识（AI 本来就知道怎么写 for 循环）</li>
 </ul>
@@ -444,29 +471,36 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 </code></pre>
 <p>无需额外配置，安装即用。记忆文件存储在项目的 <code>.pi/memory/</code> 目录下。</p>
 <h3 id="记忆的作用域"><a class="header" href="#记忆的作用域">记忆的作用域</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>作用域</th><th>路径</th><th>用途</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>作用域</th><th>路径</th><th>用途</th></tr>
+</thead>
+<tbody>
 <tr><td>项目级</td><td><code>.pi/memory/</code></td><td>项目特有的知识（架构、决策、坑）</td></tr>
 <tr><td>全局</td><td><code>~/.pi/agent/memory/</code></td><td>跨项目通用的知识（工具链、编码纪律）</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
 <p>现在 AI 有了记忆，能记住过去的知识。但面对一个大项目，它知道第一步该做什么、第二步该做什么吗？</p>
 <p>下一章，我们来看如何让 AI 学会<strong>规划</strong>。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="从记忆到规划"><a class="header" href="#从记忆到规划">从记忆到规划</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="从记忆到规划"><a class="header" href="#从记忆到规划">从记忆到规划</a></h1>
 <h2 id="你可能遇到过这种情况-1"><a class="header" href="#你可能遇到过这种情况-1">你可能遇到过这种情况</a></h2>
-<p>你让 AI 做一个"把项目从 JavaScript 迁移到 TypeScript"的大任务。</p>
-<p>前 30 分钟一切顺利——AI 按计划迁移了配置文件、类型定义、核心模块。但到第 5 个文件的时候，AI 开始"跑偏"：</p>
+<p>你让 AI 做一个“把项目从 JavaScript 迁移到 TypeScript“的大任务。</p>
+<p>前 30 分钟一切顺利——AI 按计划迁移了配置文件、类型定义、核心模块。但到第 5 个文件的时候，AI 开始“跑偏“：</p>
 <ul>
 <li>它忘了之前的约定，开始用不同的命名风格</li>
 <li>它跳过了测试文件的迁移</li>
-<li>它开始做一个你没要求的"顺便重构"</li>
+<li>它开始做一个你没要求的“顺便重构“</li>
 <li>当你提醒它回到正轨，它已经不记得原计划的前 3 步是什么了</li>
 </ul>
 <blockquote>
-<p>💡 <strong>金鱼记忆解决了，但还有"注意力涣散"问题</strong>：AI 记得住知识，但管不住任务。</p>
+<p>💡 <strong>金鱼记忆解决了，但还有“注意力涣散“问题</strong>：AI 记得住知识，但管不住任务。</p>
 </blockquote>
 <h2 id="路线图让-ai-学会管理复杂任务"><a class="header" href="#路线图让-ai-学会管理复杂任务">路线图：让 AI 学会管理复杂任务</a></h2>
-<p>pi-roadmap 给 AI 装上了"项目管理大脑"：</p>
+<p>pi-roadmap 给 AI 装上了“项目管理大脑“：</p>
 <ul>
 <li><strong>结构化拆解</strong>：把大目标拆成 Epic → Story → Task 三层</li>
 <li><strong>进度追踪</strong>：每个任务有明确的状态（todo / doing / done / blocked）</li>
@@ -479,11 +513,17 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
       └── Task（最小执行单元）
 </code></pre>
 <p>这个结构来自敏捷开发的实践，但做了一点适配：</p>
-<div class="table-wrapper"><table><thead><tr><th>概念</th><th>传统敏捷</th><th>pi-roadmap</th><th>理由</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>概念</th><th>传统敏捷</th><th>pi-roadmap</th><th>理由</th></tr>
+</thead>
+<tbody>
 <tr><td>Epic</td><td>2-8 周</td><td>一个完整项目方向</td><td>AI 会话不会持续几周</td></tr>
 <tr><td>Story</td><td>1-3 天</td><td>1-3 个会话可完成</td><td>适配 AI 的工作节奏</td></tr>
 <tr><td>Task</td><td>0.5-1 天</td><td>30 分钟 - 2 小时</td><td>AI 单次能专注的粒度</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="工作原理-1"><a class="header" href="#工作原理-1">工作原理</a></h3>
 <pre><code>用户描述目标
@@ -509,7 +549,7 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 <h2 id="实际案例迁移一个多包项目"><a class="header" href="#实际案例迁移一个多包项目">实际案例：迁移一个多包项目</a></h2>
 <p>让我们看一个真实的场景——把 12 个 npm 包同时做文档升级：</p>
 <h3 id="步骤-1创建路线图"><a class="header" href="#步骤-1创建路线图">步骤 1：创建路线图</a></h3>
-<p>你说："帮我规划一下给所有包写文档的工作。"</p>
+<p>你说：“帮我规划一下给所有包写文档的工作。”</p>
 <p>AI 调用 <code>roadmap_plan</code>，自动拆解：</p>
 <pre><code class="language-json">{
   "roadmapId": "package-docs",
@@ -543,7 +583,7 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 }
 </code></pre>
 <h3 id="步骤-2按计划推进"><a class="header" href="#步骤-2按计划推进">步骤 2：按计划推进</a></h3>
-<p>每次新会话，你说"继续"。AI 调用 <code>roadmap_next</code>：</p>
+<p>每次新会话，你说“继续“。AI 调用 <code>roadmap_next</code>：</p>
 <pre><code>📊 推荐下一步任务：
 
 E0.S0.T1 — 提炼 README 模板（high priority）
@@ -562,17 +602,23 @@ E0.S0.T1 — 提炼 README 模板（high priority）
    原因：pi-journal 的 API 文档不完整，需要先补充源码注释
 </code></pre>
 <h2 id="路线图-vs-记忆什么关系"><a class="header" href="#路线图-vs-记忆什么关系">路线图 vs 记忆：什么关系？</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>维度</th><th>记忆（pi-memory）</th><th>路线图（pi-roadmap）</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>维度</th><th>记忆（pi-memory）</th><th>路线图（pi-roadmap）</th></tr>
+</thead>
+<tbody>
 <tr><td>存什么</td><td>知识、决策、踩坑</td><td>任务、进度、计划</td></tr>
 <tr><td>粒度</td><td>自由文本</td><td>结构化 JSON</td></tr>
 <tr><td>查询方式</td><td>关键词</td><td>状态/优先级</td></tr>
 <tr><td>生命周期</td><td>长期保留</td><td>项目结束可归档</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>简单来说：</p>
 <ul>
-<li><strong>记忆</strong>是"我知道什么"</li>
-<li><strong>路线图</strong>是"我要做什么、做到哪了"</li>
+<li><strong>记忆</strong>是“我知道什么“</li>
+<li><strong>路线图</strong>是“我要做什么、做到哪了“</li>
 </ul>
 <p>两者互补：记忆帮 AI 不忘知识，路线图帮 AI 不忘任务。</p>
 <h2 id="最佳实践-1"><a class="header" href="#最佳实践-1">最佳实践</a></h2>
@@ -593,22 +639,23 @@ E0.S0.T1 — 提炼 README 模板（high priority）
 </code></pre>
 <h3 id="拆解的黄金法则"><a class="header" href="#拆解的黄金法则">拆解的黄金法则</a></h3>
 <ol>
-<li><strong>Epic 的标题应该是一个动词短语</strong>："发布 npm 包"而不是"npm"</li>
-<li><strong>Story 应该有明确的交付物</strong>："完成 README"而不是"写文档"</li>
-<li><strong>Task 应该 30 分钟内可执行</strong>："配置 package.json 的 name 字段"而不是"配置构建"</li>
+<li><strong>Epic 的标题应该是一个动词短语</strong>：“发布 npm 包“而不是“npm”</li>
+<li><strong>Story 应该有明确的交付物</strong>：“完成 README“而不是“写文档”</li>
+<li><strong>Task 应该 30 分钟内可执行</strong>：“配置 package.json 的 name 字段“而不是“配置构建”</li>
 <li><strong>同层级的项应该是同粒度</strong>：不要一个 Story 有 2 个 Task，另一个有 20 个</li>
 </ol>
 <h2 id="下一步-1"><a class="header" href="#下一步-1">下一步</a></h2>
-<p>AI 有了记忆（记住知识）和路线图（管理任务）。但有时候，AI 还是会"犯错"——改不该改的文件、用不该用的方式。</p>
+<p>AI 有了记忆（记住知识）和路线图（管理任务）。但有时候，AI 还是会“犯错“——改不该改的文件、用不该用的方式。</p>
 <p>下一章，我们来看如何给 AI <strong>立规矩</strong>。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="给-ai-立规矩"><a class="header" href="#给-ai-立规矩">给 AI 立规矩</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="给-ai-立规矩"><a class="header" href="#给-ai-立规矩">给 AI 立规矩</a></h1>
 <h2 id="你可能遇到过这种情况-2"><a class="header" href="#你可能遇到过这种情况-2">你可能遇到过这种情况</a></h2>
-<p>你让 AI 帮你"修一下登录页面的样式"。30 秒后你看了一眼代码——</p>
+<p>你让 AI 帮你“修一下登录页面的样式“。30 秒后你看了一眼代码——</p>
 <p>AI 不但改了样式，还：</p>
 <ul>
-<li>"顺手"重构了整个登录组件的目录结构</li>
+<li>“顺手“重构了整个登录组件的目录结构</li>
 <li>把 CSS 模块改成了 Tailwind（你项目没用 Tailwind）</li>
-<li>删除了 3 个它认为"没用"的测试文件</li>
+<li>删除了 3 个它认为“没用“的测试文件</li>
 <li>把 package.json 里的依赖升级到了最新版</li>
 </ul>
 <p>等你发现的时候，代码已经提交了。</p>
@@ -618,7 +665,7 @@ E0.S0.T1 — 提炼 README 模板（high priority）
 <h2 id="两道防线shepherd-和-context"><a class="header" href="#两道防线shepherd-和-context">两道防线：Shepherd 和 Context</a></h2>
 <p>pi-atelier 提供了两层防护机制：</p>
 <h3 id="第一道pi-shepherd--行为守卫"><a class="header" href="#第一道pi-shepherd--行为守卫">第一道：pi-shepherd — 行为守卫</a></h3>
-<p>Shepherd（牧羊犬）是一个<strong>规则驱动的事件钩子引擎</strong>，在 AI 的关键动作前后做检查，相当于"门卫"。</p>
+<p>Shepherd（牧羊犬）是一个<strong>规则驱动的事件钩子引擎</strong>，在 AI 的关键动作前后做检查，相当于“门卫“。</p>
 <pre><code>AI 准备执行动作（工具调用）
      │
      ▼
@@ -641,20 +688,32 @@ E0.S0.T1 — 提炼 README 模板（high priority）
    注入提醒 / 追加动作
 </code></pre>
 <p>支持的钩子时机：</p>
-<div class="table-wrapper"><table><thead><tr><th>钩子</th><th>触发时机</th><th>典型用途</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>钩子</th><th>触发时机</th><th>典型用途</th></tr>
+</thead>
+<tbody>
 <tr><td><code>tool_call</code></td><td>AI 调用工具<strong>前</strong></td><td>改写命令、阻止危险操作</td></tr>
 <tr><td><code>tool_result</code></td><td>工具执行<strong>后</strong></td><td>自动提醒跑测试、lint 检查</td></tr>
 <tr><td><code>agent_end</code></td><td>AI 完成对话<strong>时</strong></td><td>提醒提交代码、更新记忆</td></tr>
 <tr><td><code>session_shutdown</code></td><td>会话关闭<strong>时</strong></td><td>清理临时数据</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Shepherd 的四种动作：</p>
-<div class="table-wrapper"><table><thead><tr><th>动作</th><th>效果</th><th>典型用途</th></tr></thead><tbody>
-<tr><td><code>notify</code></td><td>向 AI 上下文注入提醒</td><td>"编辑了 TS 文件，记得跑测试"</td></tr>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>动作</th><th>效果</th><th>典型用途</th></tr>
+</thead>
+<tbody>
+<tr><td><code>notify</code></td><td>向 AI 上下文注入提醒</td><td>“编辑了 TS 文件，记得跑测试”</td></tr>
 <tr><td><code>steer</code></td><td>静默注入引导（不显示给用户）</td><td>引导 AI 查阅规范</td></tr>
 <tr><td><code>rewrite</code></td><td>改写工具调用参数</td><td>自动给命令加前缀</td></tr>
 <tr><td><code>deny</code></td><td>阻止工具执行</td><td>禁止危险操作</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="第二道pi-context-manager--信息质量与诊断"><a class="header" href="#第二道pi-context-manager--信息质量与诊断">第二道：pi-context-manager — 信息质量与诊断</a></h3>
 <p>Context Manager（上下文管家）控制 AI 能看到什么信息，还能帮你诊断 token 消耗问题。</p>
@@ -677,7 +736,7 @@ E0.S0.T1 — 提炼 README 模板（high priority）
      ▼
 AI 看到精炼后的信息，做出更好的判断
 </code></pre>
-<p>详细原理见 <a href="chapter-3/./context.html">3.3 Context Manager 原理</a>。</p>
+<p>详细原理见 <a href="chapter-3/context.html">3.3 Context Manager 原理</a>。</p>
 <h2 id="实际案例防止-ai-犯错"><a class="header" href="#实际案例防止-ai-犯错">实际案例：防止 AI 犯错</a></h2>
 <h3 id="场景-1编辑后自动提醒跑测试"><a class="header" href="#场景-1编辑后自动提醒跑测试">场景 1：编辑后自动提醒跑测试</a></h3>
 <pre><code class="language-json">{
@@ -746,14 +805,25 @@ AI 看到精炼后的信息，做出更好的判断
 <p><code>state</code> 实现了<strong>状态追踪</strong>——Shepherd 会记住工具出错的次数，累计到阈值才触发。<code>subagent: false</code> 表示子代理中不触发此规则。</p>
 <h2 id="shepherd-规则配置详解"><a class="header" href="#shepherd-规则配置详解">Shepherd 规则配置详解</a></h2>
 <h3 id="规则文件位置"><a class="header" href="#规则文件位置">规则文件位置</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>级别</th><th>路径</th><th>说明</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>级别</th><th>路径</th><th>说明</th></tr>
+</thead>
+<tbody>
 <tr><td>全局默认</td><td>扩展包内的 <code>rules.json</code></td><td>Shepherd 自带的规则集</td></tr>
 <tr><td>项目级</td><td><code>.pi/shepherd-rules-*.json</code>（项目根目录）</td><td>项目自定义规则，可建多个文件</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>修改规则文件后 <code>/reload</code> 即可生效，无需重启 pi。</p>
 <h3 id="规则字段说明"><a class="header" href="#规则字段说明">规则字段说明</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>字段</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>字段</th><th>必填</th><th>说明</th></tr>
+</thead>
+<tbody>
 <tr><td><code>comment</code></td><td>✅</td><td>规则注释，方便理解</td></tr>
 <tr><td><code>hook</code></td><td>✅</td><td>触发时机：<code>tool_call</code> / <code>tool_result</code> / <code>agent_end</code> / <code>session_shutdown</code></td></tr>
 <tr><td><code>tool</code></td><td>❌</td><td>限定只匹配特定工具（如 <code>"edit"</code>、<code>"bash"</code>、<code>"grep"</code>）</td></tr>
@@ -768,7 +838,8 @@ AI 看到精炼后的信息，做出更好的判断
 <tr><td><code>requireSuccess</code></td><td>❌</td><td>是否只在工具成功时触发（默认 <code>false</code>）</td></tr>
 <tr><td><code>requiresTools</code></td><td>❌</td><td>限定只在某些 MCP 工具可用时触发</td></tr>
 <tr><td><code>enabled</code></td><td>✅</td><td>是否启用</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="条件匹配"><a class="header" href="#条件匹配">条件匹配</a></h3>
 <p><code>conditions</code> 数组中的每个元素：</p>
@@ -792,7 +863,12 @@ AI 看到精炼后的信息，做出更好的判断
 </code></pre>
 <h2 id="context-的配置方式"><a class="header" href="#context-的配置方式">Context 的配置方式</a></h2>
 <p>pi-context-manager 提供以下命令：</p>
-<div class="table-wrapper"><table><thead><tr><th>命令</th><th>用途</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>命令</th><th>用途</th></tr>
+</thead>
+<tbody>
 <tr><td><code>/record [on|off]</code></td><td>开关 payload 录制</td></tr>
 <tr><td><code>/context</code></td><td>TUI 面板：可视化上下文使用情况</td></tr>
 <tr><td><code>/distill-config [N]</code></td><td>查看/设置 distill token 阈值</td></tr>
@@ -800,17 +876,18 @@ AI 看到精炼后的信息，做出更好的判断
 <tr><td><code>/processor-config [N|off]</code></td><td>查看/设置 tool-result-processor 阈值</td></tr>
 <tr><td><code>/aging-config [N|off]</code></td><td>查看/设置 aging 淘汰轮数</td></tr>
 <tr><td><code>/context-clean [sessionId]</code></td><td>清理持久化数据</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>💡 <strong>所有命令无参调用时显示当前配置和用法说明</strong>，例如直接输入 <code>/distill-config</code> 即可查看当前阈值和用法。</p>
 </blockquote>
-<p>详细原理见 <a href="chapter-3/./context.html">3.3 Context Manager 原理</a>。</p>
+<p>详细原理见 <a href="chapter-3/context.html">3.3 Context Manager 原理</a>。</p>
 <h2 id="最佳实践-2"><a class="header" href="#最佳实践-2">最佳实践</a></h2>
 <h3 id="-好的规则设计"><a class="header" href="#-好的规则设计">✅ 好的规则设计</a></h3>
 <ul>
 <li><strong>精确的条件</strong>：用 <code>conditions</code> 限定触发范围，不要一刀切</li>
-<li><strong>清晰的提示</strong>：告诉 AI "为什么不行"和"应该怎么做"</li>
+<li><strong>清晰的提示</strong>：告诉 AI “为什么不行“和“应该怎么做”</li>
 <li><strong>分层防护</strong>：重要的事情用 <code>deny</code>（强制），次要的用 <code>notify</code>（提醒），内部引导用 <code>steer</code>（静默）</li>
 <li><strong>善用状态追踪</strong>：连续出错 3 次再提醒，比每次都提醒更有效</li>
 </ul>
@@ -831,7 +908,8 @@ AI 看到精炼后的信息，做出更好的判断
 <h2 id="下一步-2"><a class="header" href="#下一步-2">下一步</a></h2>
 <p>有了记忆、规划和规矩，AI 已经是一个靠谱的助手了。但一个会话做了很多事之后——你怎么知道它具体做了什么？哪些文件改了？哪些决策做了？</p>
 <p>下一章，我们来看如何让 AI 学会<strong>复盘</strong>。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="让-ai-学会复盘"><a class="header" href="#让-ai-学会复盘">让 AI 学会复盘</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="让-ai-学会复盘"><a class="header" href="#让-ai-学会复盘">让 AI 学会复盘</a></h1>
 <h2 id="你可能遇到过这种情况-3"><a class="header" href="#你可能遇到过这种情况-3">你可能遇到过这种情况</a></h2>
 <p>你开了一个 3 小时的会话，AI 帮你做了很多事：</p>
 <ul>
@@ -840,14 +918,19 @@ AI 看到精炼后的信息，做出更好的判断
 <li>配置了 CI 流水线</li>
 <li>写了一堆测试</li>
 </ul>
-<p>第二天你想回顾一下："昨天那个登录 bug 具体是怎么修的？"但你只有模糊的记忆——是改了 <code>auth.ts</code> 还是 <code>middleware.ts</code>？是加了空值检查还是改了类型断言？</p>
-<p>你翻遍了 git log，commit message 写的是"fix: update auth"——等于没写。</p>
+<p>第二天你想回顾一下：“昨天那个登录 bug 具体是怎么修的？“但你只有模糊的记忆——是改了 <code>auth.ts</code> 还是 <code>middleware.ts</code>？是加了空值检查还是改了类型断言？</p>
+<p>你翻遍了 git log，commit message 写的是“fix: update auth“——等于没写。</p>
 <blockquote>
-<p>💡 <strong>AI 做了很多事，但没有人记录"为什么这样做"</strong>。git 只记了改了什么，没记思考过程。</p>
+<p>💡 <strong>AI 做了很多事，但没有人记录“为什么这样做“</strong>。git 只记了改了什么，没记思考过程。</p>
 </blockquote>
 <h2 id="核心工具pi-session-analyzer"><a class="header" href="#核心工具pi-session-analyzer">核心工具：pi-session-analyzer</a></h2>
 <p>pi-atelier 提供了 Session Analyzer（会话分析器）来搜索和分析历史会话：</p>
-<div class="table-wrapper"><table><thead><tr><th>功能</th><th>说明</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>功能</th><th>说明</th></tr>
+</thead>
+<tbody>
 <tr><td>跨会话搜索</td><td>关键词搜索所有历史会话的内容</td></tr>
 <tr><td>按文件搜索</td><td>找到所有修改过某个文件的会话</td></tr>
 <tr><td>时间线视图</td><td>按时间顺序查看一个会话的完整过程</td></tr>
@@ -855,14 +938,15 @@ AI 看到精炼后的信息，做出更好的判断
 <tr><td>分支分析</td><td>分析 <code>/tree</code> 产生的平行分支</td></tr>
 <tr><td>接手报告</td><td>5 维度上下文，帮 AI 快速恢复工作</td></tr>
 <tr><td>审计检查</td><td>检查会话中是否有违规操作</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>⚠️ <strong>关于 pi-journal</strong>：pi-journal 是计划中的日志扩展，但目前<strong>功能尚未完成</strong>（<code>tools=[], commands=[]</code>，核心功能未注册到 pi）。当前版本中，请使用 pi-session-analyzer 来回溯历史会话。</p>
 </blockquote>
 <h2 id="实际案例找到上周的-bug-修复"><a class="header" href="#实际案例找到上周的-bug-修复">实际案例：找到上周的 bug 修复</a></h2>
 <h3 id="场景跨会话搜索"><a class="header" href="#场景跨会话搜索">场景：跨会话搜索</a></h3>
-<p>你说："帮我找一下上次修 DuckDB 时区问题的会话。"</p>
+<p>你说：“帮我找一下上次修 DuckDB 时区问题的会话。”</p>
 <p>AI 调用 <code>session_search</code>：</p>
 <pre><code>🔍 搜索 "DuckDB 时区" — 找到 2 个匹配会话：
 
@@ -873,7 +957,7 @@ AI 看到精炼后的信息，做出更好的判断
    讨论了时区策略但没改代码
 </code></pre>
 <h3 id="场景查看会话详情"><a class="header" href="#场景查看会话详情">场景：查看会话详情</a></h3>
-<p>你说："看看第一个会话的详细过程。"</p>
+<p>你说：“看看第一个会话的详细过程。”</p>
 <p>AI 调用 <code>session_analyze</code>，生成时间线：</p>
 <pre><code>📅 会话时间线（05-22 19:36）
 
@@ -888,7 +972,7 @@ AI 看到精炼后的信息，做出更好的判断
 [19:44] AI：提交 git commit "fix: set DuckDB timezone to Asia/Shanghai"
 </code></pre>
 <h3 id="场景按文件追踪"><a class="header" href="#场景按文件追踪">场景：按文件追踪</a></h3>
-<p>你说："connection.ts 最近被谁改过？"</p>
+<p>你说：“connection.ts 最近被谁改过？”</p>
 <p>AI 调用 <code>session_search</code> 的 <code>file</code> 模式：</p>
 <pre><code>📄 src/db/connection.ts 的修改历史：
 
@@ -908,18 +992,24 @@ session_analyze(action="entries", compact=true)
 → 适合 100+ 条记录的大会话
 </code></pre>
 <h2 id="session-analyzer-的分析维度"><a class="header" href="#session-analyzer-的分析维度">Session Analyzer 的分析维度</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>模式</th><th>用途</th><th>命令示例</th></tr></thead><tbody>
-<tr><td><code>summary</code></td><td>会话概览</td><td>"这个会话做了什么"</td></tr>
-<tr><td><code>entries</code></td><td>逐条事件</td><td>"列出所有文件修改"</td></tr>
-<tr><td><code>timeline</code></td><td>时间线</td><td>"AI 的操作顺序是什么"</td></tr>
-<tr><td><code>chain</code></td><td>子代理追踪</td><td>"子代理做了什么"</td></tr>
-<tr><td><code>audit</code></td><td>审计检查</td><td>"有没有违规操作"</td></tr>
-<tr><td><code>digest</code></td><td>对话序列</td><td>"我和 AI 聊了什么"</td></tr>
-<tr><td><code>takeover</code></td><td>接手报告</td><td>"帮我接手上次的工作"</td></tr>
-</tbody></table>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>模式</th><th>用途</th><th>命令示例</th></tr>
+</thead>
+<tbody>
+<tr><td><code>summary</code></td><td>会话概览</td><td>“这个会话做了什么”</td></tr>
+<tr><td><code>entries</code></td><td>逐条事件</td><td>“列出所有文件修改”</td></tr>
+<tr><td><code>timeline</code></td><td>时间线</td><td>“AI 的操作顺序是什么”</td></tr>
+<tr><td><code>chain</code></td><td>子代理追踪</td><td>“子代理做了什么”</td></tr>
+<tr><td><code>audit</code></td><td>审计检查</td><td>“有没有违规操作”</td></tr>
+<tr><td><code>digest</code></td><td>对话序列</td><td>“我和 AI 聊了什么”</td></tr>
+<tr><td><code>takeover</code></td><td>接手报告</td><td>“帮我接手上次的工作”</td></tr>
+</tbody>
+</table>
 </div>
 <h3 id="最有用的模式takeover"><a class="header" href="#最有用的模式takeover">最有用的模式：takeover</a></h3>
-<p><code>takeover</code> 生成一份"接手报告"，包含 5 个维度：</p>
+<p><code>takeover</code> 生成一份“接手报告“，包含 5 个维度：</p>
 <pre><code>📋 会话接手报告
 
 1. 用户意图：修复 DuckDB 时区问题
@@ -928,7 +1018,7 @@ session_analyze(action="entries", compact=true)
 4. 下一步：考虑是否需要在文档中说明时区行为
 5. 关键决策：选择在连接层而非 SQL 层处理时区
 </code></pre>
-<p>当你想"接着上次的工作继续"时，这个报告能帮你（或者另一个 AI）快速恢复上下文。</p>
+<p>当你想“接着上次的工作继续“时，这个报告能帮你（或者另一个 AI）快速恢复上下文。</p>
 <h2 id="最佳实践-3"><a class="header" href="#最佳实践-3">最佳实践</a></h2>
 <h3 id="-session-analyzer-的高效用法"><a class="header" href="#-session-analyzer-的高效用法">✅ Session Analyzer 的高效用法</a></h3>
 <ul>
@@ -944,23 +1034,24 @@ session_analyze(action="entries", compact=true)
 <li>不要期望找到代码全文——会话记录是摘要，不是完整备份</li>
 </ul>
 <h2 id="下一步-3"><a class="header" href="#下一步-3">下一步</a></h2>
-<p>有了复盘能力，AI 和你都能回顾过去的工作。但还有一个问题：会话越长，AI 越容易"变笨"——开始重复自己、忘记前面的约定。</p>
+<p>有了复盘能力，AI 和你都能回顾过去的工作。但还有一个问题：会话越长，AI 越容易“变笨“——开始重复自己、忘记前面的约定。</p>
 <p>下一章，我们来看如何让 AI 在长会话中保持聪明。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="长会话生存指南"><a class="header" href="#长会话生存指南">长会话生存指南</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="长会话生存指南"><a class="header" href="#长会话生存指南">长会话生存指南</a></h1>
 <h2 id="你可能遇到过这种情况-4"><a class="header" href="#你可能遇到过这种情况-4">你可能遇到过这种情况</a></h2>
 <p>你开了一个长会话，AI 帮你做了很多事。到第 50 轮对话的时候，你发现：</p>
 <ul>
 <li>AI 开始问你之前已经回答过的问题</li>
 <li>它重新提了一个已经被否决的方案</li>
 <li>它的代码质量明显下降——少了错误处理、类型定义</li>
-<li>有时候它甚至开始"幻觉"——编造不存在的函数和文件</li>
+<li>有时候它甚至开始“幻觉“——编造不存在的函数和文件</li>
 </ul>
-<p>最极端的情况：AI 直接报错了——"上下文窗口超出限制"（context window exceeded），整个会话崩溃。</p>
+<p>最极端的情况：AI 直接报错了——“上下文窗口超出限制”（context window exceeded），整个会话崩溃。</p>
 <blockquote>
-<p>💡 <strong>这就是"上下文膨胀"问题</strong>：AI 的"工作记忆"有容量上限，装太多东西就会溢出。</p>
+<p>💡 <strong>这就是“上下文膨胀“问题</strong>：AI 的“工作记忆“有容量上限，装太多东西就会溢出。</p>
 </blockquote>
 <h2 id="问题的根源"><a class="header" href="#问题的根源">问题的根源</a></h2>
-<p>AI 的上下文窗口是一个固定大小的"工作台"：</p>
+<p>AI 的上下文窗口是一个固定大小的“工作台“：</p>
 <pre><code>上下文窗口（例如 128K tokens）
 ┌──────────────────────────────────────┐
 │ 系统提示（System Prompt）    ≈ 5K     │
@@ -981,18 +1072,24 @@ session_analyze(action="entries", compact=true)
 </ol>
 <h2 id="两件工具smart-compact-和-context-manager"><a class="header" href="#两件工具smart-compact-和-context-manager">两件工具：Smart Compact 和 Context Manager</a></h2>
 <p>你可能会问：这两个包都要装吗？答案是：<strong>推荐都装</strong>，它们解决不同层面的问题：</p>
-<div class="table-wrapper"><table><thead><tr><th>维度</th><th>pi-smart-compact</th><th>pi-context-manager</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>维度</th><th>pi-smart-compact</th><th>pi-context-manager</th></tr>
+</thead>
+<tbody>
 <tr><td><strong>做什么</strong></td><td>压缩历史对话</td><td>诊断 token 消耗 + 压缩工具返回</td></tr>
 <tr><td><strong>主动/被动</strong></td><td>全自动触发</td><td>诊断需你叫 AI 跑，distill 自动</td></tr>
-<tr><td><strong>解决什么</strong></td><td>"历史对话太长"</td><td>"工具返回太多" + "为什么这么慢"</td></tr>
+<tr><td><strong>解决什么</strong></td><td>“历史对话太长”</td><td>“工具返回太多” + “为什么这么慢”</td></tr>
 <tr><td><strong>能互相替代吗</strong></td><td>❌ 不能</td><td>❌ 不能</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>💡 <strong>一句话总结</strong>：context-manager 帮你<strong>发现问题</strong>（token 都花哪了），smart-compact 帮你<strong>自动解决问题</strong>（压缩历史）。两个配合使用效果最佳。</p>
 </blockquote>
 <h3 id="pi-smart-compact--智能压缩"><a class="header" href="#pi-smart-compact--智能压缩">pi-smart-compact — 智能压缩</a></h3>
-<p>Smart Compact 在上下文快满的时候自动"压缩"历史对话：</p>
+<p>Smart Compact 在上下文快满的时候自动“压缩“历史对话：</p>
 <pre><code>压缩前（80K tokens 的对话历史）：
 ┌─────────────────────────────────┐
 │ 用户：帮我看看 auth.ts          │
@@ -1015,10 +1112,16 @@ session_analyze(action="entries", compact=true)
 └─────────────────────────────────┘
 </code></pre>
 <p>两阶段压缩策略：</p>
-<div class="table-wrapper"><table><thead><tr><th>阶段</th><th>方法</th><th>何时触发</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>阶段</th><th>方法</th><th>何时触发</th></tr>
+</thead>
+<tbody>
 <tr><td>第一阶段</td><td>提取关键信息（如决策、文件修改、结论）</td><td>上下文使用率 &gt; 60%</td></tr>
 <tr><td>第二阶段</td><td>丢弃低价值信息（如重复的文件读取、中间调试输出）</td><td>上下文使用率 &gt; 80%</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="pi-context-manager--诊断工具"><a class="header" href="#pi-context-manager--诊断工具">pi-context-manager — 诊断工具</a></h3>
 <p>pi-context-manager 提供了 <code>payload_analyze</code> 工具，帮你看清 token 到底花在哪了：</p>
@@ -1082,19 +1185,25 @@ Top 3 最贵的工具调用：
 <p>手动触发：在对话中输入 <code>/smart-compact</code>。
 配置查看：输入 <code>/smart-compact-config</code>。</p>
 <h2 id="payload-analyzer-的常用命令"><a class="header" href="#payload-analyzer-的常用命令">Payload Analyzer 的常用命令</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>命令</th><th>用途</th><th>何时用</th></tr></thead><tbody>
-<tr><td><code>budget</code></td><td>Token 预算分析（system/tools/history 构成）</td><td>"token 都花哪了"</td></tr>
-<tr><td><code>growth</code></td><td>上下文增长趋势（token 随请求变化曲线）</td><td>"为什么越来越慢"</td></tr>
-<tr><td><code>expensive</code></td><td>最贵的工具调用（Top N 排序）</td><td>"哪个工具最吃 token"</td></tr>
-<tr><td><code>overview</code></td><td>逐消息详细分析（含 distill 事件）</td><td>"精确诊断某个时间点"</td></tr>
-<tr><td><code>messages</code></td><td>按索引/范围/关键词定位消息</td><td>"看看第 10 条消息说了什么"</td></tr>
-<tr><td><code>chain</code></td><td>跨 payload 追踪同一个工具调用</td><td>"这个调用后来怎么样了"</td></tr>
-<tr><td><code>chain-tcid</code></td><td>跨 payload 追踪同一个 toolCallId</td><td>"验证 distill 行为"</td></tr>
-<tr><td><code>diff</code></td><td>对比两个 payload 的差异</td><td>"这两次请求有什么不同"</td></tr>
-<tr><td><code>stats</code></td><td>聚合统计 distill/processor 命中率</td><td>"压缩效率如何"</td></tr>
-<tr><td><code>single</code></td><td>分析单个 payload 文件</td><td>"深入看一个录制文件"</td></tr>
-<tr><td><code>list</code></td><td>列出所有录制文件</td><td>"有哪些可以分析的"</td></tr>
-</tbody></table>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>命令</th><th>用途</th><th>何时用</th></tr>
+</thead>
+<tbody>
+<tr><td><code>budget</code></td><td>Token 预算分析（system/tools/history 构成）</td><td>“token 都花哪了”</td></tr>
+<tr><td><code>growth</code></td><td>上下文增长趋势（token 随请求变化曲线）</td><td>“为什么越来越慢”</td></tr>
+<tr><td><code>expensive</code></td><td>最贵的工具调用（Top N 排序）</td><td>“哪个工具最吃 token”</td></tr>
+<tr><td><code>overview</code></td><td>逐消息详细分析（含 distill 事件）</td><td>“精确诊断某个时间点”</td></tr>
+<tr><td><code>messages</code></td><td>按索引/范围/关键词定位消息</td><td>“看看第 10 条消息说了什么”</td></tr>
+<tr><td><code>chain</code></td><td>跨 payload 追踪同一个工具调用</td><td>“这个调用后来怎么样了”</td></tr>
+<tr><td><code>chain-tcid</code></td><td>跨 payload 追踪同一个 toolCallId</td><td>“验证 distill 行为”</td></tr>
+<tr><td><code>diff</code></td><td>对比两个 payload 的差异</td><td>“这两次请求有什么不同”</td></tr>
+<tr><td><code>stats</code></td><td>聚合统计 distill/processor 命中率</td><td>“压缩效率如何”</td></tr>
+<tr><td><code>single</code></td><td>分析单个 payload 文件</td><td>“深入看一个录制文件”</td></tr>
+<tr><td><code>list</code></td><td>列出所有录制文件</td><td>“有哪些可以分析的”</td></tr>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>💡 <strong>诊断流程</strong>：先用 <code>list</code> 看有哪些录制文件 → <code>budget</code> 看整体分布 → <code>expensive</code> 找大户 → <code>messages</code> 精确定位。</p>
@@ -1127,15 +1236,16 @@ Top 3 最贵的工具调用：
 </code></pre>
 <h3 id="-常见误区-1"><a class="header" href="#-常见误区-1">❌ 常见误区</a></h3>
 <ul>
-<li>"上下文还有 50% 空间，不用担心" → 错，工具返回结果可能突然膨胀</li>
-<li>"压缩会丢失重要信息" → Smart Compact 优先保留决策和结论</li>
-<li>"重启会话就好了" → 治标不治本，下次还会遇到同样的问题</li>
+<li>“上下文还有 50% 空间，不用担心” → 错，工具返回结果可能突然膨胀</li>
+<li>“压缩会丢失重要信息” → Smart Compact 优先保留决策和结论</li>
+<li>“重启会话就好了” → 治标不治本，下次还会遇到同样的问题</li>
 </ul>
 <h2 id="下一步-4"><a class="header" href="#下一步-4">下一步</a></h2>
-<p>现在 AI 有了记忆、规划、规矩、复盘和压缩——它已经是一个相当能干的助手了。但它还是"被动"的——你问它才做。</p>
+<p>现在 AI 有了记忆、规划、规矩、复盘和压缩——它已经是一个相当能干的助手了。但它还是“被动“的——你问它才做。</p>
 <p>能不能让 AI 主动工作？比如每天自动检查代码质量，或者自动跑一轮研究分析？</p>
 <p>下一章，我们来看如何让 AI <strong>自动化工作</strong>。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="自动化与工作流"><a class="header" href="#自动化与工作流">自动化与工作流</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="自动化与工作流"><a class="header" href="#自动化与工作流">自动化与工作流</a></h1>
 <h2 id="你可能遇到过这种情况-5"><a class="header" href="#你可能遇到过这种情况-5">你可能遇到过这种情况</a></h2>
 <p>每周五下午，你都要做同样的事：</p>
 <ol>
@@ -1146,7 +1256,7 @@ Top 3 最贵的工具调用：
 </ol>
 <p>每次都要手动提醒 AI 做这些事。有时候忘了，周一回来发现上周五的改动没提交。</p>
 <blockquote>
-<p>💡 <strong>AI 能做事，但它不会"主动"做事</strong>。它需要你告诉它"现在该做什么"。</p>
+<p>💡 <strong>AI 能做事，但它不会“主动“做事</strong>。它需要你告诉它“现在该做什么“。</p>
 </blockquote>
 <h2 id="两件工具scheduler-和-workflow"><a class="header" href="#两件工具scheduler-和-workflow">两件工具：Scheduler 和 Workflow</a></h2>
 <h3 id="pi-scheduler--定时任务"><a class="header" href="#pi-scheduler--定时任务">pi-scheduler — 定时任务</a></h3>
@@ -1164,10 +1274,16 @@ Top 3 最贵的工具调用：
   AI 自动执行
 </code></pre>
 <p>支持的定时类型：</p>
-<div class="table-wrapper"><table><thead><tr><th>类型</th><th>说明</th><th>示例</th></tr></thead><tbody>
-<tr><td>一次性</td><td>指定时间后触发一次</td><td>"30 分钟后提醒我开会"</td></tr>
-<tr><td>重复</td><td>按固定间隔重复触发</td><td>"每 2 小时检查一次测试"</td></tr>
-</tbody></table>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>类型</th><th>说明</th><th>示例</th></tr>
+</thead>
+<tbody>
+<tr><td>一次性</td><td>指定时间后触发一次</td><td>“30 分钟后提醒我开会”</td></tr>
+<tr><td>重复</td><td>按固定间隔重复触发</td><td>“每 2 小时检查一次测试”</td></tr>
+</tbody>
+</table>
 </div>
 <h3 id="pi-workflow--子代理编排"><a class="header" href="#pi-workflow--子代理编排">pi-workflow — 子代理编排</a></h3>
 <p>Workflow（工作流）让 AI 把复杂任务拆成多个子代理并行执行：</p>
@@ -1213,7 +1329,7 @@ AI：⏰ 提醒：该检查 CI 结果了。当前时间 15:30。
 </code></pre>
 <h2 id="实际案例子代理研究"><a class="header" href="#实际案例子代理研究">实际案例：子代理研究</a></h2>
 <h3 id="场景调研一个新技术的最佳实践"><a class="header" href="#场景调研一个新技术的最佳实践">场景：调研一个新技术的最佳实践</a></h3>
-<p>你说："调研一下 Bun 和 Node.js 的性能差异，给我一个选型建议。"</p>
+<p>你说：“调研一下 Bun 和 Node.js 的性能差异，给我一个选型建议。”</p>
 <p>AI 启动研究工作流：</p>
 <pre><code>🔬 研究工作流启动
 
@@ -1248,12 +1364,18 @@ AI：⏰ 提醒：该检查 CI 结果了。当前时间 15:30。
    - 性能差异对本项目影响不大（IO 密集型）
 </code></pre>
 <h3 id="子代理的优势"><a class="header" href="#子代理的优势">子代理的优势</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>特性</th><th>单代理（普通对话）</th><th>多代理（Workflow）</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>特性</th><th>单代理（普通对话）</th><th>多代理（Workflow）</th></tr>
+</thead>
+<tbody>
 <tr><td>上下文隔离</td><td>所有信息混在一起</td><td>每个子代理独立</td></tr>
 <tr><td>并行执行</td><td>串行，一个一个来</td><td>可并行搜索</td></tr>
 <tr><td>错误隔离</td><td>一个环节出错影响全局</td><td>子代理出错不影响其他</td></tr>
 <tr><td>Token 效率</td><td>所有信息都在主上下文</td><td>只有最终结果回到主上下文</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="scheduler-的配置"><a class="header" href="#scheduler-的配置">Scheduler 的配置</a></h2>
 <p>通过 <code>settings.json</code> 安装：</p>
@@ -1262,19 +1384,31 @@ AI：⏰ 提醒：该检查 CI 结果了。当前时间 15:30。
 }
 </code></pre>
 <p>工具提供三个操作：</p>
-<div class="table-wrapper"><table><thead><tr><th>操作</th><th>说明</th><th>参数</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>操作</th><th>说明</th><th>参数</th></tr>
+</thead>
+<tbody>
 <tr><td><code>create</code></td><td>创建定时任务</td><td><code>interval_ms</code>, <code>prompt</code>, <code>recurring</code></td></tr>
 <tr><td><code>list</code></td><td>查看所有任务</td><td>无</td></tr>
 <tr><td><code>cancel</code></td><td>取消任务</td><td><code>id</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="常用的时间间隔"><a class="header" href="#常用的时间间隔">常用的时间间隔</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>间隔</th><th>interval_ms</th><th>用途</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>间隔</th><th>interval_ms</th><th>用途</th></tr>
+</thead>
+<tbody>
 <tr><td>30 分钟</td><td>1,800,000</td><td>短期提醒</td></tr>
 <tr><td>2 小时</td><td>7,200,000</td><td>定期检查</td></tr>
 <tr><td>每天</td><td>86,400,000</td><td>日报/日检查</td></tr>
 <tr><td>每周</td><td>604,800,000</td><td>周报/周检查</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="workflow-的配置"><a class="header" href="#workflow-的配置">Workflow 的配置</a></h2>
 <p>通过 <code>settings.json</code> 安装：</p>
@@ -1291,9 +1425,9 @@ AI：⏰ 提醒：该检查 CI 结果了。当前时间 15:30。
 <h2 id="最佳实践-5"><a class="header" href="#最佳实践-5">最佳实践</a></h2>
 <h3 id="-好的定时任务设计"><a class="header" href="#-好的定时任务设计">✅ 好的定时任务设计</a></h3>
 <ul>
-<li><strong>明确的指令</strong>：告诉 AI 具体要做什么，不要模糊的"检查一下"</li>
+<li><strong>明确的指令</strong>：告诉 AI 具体要做什么，不要模糊的“检查一下“</li>
 <li><strong>合理的间隔</strong>：不要每 5 分钟检查一次（浪费资源）</li>
-<li><strong>有意义的触发</strong>：提醒应该是"该做 X 了"，而不是"你在吗"</li>
+<li><strong>有意义的触发</strong>：提醒应该是“该做 X 了“，而不是“你在吗“</li>
 </ul>
 <h3 id="-好的子代理设计"><a class="header" href="#-好的子代理设计">✅ 好的子代理设计</a></h3>
 <ul>
@@ -1303,14 +1437,15 @@ AI：⏰ 提醒：该检查 CI 结果了。当前时间 15:30。
 </ul>
 <h3 id="-常见误区-2"><a class="header" href="#-常见误区-2">❌ 常见误区</a></h3>
 <ul>
-<li>"定时任务可以替代所有手动操作" → 不行，复杂决策还是需要人参与</li>
-<li>"子代理越多越好" → 太多子代理的综合成本可能超过收益</li>
-<li>"Workflow 可以做任何事" → 它擅长研究和分析，不适合需要人工判断的决策</li>
+<li>“定时任务可以替代所有手动操作” → 不行，复杂决策还是需要人参与</li>
+<li>“子代理越多越好” → 太多子代理的综合成本可能超过收益</li>
+<li>“Workflow 可以做任何事” → 它擅长研究和分析，不适合需要人工判断的决策</li>
 </ul>
 <h2 id="下一步-5"><a class="header" href="#下一步-5">下一步</a></h2>
 <p>到目前为止，我们介绍了 pi-atelier 提供的所有核心工具。但如果这些工具还不够——你想做一个当前没有的功能呢？</p>
 <p>下一章，我们来看如何自己动手<strong>开发扩展</strong>。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="自己动手做扩展"><a class="header" href="#自己动手做扩展">自己动手做扩展</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="自己动手做扩展"><a class="header" href="#自己动手做扩展">自己动手做扩展</a></h1>
 <h2 id="为什么要自己写扩展"><a class="header" href="#为什么要自己写扩展">为什么要自己写扩展？</a></h2>
 <p>pi-atelier 提供了 11 个扩展，覆盖了记忆、规划、规矩、复盘、压缩、自动化等核心场景。但每个项目都有自己的特殊需求：</p>
 <ul>
@@ -1333,12 +1468,18 @@ AI：⏰ 提醒：该检查 CI 结果了。当前时间 15:30。
 └── README.md           # 文档
 </code></pre>
 <h3 id="核心概念"><a class="header" href="#核心概念">核心概念</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>概念</th><th>说明</th><th>类比</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>概念</th><th>说明</th><th>类比</th></tr>
+</thead>
+<tbody>
 <tr><td><strong>Tool</strong></td><td>AI 可以调用的函数</td><td>给 AI 一把新锤子</td></tr>
 <tr><td><strong>Hook</strong></td><td>在特定时机执行的逻辑</td><td>给 AI 一个闹钟</td></tr>
 <tr><td><strong>Prompt</strong></td><td>工具的描述（AI 看到的说明）</td><td>告诉 AI 这把锤子怎么用</td></tr>
 <tr><td><strong>Config</strong></td><td>用户可配置的参数</td><td>锤子的力度调节</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="扩展的生命周期"><a class="header" href="#扩展的生命周期">扩展的生命周期</a></h3>
 <pre><code>1. pi 启动
@@ -1359,7 +1500,7 @@ AI：⏰ 提醒：该检查 CI 结果了。当前时间 15:30。
      ▼
 5. AI 会话中可以调用新工具
 </code></pre>
-<h2 id="实战从零写一个代码统计扩展"><a class="header" href="#实战从零写一个代码统计扩展">实战：从零写一个"代码统计"扩展</a></h2>
+<h2 id="实战从零写一个代码统计扩展"><a class="header" href="#实战从零写一个代码统计扩展">实战：从零写一个“代码统计“扩展</a></h2>
 <p>让我们一步步写一个简单的扩展——统计项目代码行数。</p>
 <h3 id="第-1-步创建项目"><a class="header" href="#第-1-步创建项目">第 1 步：创建项目</a></h3>
 <pre><code class="language-bash">mkdir pi-code-stats
@@ -1458,7 +1599,12 @@ export function activate(context: ExtensionContext) {
 <p>重启 pi，AI 就能用 <code>code_stats</code> 工具了。</p>
 <h2 id="pi-shared-utils你的工具箱"><a class="header" href="#pi-shared-utils你的工具箱">pi-shared-utils：你的工具箱</a></h2>
 <p>写扩展时，不用什么都从零开始。<code>pi-shared-utils</code> 提供了一组常用工具函数：</p>
-<div class="table-wrapper"><table><thead><tr><th>模块</th><th>功能</th><th>什么时候用</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>模块</th><th>功能</th><th>什么时候用</th></tr>
+</thead>
+<tbody>
 <tr><td><code>logger</code></td><td>统一日志格式</td><td>需要打印调试信息</td></tr>
 <tr><td><code>storage</code></td><td>跨会话持久存储</td><td>需要保存配置或状态</td></tr>
 <tr><td><code>paths</code></td><td>统一路径处理</td><td>需要找文件位置</td></tr>
@@ -1467,7 +1613,8 @@ export function activate(context: ExtensionContext) {
 <tr><td><code>settings-backup</code></td><td>settings.json 备份与回滚</td><td>需要安全写入配置</td></tr>
 <tr><td><code>file-lock</code></td><td>文件锁（proper-lockfile 封装）</td><td>需要防竞态写入</td></tr>
 <tr><td><code>config</code></td><td>三层配置合并（defaults → 全局 → 项目）</td><td>扩展需要可配置参数</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="使用示例"><a class="header" href="#使用示例">使用示例</a></h3>
 <pre><code class="language-typescript">import { logger, storage, paths } from 'pi-shared-utils';
@@ -1513,13 +1660,19 @@ pi
 <li><code>activate()</code> 函数是否正确导出</li>
 </ul>
 <h3 id="常见问题排查"><a class="header" href="#常见问题排查">常见问题排查</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>问题</th><th>原因</th><th>解决方案</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>问题</th><th>原因</th><th>解决方案</th></tr>
+</thead>
+<tbody>
 <tr><td>AI 看不到工具</td><td><code>piExtension</code> 字段缺失</td><td>在 package.json 加 <code>"piExtension": true</code></td></tr>
 <tr><td>工具调用报错</td><td>handler 内部异常</td><td>查看终端日志中的错误栈</td></tr>
 <tr><td>AI 不调用工具</td><td>description 太模糊</td><td>让工具描述更具体，包含参数说明和示例</td></tr>
 <tr><td>返回值为空</td><td>异步操作未 await</td><td>handler 加 <code>async</code>，调用加 <code>await</code></td></tr>
 <tr><td>路径找不到</td><td>相对路径问题</td><td>用 <code>paths.getProjectRoot()</code> 获取绝对路径</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>💡 <strong>技巧</strong>：开发扩展时，可以在 handler 里先 <code>console.log(JSON.stringify(args, null, 2))</code> 打印参数，确认 AI 传了什么进来。</p>
@@ -1542,18 +1695,12 @@ npm publish --access public
 </code></pre>
 <h3 id="发布前的检查清单"><a class="header" href="#发布前的检查清单">发布前的检查清单</a></h3>
 <ul>
-<li><input disabled="" type="checkbox"/>
-<code>package.json</code> 有完整的 <code>description</code> 和 <code>keywords</code></li>
-<li><input disabled="" type="checkbox"/>
-<code>README.md</code> 按模板写完（安装、使用、配置、示例）</li>
-<li><input disabled="" type="checkbox"/>
-有 <code>LICENSE</code> 文件</li>
-<li><input disabled="" type="checkbox"/>
-有 <code>CHANGELOG.md</code></li>
-<li><input disabled="" type="checkbox"/>
-代码有基本的错误处理</li>
-<li><input disabled="" type="checkbox"/>
-工具描述（prompts/*.md）清晰完整</li>
+<li><input disabled="" type="checkbox"> <code>package.json</code> 有完整的 <code>description</code> 和 <code>keywords</code></li>
+<li><input disabled="" type="checkbox"> <code>README.md</code> 按模板写完（安装、使用、配置、示例）</li>
+<li><input disabled="" type="checkbox"> 有 <code>LICENSE</code> 文件</li>
+<li><input disabled="" type="checkbox"> 有 <code>CHANGELOG.md</code></li>
+<li><input disabled="" type="checkbox"> 代码有基本的错误处理</li>
+<li><input disabled="" type="checkbox"> 工具描述（prompts/*.md）清晰完整</li>
 </ul>
 <h2 id="扩展开发的最佳实践"><a class="header" href="#扩展开发的最佳实践">扩展开发的最佳实践</a></h2>
 <h3 id="-好的扩展设计"><a class="header" href="#-好的扩展设计">✅ 好的扩展设计</a></h3>
@@ -1618,9 +1765,15 @@ context.registerHook({
 <li><strong>扩展</strong>（pi-shared-utils + 你自己的扩展）— 让 AI 无所不能</li>
 </ol>
 <p>欢迎在 <a href="https://github.com/catlain/pi-atelier">GitHub</a> 上提交 Issue 和 PR，一起让 AI 编程助手变得更好！</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="附录"><a class="header" href="#附录">附录</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="附录"><a class="header" href="#附录">附录</a></h1>
 <h2 id="a-扩展速查表"><a class="header" href="#a-扩展速查表">A. 扩展速查表</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>扩展</th><th>安装命令</th><th>核心工具/命令</th><th>一句话用途</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>扩展</th><th>安装命令</th><th>核心工具/命令</th><th>一句话用途</th></tr>
+</thead>
+<tbody>
 <tr><td>pi-memory</td><td><code>"pi-memory"</code></td><td><code>memory_update</code>, <code>memory_index</code></td><td>跨会话知识持久化</td></tr>
 <tr><td>pi-roadmap</td><td><code>"pi-roadmap"</code></td><td><code>roadmap_plan</code>, <code>roadmap_next</code>, <code>roadmap_done</code> 等</td><td>任务拆解和进度追踪</td></tr>
 <tr><td>pi-shepherd</td><td><code>"pi-shepherd"</code></td><td>规则驱动的钩子引擎</td><td>AI 行为守卫（无工具/命令）</td></tr>
@@ -1631,7 +1784,8 @@ context.registerHook({
 <tr><td>pi-workflow</td><td><code>"pi-workflow"</code></td><td><code>registerWorkflowTool</code>（供其他扩展调用）</td><td>工作流框架库</td></tr>
 <tr><td>pi-shared-utils</td><td><code>"pi-shared-utils"</code></td><td>logger, storage, paths, json, validator, settings-backup, file-lock</td><td>扩展开发工具库</td></tr>
 <tr><td>pi-journal</td><td><code>"pi-journal"</code></td><td>⚠️ 开发中，功能未注册</td><td>日志报告生成器</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="b-推荐扩展组合"><a class="header" href="#b-推荐扩展组合">B. 推荐扩展组合</a></h2>
 <h3 id="个人项目轻量组合"><a class="header" href="#个人项目轻量组合">个人项目（轻量组合）</a></h3>
@@ -1749,7 +1903,7 @@ context.registerHook({
 <li>调低 distill 阈值（<code>/distill-config</code>）</li>
 <li>配置 aging 自动淘汰旧内容（<code>/aging-config</code>）</li>
 </ol>
-<h3 id="q-payload_analyze-报无录制文件"><a class="header" href="#q-payload_analyze-报无录制文件">Q: payload_analyze 报"无录制文件"？</a></h3>
+<h3 id="q-payload_analyze-报无录制文件"><a class="header" href="#q-payload_analyze-报无录制文件">Q: payload_analyze 报“无录制文件“？</a></h3>
 <p>需要先开启录制：<code>/record on</code>。录制期间正常使用，用完后 <code>/record off</code>。</p>
 
                     </main>

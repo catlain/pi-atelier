@@ -21,7 +21,6 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
@@ -89,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></li><li class="chapter-item expanded "><a href="../chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></li><li class="chapter-item expanded "><a href="../chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></li><li class="chapter-item expanded "><a href="../chapter-3/rules.html" class="active"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></li><li class="chapter-item expanded "><a href="../chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></li><li class="chapter-item expanded "><a href="../chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></li><li class="chapter-item expanded "><a href="../chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></li><li class="chapter-item expanded "><a href="../chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></li><li class="chapter-item expanded "><a href="../appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></span></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -121,7 +120,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -149,7 +148,7 @@
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <i id="git-repository-button" class="fa fab-github"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/chapter-3/rules.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
@@ -175,12 +174,12 @@
                     <main>
                         <h1 id="给-ai-立规矩"><a class="header" href="#给-ai-立规矩">给 AI 立规矩</a></h1>
 <h2 id="你可能遇到过这种情况"><a class="header" href="#你可能遇到过这种情况">你可能遇到过这种情况</a></h2>
-<p>你让 AI 帮你"修一下登录页面的样式"。30 秒后你看了一眼代码——</p>
+<p>你让 AI 帮你“修一下登录页面的样式“。30 秒后你看了一眼代码——</p>
 <p>AI 不但改了样式，还：</p>
 <ul>
-<li>"顺手"重构了整个登录组件的目录结构</li>
+<li>“顺手“重构了整个登录组件的目录结构</li>
 <li>把 CSS 模块改成了 Tailwind（你项目没用 Tailwind）</li>
-<li>删除了 3 个它认为"没用"的测试文件</li>
+<li>删除了 3 个它认为“没用“的测试文件</li>
 <li>把 package.json 里的依赖升级到了最新版</li>
 </ul>
 <p>等你发现的时候，代码已经提交了。</p>
@@ -190,7 +189,7 @@
 <h2 id="两道防线shepherd-和-context"><a class="header" href="#两道防线shepherd-和-context">两道防线：Shepherd 和 Context</a></h2>
 <p>pi-atelier 提供了两层防护机制：</p>
 <h3 id="第一道pi-shepherd--行为守卫"><a class="header" href="#第一道pi-shepherd--行为守卫">第一道：pi-shepherd — 行为守卫</a></h3>
-<p>Shepherd（牧羊犬）是一个<strong>规则驱动的事件钩子引擎</strong>，在 AI 的关键动作前后做检查，相当于"门卫"。</p>
+<p>Shepherd（牧羊犬）是一个<strong>规则驱动的事件钩子引擎</strong>，在 AI 的关键动作前后做检查，相当于“门卫“。</p>
 <pre><code>AI 准备执行动作（工具调用）
      │
      ▼
@@ -213,20 +212,32 @@
    注入提醒 / 追加动作
 </code></pre>
 <p>支持的钩子时机：</p>
-<div class="table-wrapper"><table><thead><tr><th>钩子</th><th>触发时机</th><th>典型用途</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>钩子</th><th>触发时机</th><th>典型用途</th></tr>
+</thead>
+<tbody>
 <tr><td><code>tool_call</code></td><td>AI 调用工具<strong>前</strong></td><td>改写命令、阻止危险操作</td></tr>
 <tr><td><code>tool_result</code></td><td>工具执行<strong>后</strong></td><td>自动提醒跑测试、lint 检查</td></tr>
 <tr><td><code>agent_end</code></td><td>AI 完成对话<strong>时</strong></td><td>提醒提交代码、更新记忆</td></tr>
 <tr><td><code>session_shutdown</code></td><td>会话关闭<strong>时</strong></td><td>清理临时数据</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Shepherd 的四种动作：</p>
-<div class="table-wrapper"><table><thead><tr><th>动作</th><th>效果</th><th>典型用途</th></tr></thead><tbody>
-<tr><td><code>notify</code></td><td>向 AI 上下文注入提醒</td><td>"编辑了 TS 文件，记得跑测试"</td></tr>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>动作</th><th>效果</th><th>典型用途</th></tr>
+</thead>
+<tbody>
+<tr><td><code>notify</code></td><td>向 AI 上下文注入提醒</td><td>“编辑了 TS 文件，记得跑测试”</td></tr>
 <tr><td><code>steer</code></td><td>静默注入引导（不显示给用户）</td><td>引导 AI 查阅规范</td></tr>
 <tr><td><code>rewrite</code></td><td>改写工具调用参数</td><td>自动给命令加前缀</td></tr>
 <tr><td><code>deny</code></td><td>阻止工具执行</td><td>禁止危险操作</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="第二道pi-context-manager--信息质量与诊断"><a class="header" href="#第二道pi-context-manager--信息质量与诊断">第二道：pi-context-manager — 信息质量与诊断</a></h3>
 <p>Context Manager（上下文管家）控制 AI 能看到什么信息，还能帮你诊断 token 消耗问题。</p>
@@ -318,14 +329,25 @@ AI 看到精炼后的信息，做出更好的判断
 <p><code>state</code> 实现了<strong>状态追踪</strong>——Shepherd 会记住工具出错的次数，累计到阈值才触发。<code>subagent: false</code> 表示子代理中不触发此规则。</p>
 <h2 id="shepherd-规则配置详解"><a class="header" href="#shepherd-规则配置详解">Shepherd 规则配置详解</a></h2>
 <h3 id="规则文件位置"><a class="header" href="#规则文件位置">规则文件位置</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>级别</th><th>路径</th><th>说明</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>级别</th><th>路径</th><th>说明</th></tr>
+</thead>
+<tbody>
 <tr><td>全局默认</td><td>扩展包内的 <code>rules.json</code></td><td>Shepherd 自带的规则集</td></tr>
 <tr><td>项目级</td><td><code>.pi/shepherd-rules-*.json</code>（项目根目录）</td><td>项目自定义规则，可建多个文件</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>修改规则文件后 <code>/reload</code> 即可生效，无需重启 pi。</p>
 <h3 id="规则字段说明"><a class="header" href="#规则字段说明">规则字段说明</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>字段</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>字段</th><th>必填</th><th>说明</th></tr>
+</thead>
+<tbody>
 <tr><td><code>comment</code></td><td>✅</td><td>规则注释，方便理解</td></tr>
 <tr><td><code>hook</code></td><td>✅</td><td>触发时机：<code>tool_call</code> / <code>tool_result</code> / <code>agent_end</code> / <code>session_shutdown</code></td></tr>
 <tr><td><code>tool</code></td><td>❌</td><td>限定只匹配特定工具（如 <code>"edit"</code>、<code>"bash"</code>、<code>"grep"</code>）</td></tr>
@@ -340,7 +362,8 @@ AI 看到精炼后的信息，做出更好的判断
 <tr><td><code>requireSuccess</code></td><td>❌</td><td>是否只在工具成功时触发（默认 <code>false</code>）</td></tr>
 <tr><td><code>requiresTools</code></td><td>❌</td><td>限定只在某些 MCP 工具可用时触发</td></tr>
 <tr><td><code>enabled</code></td><td>✅</td><td>是否启用</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="条件匹配"><a class="header" href="#条件匹配">条件匹配</a></h3>
 <p><code>conditions</code> 数组中的每个元素：</p>
@@ -364,7 +387,12 @@ AI 看到精炼后的信息，做出更好的判断
 </code></pre>
 <h2 id="context-的配置方式"><a class="header" href="#context-的配置方式">Context 的配置方式</a></h2>
 <p>pi-context-manager 提供以下命令：</p>
-<div class="table-wrapper"><table><thead><tr><th>命令</th><th>用途</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>命令</th><th>用途</th></tr>
+</thead>
+<tbody>
 <tr><td><code>/record [on|off]</code></td><td>开关 payload 录制</td></tr>
 <tr><td><code>/context</code></td><td>TUI 面板：可视化上下文使用情况</td></tr>
 <tr><td><code>/distill-config [N]</code></td><td>查看/设置 distill token 阈值</td></tr>
@@ -372,7 +400,8 @@ AI 看到精炼后的信息，做出更好的判断
 <tr><td><code>/processor-config [N|off]</code></td><td>查看/设置 tool-result-processor 阈值</td></tr>
 <tr><td><code>/aging-config [N|off]</code></td><td>查看/设置 aging 淘汰轮数</td></tr>
 <tr><td><code>/context-clean [sessionId]</code></td><td>清理持久化数据</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>💡 <strong>所有命令无参调用时显示当前配置和用法说明</strong>，例如直接输入 <code>/distill-config</code> 即可查看当前阈值和用法。</p>
@@ -382,7 +411,7 @@ AI 看到精炼后的信息，做出更好的判断
 <h3 id="-好的规则设计"><a class="header" href="#-好的规则设计">✅ 好的规则设计</a></h3>
 <ul>
 <li><strong>精确的条件</strong>：用 <code>conditions</code> 限定触发范围，不要一刀切</li>
-<li><strong>清晰的提示</strong>：告诉 AI "为什么不行"和"应该怎么做"</li>
+<li><strong>清晰的提示</strong>：告诉 AI “为什么不行“和“应该怎么做”</li>
 <li><strong>分层防护</strong>：重要的事情用 <code>deny</code>（强制），次要的用 <code>notify</code>（提醒），内部引导用 <code>steer</code>（静默）</li>
 <li><strong>善用状态追踪</strong>：连续出错 3 次再提醒，比每次都提醒更有效</li>
 </ul>
@@ -408,10 +437,10 @@ AI 看到精炼后的信息，做出更好的判断
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        <a rel="prev" href="../" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <a rel="prev" href="../chapter-2/roadmap.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                             <i class="fa fa-angle-left"></i>
                         </a>
-                        <a rel="next" href="../" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <a rel="next" href="../chapter-4/review.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                             <i class="fa fa-angle-right"></i>
                         </a>
 
@@ -421,10 +450,10 @@ AI 看到精炼后的信息，做出更好的判断
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                <a rel="prev" href="../" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                <a rel="prev" href="../chapter-2/roadmap.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                     <i class="fa fa-angle-left"></i>
                 </a>
-                <a rel="next" href="../" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                <a rel="next" href="../chapter-4/review.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                     <i class="fa fa-angle-right"></i>
                 </a>
             </nav>

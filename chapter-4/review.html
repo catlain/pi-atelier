@@ -21,7 +21,6 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
@@ -89,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></li><li class="chapter-item expanded "><a href="../chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></li><li class="chapter-item expanded "><a href="../chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></li><li class="chapter-item expanded "><a href="../chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></li><li class="chapter-item expanded "><a href="../chapter-4/review.html" class="active"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></li><li class="chapter-item expanded "><a href="../chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></li><li class="chapter-item expanded "><a href="../chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></li><li class="chapter-item expanded "><a href="../chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></li><li class="chapter-item expanded "><a href="../appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></span></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -121,7 +120,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -149,7 +148,7 @@
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <i id="git-repository-button" class="fa fab-github"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/chapter-4/review.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
@@ -182,14 +181,19 @@
 <li>配置了 CI 流水线</li>
 <li>写了一堆测试</li>
 </ul>
-<p>第二天你想回顾一下："昨天那个登录 bug 具体是怎么修的？"但你只有模糊的记忆——是改了 <code>auth.ts</code> 还是 <code>middleware.ts</code>？是加了空值检查还是改了类型断言？</p>
-<p>你翻遍了 git log，commit message 写的是"fix: update auth"——等于没写。</p>
+<p>第二天你想回顾一下：“昨天那个登录 bug 具体是怎么修的？“但你只有模糊的记忆——是改了 <code>auth.ts</code> 还是 <code>middleware.ts</code>？是加了空值检查还是改了类型断言？</p>
+<p>你翻遍了 git log，commit message 写的是“fix: update auth“——等于没写。</p>
 <blockquote>
-<p>💡 <strong>AI 做了很多事，但没有人记录"为什么这样做"</strong>。git 只记了改了什么，没记思考过程。</p>
+<p>💡 <strong>AI 做了很多事，但没有人记录“为什么这样做“</strong>。git 只记了改了什么，没记思考过程。</p>
 </blockquote>
 <h2 id="核心工具pi-session-analyzer"><a class="header" href="#核心工具pi-session-analyzer">核心工具：pi-session-analyzer</a></h2>
 <p>pi-atelier 提供了 Session Analyzer（会话分析器）来搜索和分析历史会话：</p>
-<div class="table-wrapper"><table><thead><tr><th>功能</th><th>说明</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>功能</th><th>说明</th></tr>
+</thead>
+<tbody>
 <tr><td>跨会话搜索</td><td>关键词搜索所有历史会话的内容</td></tr>
 <tr><td>按文件搜索</td><td>找到所有修改过某个文件的会话</td></tr>
 <tr><td>时间线视图</td><td>按时间顺序查看一个会话的完整过程</td></tr>
@@ -197,14 +201,15 @@
 <tr><td>分支分析</td><td>分析 <code>/tree</code> 产生的平行分支</td></tr>
 <tr><td>接手报告</td><td>5 维度上下文，帮 AI 快速恢复工作</td></tr>
 <tr><td>审计检查</td><td>检查会话中是否有违规操作</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>⚠️ <strong>关于 pi-journal</strong>：pi-journal 是计划中的日志扩展，但目前<strong>功能尚未完成</strong>（<code>tools=[], commands=[]</code>，核心功能未注册到 pi）。当前版本中，请使用 pi-session-analyzer 来回溯历史会话。</p>
 </blockquote>
 <h2 id="实际案例找到上周的-bug-修复"><a class="header" href="#实际案例找到上周的-bug-修复">实际案例：找到上周的 bug 修复</a></h2>
 <h3 id="场景跨会话搜索"><a class="header" href="#场景跨会话搜索">场景：跨会话搜索</a></h3>
-<p>你说："帮我找一下上次修 DuckDB 时区问题的会话。"</p>
+<p>你说：“帮我找一下上次修 DuckDB 时区问题的会话。”</p>
 <p>AI 调用 <code>session_search</code>：</p>
 <pre><code>🔍 搜索 "DuckDB 时区" — 找到 2 个匹配会话：
 
@@ -215,7 +220,7 @@
    讨论了时区策略但没改代码
 </code></pre>
 <h3 id="场景查看会话详情"><a class="header" href="#场景查看会话详情">场景：查看会话详情</a></h3>
-<p>你说："看看第一个会话的详细过程。"</p>
+<p>你说：“看看第一个会话的详细过程。”</p>
 <p>AI 调用 <code>session_analyze</code>，生成时间线：</p>
 <pre><code>📅 会话时间线（05-22 19:36）
 
@@ -230,7 +235,7 @@
 [19:44] AI：提交 git commit "fix: set DuckDB timezone to Asia/Shanghai"
 </code></pre>
 <h3 id="场景按文件追踪"><a class="header" href="#场景按文件追踪">场景：按文件追踪</a></h3>
-<p>你说："connection.ts 最近被谁改过？"</p>
+<p>你说：“connection.ts 最近被谁改过？”</p>
 <p>AI 调用 <code>session_search</code> 的 <code>file</code> 模式：</p>
 <pre><code>📄 src/db/connection.ts 的修改历史：
 
@@ -250,18 +255,24 @@ session_analyze(action="entries", compact=true)
 → 适合 100+ 条记录的大会话
 </code></pre>
 <h2 id="session-analyzer-的分析维度"><a class="header" href="#session-analyzer-的分析维度">Session Analyzer 的分析维度</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>模式</th><th>用途</th><th>命令示例</th></tr></thead><tbody>
-<tr><td><code>summary</code></td><td>会话概览</td><td>"这个会话做了什么"</td></tr>
-<tr><td><code>entries</code></td><td>逐条事件</td><td>"列出所有文件修改"</td></tr>
-<tr><td><code>timeline</code></td><td>时间线</td><td>"AI 的操作顺序是什么"</td></tr>
-<tr><td><code>chain</code></td><td>子代理追踪</td><td>"子代理做了什么"</td></tr>
-<tr><td><code>audit</code></td><td>审计检查</td><td>"有没有违规操作"</td></tr>
-<tr><td><code>digest</code></td><td>对话序列</td><td>"我和 AI 聊了什么"</td></tr>
-<tr><td><code>takeover</code></td><td>接手报告</td><td>"帮我接手上次的工作"</td></tr>
-</tbody></table>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>模式</th><th>用途</th><th>命令示例</th></tr>
+</thead>
+<tbody>
+<tr><td><code>summary</code></td><td>会话概览</td><td>“这个会话做了什么”</td></tr>
+<tr><td><code>entries</code></td><td>逐条事件</td><td>“列出所有文件修改”</td></tr>
+<tr><td><code>timeline</code></td><td>时间线</td><td>“AI 的操作顺序是什么”</td></tr>
+<tr><td><code>chain</code></td><td>子代理追踪</td><td>“子代理做了什么”</td></tr>
+<tr><td><code>audit</code></td><td>审计检查</td><td>“有没有违规操作”</td></tr>
+<tr><td><code>digest</code></td><td>对话序列</td><td>“我和 AI 聊了什么”</td></tr>
+<tr><td><code>takeover</code></td><td>接手报告</td><td>“帮我接手上次的工作”</td></tr>
+</tbody>
+</table>
 </div>
 <h3 id="最有用的模式takeover"><a class="header" href="#最有用的模式takeover">最有用的模式：takeover</a></h3>
-<p><code>takeover</code> 生成一份"接手报告"，包含 5 个维度：</p>
+<p><code>takeover</code> 生成一份“接手报告“，包含 5 个维度：</p>
 <pre><code>📋 会话接手报告
 
 1. 用户意图：修复 DuckDB 时区问题
@@ -270,7 +281,7 @@ session_analyze(action="entries", compact=true)
 4. 下一步：考虑是否需要在文档中说明时区行为
 5. 关键决策：选择在连接层而非 SQL 层处理时区
 </code></pre>
-<p>当你想"接着上次的工作继续"时，这个报告能帮你（或者另一个 AI）快速恢复上下文。</p>
+<p>当你想“接着上次的工作继续“时，这个报告能帮你（或者另一个 AI）快速恢复上下文。</p>
 <h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
 <h3 id="-session-analyzer-的高效用法"><a class="header" href="#-session-analyzer-的高效用法">✅ Session Analyzer 的高效用法</a></h3>
 <ul>
@@ -286,17 +297,17 @@ session_analyze(action="entries", compact=true)
 <li>不要期望找到代码全文——会话记录是摘要，不是完整备份</li>
 </ul>
 <h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
-<p>有了复盘能力，AI 和你都能回顾过去的工作。但还有一个问题：会话越长，AI 越容易"变笨"——开始重复自己、忘记前面的约定。</p>
+<p>有了复盘能力，AI 和你都能回顾过去的工作。但还有一个问题：会话越长，AI 越容易“变笨“——开始重复自己、忘记前面的约定。</p>
 <p>下一章，我们来看如何让 AI 在长会话中保持聪明。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        <a rel="prev" href="../" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <a rel="prev" href="../chapter-3/rules.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                             <i class="fa fa-angle-left"></i>
                         </a>
-                        <a rel="next" href="../" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <a rel="next" href="../chapter-5/long-session.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                             <i class="fa fa-angle-right"></i>
                         </a>
 
@@ -306,10 +317,10 @@ session_analyze(action="entries", compact=true)
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                <a rel="prev" href="../" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                <a rel="prev" href="../chapter-3/rules.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                     <i class="fa fa-angle-left"></i>
                 </a>
-                <a rel="next" href="../" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                <a rel="next" href="../chapter-5/long-session.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                     <i class="fa fa-angle-right"></i>
                 </a>
             </nav>

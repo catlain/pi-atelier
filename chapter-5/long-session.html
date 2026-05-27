@@ -21,7 +21,6 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
@@ -89,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></li><li class="chapter-item expanded "><a href="../chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></li><li class="chapter-item expanded "><a href="../chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></li><li class="chapter-item expanded "><a href="../chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></li><li class="chapter-item expanded "><a href="../chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></li><li class="chapter-item expanded "><a href="../chapter-5/long-session.html" class="active"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></li><li class="chapter-item expanded "><a href="../chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></li><li class="chapter-item expanded "><a href="../chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></li><li class="chapter-item expanded "><a href="../appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="introduction.html"><strong aria-hidden="true">1.</strong> pi-atelier：让 AI 编程助手变得专业</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-1/memory.html"><strong aria-hidden="true">2.</strong> 第一章：一个 AI 的记忆</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-2/roadmap.html"><strong aria-hidden="true">3.</strong> 第二章：从记忆到规划</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-3/rules.html"><strong aria-hidden="true">4.</strong> 第三章：给 AI 立规矩</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-4/review.html"><strong aria-hidden="true">5.</strong> 第四章：让 AI 学会复盘</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-5/long-session.html"><strong aria-hidden="true">6.</strong> 第五章：长会话生存指南</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-6/automation.html"><strong aria-hidden="true">7.</strong> 第六章：自动化与工作流</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="chapter-7/extensions.html"><strong aria-hidden="true">8.</strong> 第七章：自己动手做扩展</a></span></li><li class="chapter-item expanded "><span class="chapter-link-wrapper"><a href="appendix/reference.html"><strong aria-hidden="true">9.</strong> 附录</a></span></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -121,7 +120,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -149,7 +148,7 @@
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <i id="git-repository-button" class="fa fab-github"></i>
                         </a>
                         <a href="https://github.com/catlain/pi-atelier/edit/main/book/src/src/chapter-5/long-session.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
@@ -180,14 +179,14 @@
 <li>AI 开始问你之前已经回答过的问题</li>
 <li>它重新提了一个已经被否决的方案</li>
 <li>它的代码质量明显下降——少了错误处理、类型定义</li>
-<li>有时候它甚至开始"幻觉"——编造不存在的函数和文件</li>
+<li>有时候它甚至开始“幻觉“——编造不存在的函数和文件</li>
 </ul>
-<p>最极端的情况：AI 直接报错了——"上下文窗口超出限制"（context window exceeded），整个会话崩溃。</p>
+<p>最极端的情况：AI 直接报错了——“上下文窗口超出限制”（context window exceeded），整个会话崩溃。</p>
 <blockquote>
-<p>💡 <strong>这就是"上下文膨胀"问题</strong>：AI 的"工作记忆"有容量上限，装太多东西就会溢出。</p>
+<p>💡 <strong>这就是“上下文膨胀“问题</strong>：AI 的“工作记忆“有容量上限，装太多东西就会溢出。</p>
 </blockquote>
 <h2 id="问题的根源"><a class="header" href="#问题的根源">问题的根源</a></h2>
-<p>AI 的上下文窗口是一个固定大小的"工作台"：</p>
+<p>AI 的上下文窗口是一个固定大小的“工作台“：</p>
 <pre><code>上下文窗口（例如 128K tokens）
 ┌──────────────────────────────────────┐
 │ 系统提示（System Prompt）    ≈ 5K     │
@@ -208,18 +207,24 @@
 </ol>
 <h2 id="两件工具smart-compact-和-context-manager"><a class="header" href="#两件工具smart-compact-和-context-manager">两件工具：Smart Compact 和 Context Manager</a></h2>
 <p>你可能会问：这两个包都要装吗？答案是：<strong>推荐都装</strong>，它们解决不同层面的问题：</p>
-<div class="table-wrapper"><table><thead><tr><th>维度</th><th>pi-smart-compact</th><th>pi-context-manager</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>维度</th><th>pi-smart-compact</th><th>pi-context-manager</th></tr>
+</thead>
+<tbody>
 <tr><td><strong>做什么</strong></td><td>压缩历史对话</td><td>诊断 token 消耗 + 压缩工具返回</td></tr>
 <tr><td><strong>主动/被动</strong></td><td>全自动触发</td><td>诊断需你叫 AI 跑，distill 自动</td></tr>
-<tr><td><strong>解决什么</strong></td><td>"历史对话太长"</td><td>"工具返回太多" + "为什么这么慢"</td></tr>
+<tr><td><strong>解决什么</strong></td><td>“历史对话太长”</td><td>“工具返回太多” + “为什么这么慢”</td></tr>
 <tr><td><strong>能互相替代吗</strong></td><td>❌ 不能</td><td>❌ 不能</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>💡 <strong>一句话总结</strong>：context-manager 帮你<strong>发现问题</strong>（token 都花哪了），smart-compact 帮你<strong>自动解决问题</strong>（压缩历史）。两个配合使用效果最佳。</p>
 </blockquote>
 <h3 id="pi-smart-compact--智能压缩"><a class="header" href="#pi-smart-compact--智能压缩">pi-smart-compact — 智能压缩</a></h3>
-<p>Smart Compact 在上下文快满的时候自动"压缩"历史对话：</p>
+<p>Smart Compact 在上下文快满的时候自动“压缩“历史对话：</p>
 <pre><code>压缩前（80K tokens 的对话历史）：
 ┌─────────────────────────────────┐
 │ 用户：帮我看看 auth.ts          │
@@ -242,10 +247,16 @@
 └─────────────────────────────────┘
 </code></pre>
 <p>两阶段压缩策略：</p>
-<div class="table-wrapper"><table><thead><tr><th>阶段</th><th>方法</th><th>何时触发</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>阶段</th><th>方法</th><th>何时触发</th></tr>
+</thead>
+<tbody>
 <tr><td>第一阶段</td><td>提取关键信息（如决策、文件修改、结论）</td><td>上下文使用率 &gt; 60%</td></tr>
 <tr><td>第二阶段</td><td>丢弃低价值信息（如重复的文件读取、中间调试输出）</td><td>上下文使用率 &gt; 80%</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="pi-context-manager--诊断工具"><a class="header" href="#pi-context-manager--诊断工具">pi-context-manager — 诊断工具</a></h3>
 <p>pi-context-manager 提供了 <code>payload_analyze</code> 工具，帮你看清 token 到底花在哪了：</p>
@@ -309,19 +320,25 @@ Top 3 最贵的工具调用：
 <p>手动触发：在对话中输入 <code>/smart-compact</code>。
 配置查看：输入 <code>/smart-compact-config</code>。</p>
 <h2 id="payload-analyzer-的常用命令"><a class="header" href="#payload-analyzer-的常用命令">Payload Analyzer 的常用命令</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>命令</th><th>用途</th><th>何时用</th></tr></thead><tbody>
-<tr><td><code>budget</code></td><td>Token 预算分析（system/tools/history 构成）</td><td>"token 都花哪了"</td></tr>
-<tr><td><code>growth</code></td><td>上下文增长趋势（token 随请求变化曲线）</td><td>"为什么越来越慢"</td></tr>
-<tr><td><code>expensive</code></td><td>最贵的工具调用（Top N 排序）</td><td>"哪个工具最吃 token"</td></tr>
-<tr><td><code>overview</code></td><td>逐消息详细分析（含 distill 事件）</td><td>"精确诊断某个时间点"</td></tr>
-<tr><td><code>messages</code></td><td>按索引/范围/关键词定位消息</td><td>"看看第 10 条消息说了什么"</td></tr>
-<tr><td><code>chain</code></td><td>跨 payload 追踪同一个工具调用</td><td>"这个调用后来怎么样了"</td></tr>
-<tr><td><code>chain-tcid</code></td><td>跨 payload 追踪同一个 toolCallId</td><td>"验证 distill 行为"</td></tr>
-<tr><td><code>diff</code></td><td>对比两个 payload 的差异</td><td>"这两次请求有什么不同"</td></tr>
-<tr><td><code>stats</code></td><td>聚合统计 distill/processor 命中率</td><td>"压缩效率如何"</td></tr>
-<tr><td><code>single</code></td><td>分析单个 payload 文件</td><td>"深入看一个录制文件"</td></tr>
-<tr><td><code>list</code></td><td>列出所有录制文件</td><td>"有哪些可以分析的"</td></tr>
-</tbody></table>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>命令</th><th>用途</th><th>何时用</th></tr>
+</thead>
+<tbody>
+<tr><td><code>budget</code></td><td>Token 预算分析（system/tools/history 构成）</td><td>“token 都花哪了”</td></tr>
+<tr><td><code>growth</code></td><td>上下文增长趋势（token 随请求变化曲线）</td><td>“为什么越来越慢”</td></tr>
+<tr><td><code>expensive</code></td><td>最贵的工具调用（Top N 排序）</td><td>“哪个工具最吃 token”</td></tr>
+<tr><td><code>overview</code></td><td>逐消息详细分析（含 distill 事件）</td><td>“精确诊断某个时间点”</td></tr>
+<tr><td><code>messages</code></td><td>按索引/范围/关键词定位消息</td><td>“看看第 10 条消息说了什么”</td></tr>
+<tr><td><code>chain</code></td><td>跨 payload 追踪同一个工具调用</td><td>“这个调用后来怎么样了”</td></tr>
+<tr><td><code>chain-tcid</code></td><td>跨 payload 追踪同一个 toolCallId</td><td>“验证 distill 行为”</td></tr>
+<tr><td><code>diff</code></td><td>对比两个 payload 的差异</td><td>“这两次请求有什么不同”</td></tr>
+<tr><td><code>stats</code></td><td>聚合统计 distill/processor 命中率</td><td>“压缩效率如何”</td></tr>
+<tr><td><code>single</code></td><td>分析单个 payload 文件</td><td>“深入看一个录制文件”</td></tr>
+<tr><td><code>list</code></td><td>列出所有录制文件</td><td>“有哪些可以分析的”</td></tr>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>💡 <strong>诊断流程</strong>：先用 <code>list</code> 看有哪些录制文件 → <code>budget</code> 看整体分布 → <code>expensive</code> 找大户 → <code>messages</code> 精确定位。</p>
@@ -354,12 +371,12 @@ Top 3 最贵的工具调用：
 </code></pre>
 <h3 id="-常见误区"><a class="header" href="#-常见误区">❌ 常见误区</a></h3>
 <ul>
-<li>"上下文还有 50% 空间，不用担心" → 错，工具返回结果可能突然膨胀</li>
-<li>"压缩会丢失重要信息" → Smart Compact 优先保留决策和结论</li>
-<li>"重启会话就好了" → 治标不治本，下次还会遇到同样的问题</li>
+<li>“上下文还有 50% 空间，不用担心” → 错，工具返回结果可能突然膨胀</li>
+<li>“压缩会丢失重要信息” → Smart Compact 优先保留决策和结论</li>
+<li>“重启会话就好了” → 治标不治本，下次还会遇到同样的问题</li>
 </ul>
 <h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
-<p>现在 AI 有了记忆、规划、规矩、复盘和压缩——它已经是一个相当能干的助手了。但它还是"被动"的——你问它才做。</p>
+<p>现在 AI 有了记忆、规划、规矩、复盘和压缩——它已经是一个相当能干的助手了。但它还是“被动“的——你问它才做。</p>
 <p>能不能让 AI 主动工作？比如每天自动检查代码质量，或者自动跑一轮研究分析？</p>
 <p>下一章，我们来看如何让 AI <strong>自动化工作</strong>。</p>
 
@@ -367,10 +384,10 @@ Top 3 最贵的工具调用：
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        <a rel="prev" href="../" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <a rel="prev" href="../chapter-4/review.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                             <i class="fa fa-angle-left"></i>
                         </a>
-                        <a rel="next" href="../" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <a rel="next" href="../chapter-6/automation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                             <i class="fa fa-angle-right"></i>
                         </a>
 
@@ -380,10 +397,10 @@ Top 3 最贵的工具调用：
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                <a rel="prev" href="../" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                <a rel="prev" href="../chapter-4/review.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                     <i class="fa fa-angle-left"></i>
                 </a>
-                <a rel="next" href="../" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                <a rel="next" href="../chapter-6/automation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                     <i class="fa fa-angle-right"></i>
                 </a>
             </nav>
