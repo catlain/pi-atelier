@@ -220,9 +220,12 @@ session_analyze(action="branches", sessionId="...")
 Session Analyzer 的数据来源：
 
 ```
-~/.pi/agent/distill/
-├── {sessionId}.jsonl          ← 每个会话的完整记录
-└── processor/                  ← 工具输出处理缓存
+~/.pi/agent/sessions/
+├── --home-lain-.pi--/                ← 按 CWD 分组的会话目录
+│   ├── 2026-05-27T..._sessionId.jsonl  ← 每个会话的完整记录
+│   └── ...
+└── --other-project-path--/          ← 不同项目目录的会话
+    └── ...
 ```
 
 会话记录是 JSONL 格式（每行一个 JSON 对象），包含：

@@ -80,7 +80,7 @@ pi-atelier 的扩展补上了这些能力缺口：
 | 规划 | pi-roadmap | 让 AI 管理 Epic → Story → Task |
 | 守卫 | pi-shepherd | 给 AI 立规矩，防止犯错 |
 | 上下文与诊断 | pi-context-manager | 控制 AI 看到的信息质量 + token 消耗诊断 |
-| 日志 | pi-journal | ⚠️ 开发中，功能尚未完成 |
+| 日志 | pi-journal | 日志报告生成（git 活动 + 会话事件 + 记忆变更） |
 | 分析 | pi-session-analyzer | 搜索和回溯历史会话 |
 | 压缩 | pi-smart-compact | 长会话中保持 AI 的聪明 |
 | 定时 | pi-scheduler | 定时提醒和周期任务 |
@@ -145,7 +145,7 @@ pi-atelier 的扩展补上了这些能力缺口：
 
 大部分扩展都是 **开箱即用**——安装后无需额外配置（但你可以按需定制）。
 
-> ⚠️ **注意**：pi-journal 目前还在开发中（核心功能未注册），暂不推荐使用。pi-workflow 和 pi-shared-utils 是供其他扩展调用的开发库，一般用户不需要直接安装。
+> 💡 **提示**：pi-workflow 和 pi-shared-utils 是供其他扩展调用的开发库，一般用户不需要直接安装。
 
 ## 重要文件路径
 
