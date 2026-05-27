@@ -76,6 +76,54 @@
         }
       ],
       "doneDate": "2026-05-26"
+    },
+    {
+      "id": "E3.S2",
+      "title": "丰富书内容 — 基于真实会话场景充实各章节",
+      "description": "从历史会话中提炼工具使用场景，丰富各章节内容。每章拆成多个子章节，用 1-2 个命令解决一个具体问题。",
+      "status": "todo",
+      "createdDate": "2026-05-27",
+      "tasks": [
+        {
+          "id": "E3.S2.T1",
+          "title": "搜索历史会话中所有工具使用场景（session_search, payload_analyze, smart-compact, context 等）",
+          "status": "done",
+          "priority": "high",
+          "createdDate": "2026-05-27",
+          "doingDate": "2026-05-27",
+          "doneDate": "2026-05-27",
+          "doneBySessionId": "2026-05-27T07-52-21-601Z_019e686b-9561-7b69-9cd7-64c06db29fd3",
+          "note": "搜索了 50+ 历史会话中的工具使用场景，提炼出 smart-compact 压缩对比、takeover 接手、aging 自动遗忘、context 手动标记删除、payload 诊断、shepherd 规则拦截等实战素材"
+        },
+        {
+          "id": "E3.S2.T2",
+          "title": "第五章：补充长会话实战场景（smart-compact 压缩对比、handoff 接手、context aging 遗忘、手工标记删除）",
+          "status": "todo",
+          "priority": "medium",
+          "createdDate": "2026-05-27"
+        },
+        {
+          "id": "E3.S2.T3",
+          "title": "第四章：补充 session_analyzer 各模式的实战案例（grep 搜 bug、takeover 接手、audit 审计）",
+          "status": "todo",
+          "priority": "medium",
+          "createdDate": "2026-05-27"
+        },
+        {
+          "id": "E3.S2.T4",
+          "title": "第三章：补充 shepherd 规则引擎实战案例（拦截危险命令、自动提醒 git 提交、跨扩展联动）",
+          "status": "todo",
+          "priority": "medium",
+          "createdDate": "2026-05-27"
+        },
+        {
+          "id": "E3.S2.T5",
+          "title": "通用润色：检查所有章节的排版、措辞、链接有效性",
+          "status": "todo",
+          "priority": "low",
+          "createdDate": "2026-05-27"
+        }
+      ]
     }
   ]
 }
