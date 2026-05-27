@@ -16,8 +16,9 @@
   /* 导航栏高度 */
   --menu-bar-height: 50px;
 
-  /* 侧边栏 */
-  --sidebar-width: 280px;
+  /* 侧边栏（用 min 动态公式，resize 拖动时 JS 会改 --sidebar-target-width） */
+  --sidebar-target-width: 280px;
+  --sidebar-width: min(var(--sidebar-target-width), 80vw);
 
   /* 内容区 */
   --content-max-width: 860px;
@@ -660,7 +661,8 @@ h3 {
    ============================================================ */
 @media only screen and (max-width: 768px) {
   :root {
-    --sidebar-width: 260px;
+    --sidebar-target-width: 260px;
+    --sidebar-width: min(var(--sidebar-target-width), 80vw);
   }
 
   .nav-chapters {
