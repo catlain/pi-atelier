@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "../searchindex-b2bf7b94.js";
+            window.path_to_searchindex_js = "../searchindex-342acbd6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4d4df149.js"></script>
@@ -213,7 +213,7 @@ AI：好的，我来跑测试... ✅ 3 个测试全部通过。
 	"comment": "[安全] 禁止 git checkout 恢复文件",
 	"hook": "tool_call",
 	"tool": "bash",
-	"action": "deny",
+	"action": "block",
 	"conditions": [
 		{ "field": "text", "pattern": "git\\s+checkout\\s+--", "flags": "" }
 	],
@@ -322,7 +322,7 @@ AI：运行 audit_format.py 检查格式... 果然是 CRLF 问题。
 </thead>
 <tbody>
 <tr><td><strong>编辑后提醒</strong></td><td><code>notify</code> + <code>conditions</code></td><td>改代码后跑测试、lint、格式化</td></tr>
-<tr><td><strong>危险操作阻止</strong></td><td><code>deny</code> + <code>conditions</code></td><td>禁止 <code>git checkout</code>、禁止删文件</td></tr>
+<tr><td><strong>危险操作阻止</strong></td><td><code>block</code> + <code>conditions</code></td><td>禁止 <code>git checkout</code>、禁止删文件</td></tr>
 <tr><td><strong>收尾自动化</strong></td><td><code>agent_end</code> + <code>check</code></td><td>会话结束自动 commit + 记忆更新</td></tr>
 <tr><td><strong>连续出错引导</strong></td><td><code>steer</code> + <code>state</code></td><td>反复失败时引导翻记忆</td></tr>
 <tr><td><strong>命令改写</strong></td><td><code>rewrite</code> + <code>pattern</code></td><td>自动给命令加前缀压缩输出</td></tr>

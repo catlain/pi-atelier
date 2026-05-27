@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "../searchindex-b2bf7b94.js";
+            window.path_to_searchindex_js = "../searchindex-342acbd6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4d4df149.js"></script>
@@ -199,12 +199,12 @@
   问题：关键细节丢失，AI 不知道之前做了什么决定
 
 Smart Compact（两阶段）：
-  Phase 1（60% 使用率）：
+  Phase 1（意图总结）：
     → 提取：决策、约定、文件修改、结论
     → 保留所有关键信息，丢弃冗余过程
   
-  Phase 2（80% 使用率）：
-    → 进一步精炼，只保留当前任务所需
+  Phase 2（工具去留）：
+    → 逐批判断每个工具结果是否需要保留
     → 丢弃：重复读取、失败尝试、调试过程
 </code></pre>
 <h3 id="操作步骤"><a class="header" href="#操作步骤">操作步骤</a></h3>
@@ -409,13 +409,13 @@ AI：
 │   → 开启 /record on（可选，为后续诊断做准备）
 │   → 注意避免重复读取大文件
 │
-├── 第 40-60 轮：上下文使用率 ~60%
-│   → Smart Compact Phase 1 自动触发（如果装了）
+├── 第 40-60 轮：上下文开始紧张
+│   → Smart Compact 接管 pi 的压缩事件（如果 auto 模式开启）
 │   → 或手动 /smart-compact
 │   → Aging 开始淘汰旧工具输出
 │
-├── 第 60-80 轮：上下文使用率 ~80%
-│   → Smart Compact Phase 2 触发
+├── 第 60-80 轮：接近上限
+│   → Smart Compact 已完成两阶段压缩
 │   → 考虑是否该开新会话了
 │   → 如果要继续：用 payload_analyze budget 检查
 │

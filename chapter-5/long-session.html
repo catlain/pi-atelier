@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "../searchindex-b2bf7b94.js";
+            window.path_to_searchindex_js = "../searchindex-342acbd6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4d4df149.js"></script>
@@ -258,11 +258,11 @@
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>阶段</th><th>方法</th><th>何时触发</th></tr>
+<tr><th>阶段</th><th>方法</th><th>说明</th></tr>
 </thead>
 <tbody>
-<tr><td>第一阶段</td><td>提取关键信息（如决策、文件修改、结论）</td><td>上下文使用率 &gt; 60%</td></tr>
-<tr><td>第二阶段</td><td>丢弃低价值信息（如重复的文件读取、中间调试输出）</td><td>上下文使用率 &gt; 80%</td></tr>
+<tr><td>Phase 1</td><td>提取关键信息（如决策、文件修改、结论）</td><td>遍历对话，生成结构化意图摘要</td></tr>
+<tr><td>Phase 2</td><td>丢弃低价值信息（如重复的文件读取、中间调试输出）</td><td>让 LLM 逐批判断工具结果去留</td></tr>
 </tbody>
 </table>
 </div>
@@ -364,7 +364,7 @@ Top 3 最贵的工具调用：
 <h3 id="-保持长会话健康的习惯"><a class="header" href="#-保持长会话健康的习惯">✅ 保持长会话健康的习惯</a></h3>
 <ol>
 <li><strong>用 compact 模式搜索</strong>：<code>code_graph_semantic_code_search(compact: true)</code> 比 <code>grep</code> 省 70% token</li>
-<li><strong>及时压缩</strong>：不要等到崩溃才处理，60% 时就应该触发压缩</li>
+<li><strong>及时压缩</strong>：不要等到崩溃才处理，上下文接近上限时就应该触发压缩</li>
 <li><strong>避免重复读取</strong>：用记忆记住文件内容，不要反复 <code>read</code> 同一个文件</li>
 <li><strong>大文件分块读</strong>：用 <code>offset/limit</code> 只读需要的部分，而不是整个文件</li>
 <li><strong>合理配置 aging</strong>：设置 8-12 轮淘汰，自动清理过时内容</li>

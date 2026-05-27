@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "../searchindex-b2bf7b94.js";
+            window.path_to_searchindex_js = "../searchindex-342acbd6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4d4df149.js"></script>
@@ -231,8 +231,10 @@
                │
                ▼
 ┌──────────────────────────────────┐
-│       .pi/roadmaps/*.json        │
-│  持久化存储，跨会话可用             │
+│  ~/.pi/roadmap/&lt;id&gt;.roadmap.json │
+│  全局存储，跨会话跨项目可用         │
+│  + 项目级 .pi/roadmap/roadmap.json│
+│    （自动同步派生）                │
 └──────────────┬───────────────────┘
                │
      ┌─────────┼─────────┐

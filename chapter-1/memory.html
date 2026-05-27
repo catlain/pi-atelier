@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "../searchindex-b2bf7b94.js";
+            window.path_to_searchindex_js = "../searchindex-342acbd6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4d4df149.js"></script>
@@ -304,13 +304,26 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 <li>通用编程知识（AI 本来就知道怎么写 for 循环）</li>
 </ul>
 <h3 id="记忆文件管理"><a class="header" href="#记忆文件管理">记忆文件管理</a></h3>
-<p>记忆不是越多越好。当文件超过 <strong>25 个</strong>时，需要清理：</p>
+<p>记忆不是越多越好。系统设有多层保护机制：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>阈值</th><th>行为</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>20 个</strong></td><td>提示注意控制数量</td></tr>
+<tr><td><strong>25 个</strong></td><td>警告接近上限，建议清理合并</td></tr>
+<tr><td><strong>40 个</strong></td><td><strong>硬拒绝写入</strong>，必须先清理</td></tr>
+</tbody>
+</table>
+</div>
+<p>清理方法：</p>
 <ol>
 <li><strong>合并</strong>：同主题的多文件合并为一个</li>
 <li><strong>归档</strong>：过时的结论被新结论取代，删掉旧的</li>
 <li><strong>拆分</strong>：单文件超过 200 行时，按子主题拆分</li>
 </ol>
-<p>记忆系统会自动在 AI 尝试写入时检查数量，超过 <strong>40 个</strong>会拒绝写入，强制先清理。</p>
+<p>此外，记忆系统还有<strong>冲突检测</strong>——如果新文件与已有记忆的 topic 相同或关键词重叠 3 个以上，会<strong>直接拒绝写入</strong>，强制先处理冲突（合并或覆盖）。</p>
 <h2 id="配置"><a class="header" href="#配置">配置</a></h2>
 <p>pi-memory 通过 pi 的 <code>settings.json</code> 安装：</p>
 <pre><code class="language-json">{
@@ -351,7 +364,7 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 <li>让 AI 执行 <code>memory_index</code>，查看当前所有记忆</li>
 <li>标记同主题的文件（关键词 3+ 重叠）</li>
 <li>让 AI 读取标记的文件，合并为一个</li>
-<li>用 <code>memory_update</code> 覆盖写入合并后的文件</li>
+<li>用 <code>memory_update</code> <strong>覆盖写入到已有文件的文件名</strong>（而不是新建文件名，否则会触发冲突检测被拒绝）</li>
 <li>删除旧的碎片文件</li>
 </ol>
 <h3 id="场景旧结论被推翻了"><a class="header" href="#场景旧结论被推翻了">场景：旧结论被推翻了</a></h3>
