@@ -98,9 +98,13 @@
         {
           "id": "E3.S2.T2",
           "title": "第五章：补充长会话实战场景（smart-compact 压缩对比、handoff 接手、context aging 遗忘、手工标记删除）",
-          "status": "todo",
+          "status": "done",
           "priority": "medium",
-          "createdDate": "2026-05-27"
+          "createdDate": "2026-05-27",
+          "doingDate": "2026-05-27",
+          "doneDate": "2026-05-27",
+          "doneBySessionId": "2026-05-27T07-52-21-601Z_019e686b-9561-7b69-9cd7-64c06db29fd3",
+          "note": "新增第三章实战场景（6个）和第五章实战场景（5个场景+完整生存策略），SUMMARY.md完善子章节导航，+550行"
         },
         {
           "id": "E3.S2.T3",
