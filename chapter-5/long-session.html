@@ -295,28 +295,46 @@ Top 3 最贵的工具调用：
 </code></pre>
 <p>安装后自动生效，无需额外配置。</p>
 <h3 id="可选的高级配置"><a class="header" href="#可选的高级配置">可选的高级配置</a></h3>
-<p>在 <code>.pi/config.json</code> 中：</p>
+<p>在 <code>.pi/settings.json</code> 中：</p>
 <pre><code class="language-json">{
   "smart-compact": {
-    "phase1_threshold": 0.6,
-    "phase2_threshold": 0.8,
-    "preserve_patterns": [
-      "决策.*：",
-      "选择了.*方案",
-      "约定.*："
-    ]
+    "auto": "auto"
   }
 }
 </code></pre>
+<ul>
+<li><code>auto</code>：自动触发（默认，推荐）</li>
+<li><code>manual</code>：只响应 <code>/smart-compact</code> 命令</li>
+</ul>
+<p>手动触发：在对话中输入 <code>/smart-compact</code>。
+配置查看：输入 <code>/smart-compact-config</code>。</p>
 <h2 id="payload-analyzer-的常用命令"><a class="header" href="#payload-analyzer-的常用命令">Payload Analyzer 的常用命令</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>命令</th><th>用途</th><th>何时用</th></tr></thead><tbody>
-<tr><td><code>budget</code></td><td>Token 预算分析</td><td>"token 都花哪了"</td></tr>
-<tr><td><code>growth</code></td><td>上下文增长趋势</td><td>"为什么越来越慢"</td></tr>
-<tr><td><code>expensive</code></td><td>最贵的工具调用</td><td>"哪个工具最吃 token"</td></tr>
-<tr><td><code>overview</code></td><td>逐消息详细分析</td><td>"精确诊断某个时间点"</td></tr>
-<tr><td><code>stats</code></td><td>聚合统计</td><td>"整体效率如何"</td></tr>
+<tr><td><code>budget</code></td><td>Token 预算分析（system/tools/history 构成）</td><td>"token 都花哪了"</td></tr>
+<tr><td><code>growth</code></td><td>上下文增长趋势（token 随请求变化曲线）</td><td>"为什么越来越慢"</td></tr>
+<tr><td><code>expensive</code></td><td>最贵的工具调用（Top N 排序）</td><td>"哪个工具最吃 token"</td></tr>
+<tr><td><code>overview</code></td><td>逐消息详细分析（含 distill 事件）</td><td>"精确诊断某个时间点"</td></tr>
+<tr><td><code>messages</code></td><td>按索引/范围/关键词定位消息</td><td>"看看第 10 条消息说了什么"</td></tr>
+<tr><td><code>chain</code></td><td>跨 payload 追踪同一个工具调用</td><td>"这个调用后来怎么样了"</td></tr>
+<tr><td><code>chain-tcid</code></td><td>跨 payload 追踪同一个 toolCallId</td><td>"验证 distill 行为"</td></tr>
+<tr><td><code>diff</code></td><td>对比两个 payload 的差异</td><td>"这两次请求有什么不同"</td></tr>
+<tr><td><code>stats</code></td><td>聚合统计 distill/processor 命中率</td><td>"压缩效率如何"</td></tr>
+<tr><td><code>single</code></td><td>分析单个 payload 文件</td><td>"深入看一个录制文件"</td></tr>
+<tr><td><code>list</code></td><td>列出所有录制文件</td><td>"有哪些可以分析的"</td></tr>
 </tbody></table>
 </div>
+<blockquote>
+<p>💡 <strong>诊断流程</strong>：先用 <code>list</code> 看有哪些录制文件 → <code>budget</code> 看整体分布 → <code>expensive</code> 找大户 → <code>messages</code> 精确定位。</p>
+</blockquote>
+<h2 id="context-manager-的-aging-和-processor"><a class="header" href="#context-manager-的-aging-和-processor">Context Manager 的 Aging 和 Processor</a></h2>
+<p>除了 Distill，pi-context-manager 还提供了两个辅助机制：</p>
+<h3 id="aging老化淘汰"><a class="header" href="#aging老化淘汰">Aging（老化淘汰）</a></h3>
+<p>自动淘汰长期未被引用的旧工具输出。通过 <code>/aging-config</code> 设置淘汰轮数。</p>
+<p>特殊豁免：技能文件（SKILL.md）内容不会被 aging 淘汰，确保 AI 始终能看到当前加载的技能。</p>
+<h3 id="tool-result-processor后处理器"><a class="header" href="#tool-result-processor后处理器">Tool Result Processor（后处理器）</a></h3>
+<p>对特定类型的工具输出做格式化精简（如 code-graph 的 AST 搜索结果、MCP JSON 输出）。通过 <code>/processor-config</code> 设置阈值。</p>
+<h3 id="context-tui-面板"><a class="header" href="#context-tui-面板">/context TUI 面板</a></h3>
+<p>输入 <code>/context</code> 可以打开可视化面板，分类浏览上下文内容，手动标记不需要的内容进行删除。</p>
 <h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
 <h3 id="-保持长会话健康的习惯"><a class="header" href="#-保持长会话健康的习惯">✅ 保持长会话健康的习惯</a></h3>
 <ol>
@@ -324,6 +342,8 @@ Top 3 最贵的工具调用：
 <li><strong>及时压缩</strong>：不要等到崩溃才处理，60% 时就应该触发压缩</li>
 <li><strong>避免重复读取</strong>：用记忆记住文件内容，不要反复 <code>read</code> 同一个文件</li>
 <li><strong>大文件分块读</strong>：用 <code>offset/limit</code> 只读需要的部分，而不是整个文件</li>
+<li><strong>合理配置 aging</strong>：设置 8-12 轮淘汰，自动清理过时内容</li>
+<li><strong>定期用 payload_analyze 体检</strong>：长会话中途跑一次 <code>budget</code>，提前发现问题</li>
 </ol>
 <h3 id="-诊断的优先级"><a class="header" href="#-诊断的优先级">✅ 诊断的优先级</a></h3>
 <pre><code>上下文出问题时：
@@ -347,20 +367,26 @@ Top 3 最贵的工具调用：
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../chapter-4/review.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-
-                            <a rel="next prefetch" href="../chapter-6/automation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
+                        <a rel="prev" href="../" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a rel="next" href="../" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
 
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
-            <!-- nav-wide-wrapper removed -->
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                <a rel="prev" href="../" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                <a rel="next" href="../" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </nav>
 
         </div>
 

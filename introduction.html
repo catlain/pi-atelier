@@ -226,7 +226,7 @@
 <tr><td>规划</td><td>pi-roadmap</td><td>让 AI 管理 Epic → Story → Task</td></tr>
 <tr><td>守卫</td><td>pi-shepherd</td><td>给 AI 立规矩，防止犯错</td></tr>
 <tr><td>上下文与诊断</td><td>pi-context-manager</td><td>控制 AI 看到的信息质量 + token 消耗诊断</td></tr>
-<tr><td>日志</td><td>pi-journal</td><td>自动记录每个会话做了什么</td></tr>
+<tr><td>日志</td><td>pi-journal</td><td>⚠️ 开发中，功能尚未完成</td></tr>
 <tr><td>分析</td><td>pi-session-analyzer</td><td>搜索和回溯历史会话</td></tr>
 <tr><td>压缩</td><td>pi-smart-compact</td><td>长会话中保持 AI 的聪明</td></tr>
 <tr><td>定时</td><td>pi-scheduler</td><td>定时提醒和周期任务</td></tr>
@@ -259,22 +259,19 @@
     "pi-roadmap",
     "pi-shepherd",
     "pi-context-manager",
-    "pi-journal",
     "pi-session-analyzer",
     "pi-smart-compact",
-    "pi-scheduler",
-    "pi-workflow"
+    "pi-scheduler"
   ]
 }
 </code></pre>
-<p>或者全部安装：</p>
+<p>或者全部安装（pi-workflow 和 pi-shared-utils 是开发库，一般用户不需要直接安装）：</p>
 <pre><code class="language-json">{
   "packages": [
     "pi-memory",
     "pi-roadmap",
     "pi-shepherd",
     "pi-context-manager",
-    "pi-journal",
     "pi-session-analyzer",
     "pi-smart-compact",
     "pi-scheduler",
@@ -283,13 +280,16 @@
   ]
 }
 </code></pre>
-<p>全部扩展都是 <strong>开箱即用</strong>——安装后无需额外配置（但你可以按需定制）。</p>
+<p>大部分扩展都是 <strong>开箱即用</strong>——安装后无需额外配置（但你可以按需定制）。</p>
+<blockquote>
+<p>⚠️ <strong>注意</strong>：pi-journal 目前还在开发中（核心功能未注册），暂不推荐使用。pi-workflow 和 pi-shared-utils 是供其他扩展调用的开发库，一般用户不需要直接安装。</p>
+</blockquote>
 <h2 id="重要文件路径"><a class="header" href="#重要文件路径">重要文件路径</a></h2>
 <p>在开始之前，你需要知道 pi 的关键文件在哪里：</p>
 <div class="table-wrapper"><table><thead><tr><th>文件</th><th>路径</th><th>说明</th></tr></thead><tbody>
-<tr><td>全局配置</td><td><code>~/.pi/settings.json</code></td><td>安装扩展、配置 provider</td></tr>
-<tr><td>项目配置</td><td><code>.pi/config.json</code>（项目根目录）</td><td>项目级自定义配置</td></tr>
-<tr><td>项目指令</td><td><code>.pi/agent/AGENTS.md</code>（项目根目录）</td><td>注入给 AI 的项目规则</td></tr>
+<tr><td>全局配置</td><td><code>~/.pi/agent/settings.json</code></td><td>安装扩展、配置 provider</td></tr>
+<tr><td>项目配置</td><td><code>.pi/settings.json</code>（项目根目录）</td><td>项目级自定义配置（覆盖全局）</td></tr>
+<tr><td>项目指令</td><td><code>AGENTS.md</code>（项目根目录或 <code>.pi/agent/</code>）</td><td>注入给 AI 的项目规则</td></tr>
 <tr><td>扩展安装目录</td><td><code>~/.pi/agent/npm/node_modules/</code></td><td>npm 包安装位置</td></tr>
 <tr><td>记忆目录</td><td><code>.pi/memory/</code>（项目级）</td><td>项目级持久记忆</td></tr>
 <tr><td>全局记忆</td><td><code>~/.pi/agent/memory/</code></td><td>跨项目通用记忆</td></tr>
@@ -316,17 +316,26 @@
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-
-                            <a rel="next prefetch" href="chapter-1/memory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
+                        <a rel="prev" href="" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a rel="next" href="" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
 
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
-            <!-- nav-wide-wrapper removed -->
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                <a rel="prev" href="" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                <a rel="next" href="" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </nav>
 
         </div>
 

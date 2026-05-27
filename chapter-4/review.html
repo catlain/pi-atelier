@@ -187,37 +187,21 @@
 <blockquote>
 <p>💡 <strong>AI 做了很多事，但没有人记录"为什么这样做"</strong>。git 只记了改了什么，没记思考过程。</p>
 </blockquote>
-<h2 id="两件工具journal-和-session-analyzer"><a class="header" href="#两件工具journal-和-session-analyzer">两件工具：Journal 和 Session Analyzer</a></h2>
-<p>pi-atelier 提供了两个互补的工具来解决这个问题：</p>
-<h3 id="pi-journal--自动记录"><a class="header" href="#pi-journal--自动记录">pi-journal — 自动记录</a></h3>
-<p>Journal（日志）在后台默默记录每个会话的关键事件：</p>
-<ul>
-<li>哪些文件被读取了</li>
-<li>哪些文件被修改了</li>
-<li>AI 做了哪些关键决策</li>
-<li>会话的起止时间</li>
-</ul>
-<pre><code>┌─────────────────────────────────────┐
-│           AI 会话进行中               │
-│                                      │
-│  读取 src/auth.ts    → Journal 记录  │
-│  修改 src/auth.ts    → Journal 记录  │
-│  运行 npm test       → Journal 记录  │
-│  提交 git commit     → Journal 记录  │
-│                                      │
-│  会话结束 → 生成当日摘要              │
-└─────────────────────────────────────┘
-</code></pre>
-<h3 id="pi-session-analyzer--深度回溯"><a class="header" href="#pi-session-analyzer--深度回溯">pi-session-analyzer — 深度回溯</a></h3>
-<p>Session Analyzer（会话分析器）让你搜索和分析历史会话：</p>
+<h2 id="核心工具pi-session-analyzer"><a class="header" href="#核心工具pi-session-analyzer">核心工具：pi-session-analyzer</a></h2>
+<p>pi-atelier 提供了 Session Analyzer（会话分析器）来搜索和分析历史会话：</p>
 <div class="table-wrapper"><table><thead><tr><th>功能</th><th>说明</th></tr></thead><tbody>
 <tr><td>跨会话搜索</td><td>关键词搜索所有历史会话的内容</td></tr>
 <tr><td>按文件搜索</td><td>找到所有修改过某个文件的会话</td></tr>
 <tr><td>时间线视图</td><td>按时间顺序查看一个会话的完整过程</td></tr>
 <tr><td>摘要生成</td><td>自动总结一个会话做了什么</td></tr>
 <tr><td>分支分析</td><td>分析 <code>/tree</code> 产生的平行分支</td></tr>
+<tr><td>接手报告</td><td>5 维度上下文，帮 AI 快速恢复工作</td></tr>
+<tr><td>审计检查</td><td>检查会话中是否有违规操作</td></tr>
 </tbody></table>
 </div>
+<blockquote>
+<p>⚠️ <strong>关于 pi-journal</strong>：pi-journal 是计划中的日志扩展，但目前<strong>功能尚未完成</strong>（<code>tools=[], commands=[]</code>，核心功能未注册到 pi）。当前版本中，请使用 pi-session-analyzer 来回溯历史会话。</p>
+</blockquote>
 <h2 id="实际案例找到上周的-bug-修复"><a class="header" href="#实际案例找到上周的-bug-修复">实际案例：找到上周的 bug 修复</a></h2>
 <h3 id="场景跨会话搜索"><a class="header" href="#场景跨会话搜索">场景：跨会话搜索</a></h3>
 <p>你说："帮我找一下上次修 DuckDB 时区问题的会话。"</p>
@@ -254,30 +238,16 @@
 2. 05-20 14:30 — 数据库连接池配置（同事）
 3. 05-18 09:15 — 初始创建（你）
 </code></pre>
-<h2 id="journal-的输出格式"><a class="header" href="#journal-的输出格式">Journal 的输出格式</a></h2>
-<p>Journal 生成的日志存储在 <code>.pi/journal/</code> 目录下：</p>
-<pre><code>.pi/journal/
-├── 2026-05-22.md        # 当日日志
-├── 2026-05-21.md
-└── summaries/
-    ├── weekly-2026-W21.md  # 周总结
-    └── daily/              # 每日摘要
-</code></pre>
-<p>每日日志的内容示例：</p>
-<pre><code class="language-markdown"># 2026-05-22 工作日志
+<h2 id="session-analyzer-的-compact-模式"><a class="header" href="#session-analyzer-的-compact-模式">Session Analyzer 的 compact 模式</a></h2>
+<p><code>entries</code> 动作支持 <code>compact</code> 参数，精简输出适合快速浏览大会话：</p>
+<pre><code># 标准模式
+session_analyze(action="entries")
+→ 完整的每条记录（含时间戳、类型、完整内容）
 
-## 会话 1：DuckDB 时区修复（19:36 - 19:44）
-
-- 修改：src/db/connection.ts
-- 修改：tests/db/connection.test.ts
-- 决策：在连接层设置时区，不在 SQL 层
-- 测试：全部通过
-
-## 会话 2：API 文档编写（20:15 - 21:30）
-
-- 创建：docs/api/auth.md
-- 创建：docs/api/users.md
-- 修改：docs/api/index.md
+# Compact 模式
+session_analyze(action="entries", compact=true)
+→ 去掉 type 列、时间只保留 HH:MM、预览 60 字符
+→ 适合 100+ 条记录的大会话
 </code></pre>
 <h2 id="session-analyzer-的分析维度"><a class="header" href="#session-analyzer-的分析维度">Session Analyzer 的分析维度</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>模式</th><th>用途</th><th>命令示例</th></tr></thead><tbody>
@@ -302,22 +272,18 @@
 </code></pre>
 <p>当你想"接着上次的工作继续"时，这个报告能帮你（或者另一个 AI）快速恢复上下文。</p>
 <h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
-<h3 id="-让-journal-发挥最大价值"><a class="header" href="#-让-journal-发挥最大价值">✅ 让 Journal 发挥最大价值</a></h3>
-<ul>
-<li><strong>频繁提交</strong>：AI 在 Journal 中记录的事件粒度跟 git commit 一致</li>
-<li><strong>定期回顾</strong>：每周用 <code>session_search</code> 回顾本周做了什么</li>
-<li><strong>结合记忆</strong>：Journal 记录"做了什么"，Memory 记录"学到了什么"</li>
-</ul>
 <h3 id="-session-analyzer-的高效用法"><a class="header" href="#-session-analyzer-的高效用法">✅ Session Analyzer 的高效用法</a></h3>
 <ul>
 <li><strong><code>grep</code> 模式</strong>：跨所有会话搜索关键词（比翻 git log 快得多）</li>
 <li><strong><code>file</code> 模式</strong>：找到所有动过某个文件的会话（代码审查利器）</li>
 <li><strong><code>takeover</code> 模式</strong>：接手别人的工作时，先生成接手报告</li>
+<li><strong><code>compact</code> 模式</strong>：大会话快速浏览，精简输出</li>
+<li><strong><code>audit</code> 模式</strong>：定期检查 AI 是否有违规操作</li>
 </ul>
 <h3 id="-常见误区"><a class="header" href="#-常见误区">❌ 常见误区</a></h3>
 <ul>
-<li>不要把 Journal 当 Memory 用——Journal 是日志（发生了什么），Memory 是知识（学到了什么）</li>
-<li>不要在 Journal 里找代码内容——Journal 只记录操作，不记录代码全文</li>
+<li>不要用 <code>session_search</code> 代替记忆——搜索是回溯（过去做了什么），记忆是知识（学到了什么）</li>
+<li>不要期望找到代码全文——会话记录是摘要，不是完整备份</li>
 </ul>
 <h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
 <p>有了复盘能力，AI 和你都能回顾过去的工作。但还有一个问题：会话越长，AI 越容易"变笨"——开始重复自己、忘记前面的约定。</p>
@@ -327,20 +293,26 @@
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../chapter-3/rules.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-
-                            <a rel="next prefetch" href="../chapter-5/long-session.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
+                        <a rel="prev" href="../" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a rel="next" href="../" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
 
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
-            <!-- nav-wide-wrapper removed -->
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                <a rel="prev" href="../" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                <a rel="next" href="../" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </nav>
 
         </div>
 

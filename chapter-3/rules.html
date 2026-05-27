@@ -190,155 +190,215 @@
 <h2 id="两道防线shepherd-和-context"><a class="header" href="#两道防线shepherd-和-context">两道防线：Shepherd 和 Context</a></h2>
 <p>pi-atelier 提供了两层防护机制：</p>
 <h3 id="第一道pi-shepherd--行为守卫"><a class="header" href="#第一道pi-shepherd--行为守卫">第一道：pi-shepherd — 行为守卫</a></h3>
-<p>Shepherd（牧羊犬）在 AI 的关键动作前做检查，相当于"门卫"。</p>
-<pre><code>AI 准备执行动作
+<p>Shepherd（牧羊犬）是一个<strong>规则驱动的事件钩子引擎</strong>，在 AI 的关键动作前后做检查，相当于"门卫"。</p>
+<pre><code>AI 准备执行动作（工具调用）
      │
      ▼
-┌──────────────────┐
-│   Shepherd 钩子   │
-│  检查：该不该做？  │
-└──────┬───────────┘
+┌──────────────────────────────┐
+│     Shepherd tool_call 钩子   │
+│   检查：该不该做？该怎么做？    │
+└──────┬───────────────────────┘
        │
-   ┌───┴───┐
-   │       │
-  放行    阻止 + 提示原因
+   ┌───┴────┐
+   │        │
+  放行     改写/阻止 + 提示原因
+
+... 工具执行完毕 ...
+
+┌──────────────────────────────┐
+│    Shepherd tool_result 钩子  │
+│   检查：需要后续动作吗？       │
+└──────┬───────────────────────┘
+       │
+   注入提醒 / 追加动作
 </code></pre>
 <p>支持的钩子时机：</p>
 <div class="table-wrapper"><table><thead><tr><th>钩子</th><th>触发时机</th><th>典型用途</th></tr></thead><tbody>
-<tr><td><code>before_edit</code></td><td>AI 编辑文件前</td><td>检查是否改了不该改的文件</td></tr>
-<tr><td><code>before_write</code></td><td>AI 写新文件前</td><td>检查文件路径是否合理</td></tr>
-<tr><td><code>before_bash</code></td><td>AI 执行命令前</td><td>禁止危险命令（rm -rf /）</td></tr>
-<tr><td><code>after_bash</code></td><td>命令执行后</td><td>自动格式化、lint 检查</td></tr>
-<tr><td><code>agent_end</code></td><td>会话结束前</td><td>提醒提交代码、更新文档</td></tr>
+<tr><td><code>tool_call</code></td><td>AI 调用工具<strong>前</strong></td><td>改写命令、阻止危险操作</td></tr>
+<tr><td><code>tool_result</code></td><td>工具执行<strong>后</strong></td><td>自动提醒跑测试、lint 检查</td></tr>
+<tr><td><code>agent_end</code></td><td>AI 完成对话<strong>时</strong></td><td>提醒提交代码、更新记忆</td></tr>
+<tr><td><code>session_shutdown</code></td><td>会话关闭<strong>时</strong></td><td>清理临时数据</td></tr>
+</tbody></table>
+</div>
+<p>Shepherd 的四种动作：</p>
+<div class="table-wrapper"><table><thead><tr><th>动作</th><th>效果</th><th>典型用途</th></tr></thead><tbody>
+<tr><td><code>notify</code></td><td>向 AI 上下文注入提醒</td><td>"编辑了 TS 文件，记得跑测试"</td></tr>
+<tr><td><code>steer</code></td><td>静默注入引导（不显示给用户）</td><td>引导 AI 查阅规范</td></tr>
+<tr><td><code>rewrite</code></td><td>改写工具调用参数</td><td>自动给命令加前缀</td></tr>
+<tr><td><code>deny</code></td><td>阻止工具执行</td><td>禁止危险操作</td></tr>
 </tbody></table>
 </div>
 <h3 id="第二道pi-context-manager--信息质量与诊断"><a class="header" href="#第二道pi-context-manager--信息质量与诊断">第二道：pi-context-manager — 信息质量与诊断</a></h3>
-<p>Context Manager（上下文管家）不但控制 AI 能看到什么信息，还能帮你诊断 token 消耗问题。</p>
-<p>AI 的"聪明程度"直接取决于它能看到的上下文质量。如果上下文里有噪音（过期的日志、无关的文件内容），AI 就会做出错误的判断。</p>
-<p>pi-context-manager 的核心能力：</p>
+<p>Context Manager（上下文管家）控制 AI 能看到什么信息，还能帮你诊断 token 消耗问题。</p>
+<p>核心能力：</p>
 <ul>
-<li><strong>Distill（蒸馏）</strong>：对工具返回的大段内容做压缩，保留关键信息</li>
-<li><strong>过滤</strong>：按规则屏蔽不相关的内容</li>
-<li><strong>优先级排序</strong>：重要的信息排前面</li>
-<li><strong>Token 诊断</strong>：用数据说话——分析上下文里 token 都花在哪了</li>
+<li><strong>Distill（蒸馏）</strong>：自动压缩工具返回的大段内容，保留关键信息</li>
+<li><strong>Tool Result Processor（后处理器）</strong>：对特定工具输出做格式化精简</li>
+<li><strong>Aging（老化淘汰）</strong>：自动淘汰长期未被引用的旧工具输出</li>
+<li><strong>Payload 分析</strong>：用数据诊断 token 都花在哪了</li>
 </ul>
 <pre><code>工具返回大量内容（可能 50KB）
      │
      ▼
-┌──────────────────┐
-│   Context Distill │
-│  压缩到 5KB 关键信息 │
-└──────────────────┘
+┌────────────────────────┐
+│   Context Manager       │
+│   Distill + Processor   │
+│   压缩到 ~5KB 关键信息   │
+└────────────────────────┘
      │
      ▼
 AI 看到精炼后的信息，做出更好的判断
 </code></pre>
+<p>详细原理见 <a href="./context.html">3.3 Context Manager 原理</a>。</p>
 <h2 id="实际案例防止-ai-犯错"><a class="header" href="#实际案例防止-ai-犯错">实际案例：防止 AI 犯错</a></h2>
-<h3 id="场景-1禁止修改系统文件"><a class="header" href="#场景-1禁止修改系统文件">场景 1：禁止修改系统文件</a></h3>
+<h3 id="场景-1编辑后自动提醒跑测试"><a class="header" href="#场景-1编辑后自动提醒跑测试">场景 1：编辑后自动提醒跑测试</a></h3>
 <pre><code class="language-json">{
-  "rules": [
-    {
-      "id": "no-system-files",
-      "hook": "before_edit",
-      "condition": "filePath matches '.pi/memory/.*'",
-      "action": "deny",
-      "message": "记忆文件只能通过 memory_update 工具修改，不要直接编辑"
-    }
-  ]
+	"comment": "[TypeScript] 编辑后必须跑测试",
+	"hook": "tool_result",
+	"tool": "edit",
+	"action": "notify",
+	"conditions": [
+		{ "field": "path", "pattern": "\\.ts$", "flags": "" }
+	],
+	"reason": "编辑了 TypeScript 文件，必须跑覆盖该代码的单元测试（如无测试则先补充），修复所有测试问题确保通过。",
+	"enabled": true
 }
 </code></pre>
-<p>这样当 AI 尝试用 <code>edit</code> 工具直接修改记忆文件时，shepherd 会拦截并告诉它用正确的方式。</p>
-<h3 id="场景-2会话结束提醒"><a class="header" href="#场景-2会话结束提醒">场景 2：会话结束提醒</a></h3>
+<p>当 AI 编辑了 <code>.ts</code> 文件后，Shepherd 自动提醒 AI 跑测试。</p>
+<h3 id="场景-2会话结束提醒提交代码"><a class="header" href="#场景-2会话结束提醒提交代码">场景 2：会话结束提醒提交代码</a></h3>
 <pre><code class="language-json">{
-  "rules": [
-    {
-      "id": "commit-reminder",
-      "hook": "agent_end",
-      "action": "inject",
-      "message": "检查是否有未提交的改动。如果有，提交并推送到远程仓库。"
-    }
-  ]
+	"comment": "[收尾] 编辑后提醒 commit + 记忆更新 + 总结",
+	"hook": "agent_end",
+	"action": "notify",
+	"check": "has_edits",
+	"reason": "检测到文件编辑，执行收尾工作：\n1️⃣ Git commit...\n2️⃣ 更新记忆...\n3️⃣ 会话总结",
+	"stopReason": ["stop"],
+	"enabled": true
 }
 </code></pre>
-<p>AI 在会话结束前会自动检查 git 状态，不会遗漏提交。</p>
-<h3 id="场景-3自动-lint"><a class="header" href="#场景-3自动-lint">场景 3：自动 lint</a></h3>
+<p><code>check: "has_edits"</code> 表示只有本轮会话确实编辑了文件才触发。<code>stopReason: ["stop"]</code> 表示只在 AI 正常结束（而非被中断）时触发。</p>
+<h3 id="场景-3自动改写命令"><a class="header" href="#场景-3自动改写命令">场景 3：自动改写命令</a></h3>
 <pre><code class="language-json">{
-  "rules": [
-    {
-      "id": "auto-lint",
-      "hook": "after_bash",
-      "condition": "command matches 'edit|write'",
-      "action": "run",
-      "command": "npx eslint {filePath}"
-    }
-  ]
+	"comment": "[rtk] 自动代理高频 bash 命令",
+	"tool": "bash",
+	"action": "rewrite",
+	"pattern": "^(git\\s+(status|log|diff)|cargo\\s+(test|build|clippy)|pytest)\\b",
+	"flags": "",
+	"reason": "rtk command rewrite：自动加 rtk 前缀压缩输出",
+	"enabled": true
 }
 </code></pre>
-<p>每次 AI 编辑文件后自动跑 lint，保证代码质量。</p>
-<h2 id="shepherd-规则的配置方式"><a class="header" href="#shepherd-规则的配置方式">Shepherd 规则的配置方式</a></h2>
-<p>规则存储在 <code>shepherd/rules.json</code> 中，每条规则包含：</p>
-<div class="table-wrapper"><table><thead><tr><th>字段</th><th>说明</th><th>示例</th></tr></thead><tbody>
-<tr><td><code>id</code></td><td>规则唯一标识</td><td><code>"no-system-files"</code></td></tr>
-<tr><td><code>hook</code></td><td>触发时机</td><td><code>"before_edit"</code></td></tr>
-<tr><td><code>condition</code></td><td>触发条件（可选）</td><td><code>"filePath matches 'src/.*'"</code></td></tr>
-<tr><td><code>action</code></td><td>执行动作</td><td><code>"deny"</code> / <code>"inject"</code> / <code>"run"</code></td></tr>
-<tr><td><code>message</code></td><td>提示信息</td><td><code>"不要直接编辑记忆文件"</code></td></tr>
+<p>当 AI 尝试执行 <code>git status</code> 等命令时，Shepherd 自动改写为 <code>rtk git status</code>（rtk 是一个输出压缩工具）。</p>
+<h3 id="场景-4代码风格检查"><a class="header" href="#场景-4代码风格检查">场景 4：代码风格检查</a></h3>
+<pre><code class="language-json">{
+	"comment": "[TS] 禁止空格缩进 — TS 文件必须用 Tab",
+	"hook": "tool_call",
+	"tool": "edit",
+	"action": "notify",
+	"conditions": [
+		{ "field": "path", "pattern": "\\.ts$", "flags": "" },
+		{ "field": "text", "pattern": "\\n  [\\S ]", "flags": "" }
+	],
+	"reason": "❌ TS 文件要求 Tab 缩进，不是空格。请用 Tab 缩进重写代码。",
+	"enabled": true
+}
+</code></pre>
+<p><strong>两个条件同时满足</strong>才触发：文件是 <code>.ts</code> 且代码内容包含空格缩进。</p>
+<h3 id="场景-5连续出错时提醒翻记忆"><a class="header" href="#场景-5连续出错时提醒翻记忆">场景 5：连续出错时提醒翻记忆</a></h3>
+<pre><code class="language-json">{
+	"comment": "[debug] 工具反复出错时提醒翻记忆",
+	"hook": "tool_result",
+	"action": "steer",
+	"state": { "countKind": "errors", "gte": 5 },
+	"reason": "🔍 **工具反复出错**：连续失败多次，翻看 .pi/memory/ 目录下的记忆文件，看是否已有踩坑记录。",
+	"enabled": true,
+	"subagent": false
+}
+</code></pre>
+<p><code>state</code> 实现了<strong>状态追踪</strong>——Shepherd 会记住工具出错的次数，累计到阈值才触发。<code>subagent: false</code> 表示子代理中不触发此规则。</p>
+<h2 id="shepherd-规则配置详解"><a class="header" href="#shepherd-规则配置详解">Shepherd 规则配置详解</a></h2>
+<h3 id="规则文件位置"><a class="header" href="#规则文件位置">规则文件位置</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>级别</th><th>路径</th><th>说明</th></tr></thead><tbody>
+<tr><td>全局默认</td><td>扩展包内的 <code>rules.json</code></td><td>Shepherd 自带的规则集</td></tr>
+<tr><td>项目级</td><td><code>.pi/shepherd-rules-*.json</code>（项目根目录）</td><td>项目自定义规则，可建多个文件</td></tr>
 </tbody></table>
 </div>
-<h3 id="常用规则模板"><a class="header" href="#常用规则模板">常用规则模板</a></h3>
+<p>修改规则文件后 <code>/reload</code> 即可生效，无需重启 pi。</p>
+<h3 id="规则字段说明"><a class="header" href="#规则字段说明">规则字段说明</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>字段</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td><code>comment</code></td><td>✅</td><td>规则注释，方便理解</td></tr>
+<tr><td><code>hook</code></td><td>✅</td><td>触发时机：<code>tool_call</code> / <code>tool_result</code> / <code>agent_end</code> / <code>session_shutdown</code></td></tr>
+<tr><td><code>tool</code></td><td>❌</td><td>限定只匹配特定工具（如 <code>"edit"</code>、<code>"bash"</code>、<code>"grep"</code>）</td></tr>
+<tr><td><code>action</code></td><td>✅</td><td>动作：<code>notify</code> / <code>steer</code> / <code>rewrite</code> / <code>deny</code></td></tr>
+<tr><td><code>conditions</code></td><td>❌</td><td>条件数组，所有条件同时满足才触发</td></tr>
+<tr><td><code>pattern</code></td><td>❌</td><td>正则匹配（匹配工具参数或命令内容）</td></tr>
+<tr><td><code>reason</code></td><td>✅</td><td>注入给 AI 的提示文本（<code>notify</code>/<code>steer</code> 动作时）</td></tr>
+<tr><td><code>state</code></td><td>❌</td><td>状态追踪（如累计错误次数）</td></tr>
+<tr><td><code>check</code></td><td>❌</td><td>全局检查（如 <code>has_edits</code> 检查是否编辑了文件）</td></tr>
+<tr><td><code>stopReason</code></td><td>❌</td><td>限定 AI 结束原因（如 <code>["stop"]</code> 只在正常结束时触发）</td></tr>
+<tr><td><code>subagent</code></td><td>❌</td><td>是否在子代理中也触发（默认 <code>true</code>）</td></tr>
+<tr><td><code>requireSuccess</code></td><td>❌</td><td>是否只在工具成功时触发（默认 <code>false</code>）</td></tr>
+<tr><td><code>requiresTools</code></td><td>❌</td><td>限定只在某些 MCP 工具可用时触发</td></tr>
+<tr><td><code>enabled</code></td><td>✅</td><td>是否启用</td></tr>
+</tbody></table>
+</div>
+<h3 id="条件匹配"><a class="header" href="#条件匹配">条件匹配</a></h3>
+<p><code>conditions</code> 数组中的每个元素：</p>
 <pre><code class="language-json">{
-  "rules": [
-    {
-      "id": "protect-config",
-      "hook": "before_edit",
-      "condition": "filePath matches '(package\\.json|tsconfig\\.json)$'",
-      "action": "warn",
-      "message": "正在修改配置文件，请确认这是有意的"
-    },
-    {
-      "id": "no-force-push",
-      "hook": "before_bash",
-      "condition": "command matches 'push.*--force'",
-      "action": "deny",
-      "message": "禁止 force push，这会覆盖远程历史"
-    },
-    {
-      "id": "test-reminder",
-      "hook": "agent_end",
-      "action": "inject",
-      "message": "运行测试确认所有测试通过后再提交"
-    }
-  ]
+	"field": "path",     // 匹配哪个字段：path（文件路径）或 text（工具参数内容）
+	"pattern": "\\.ts$", // 正则表达式
+	"flags": ""          // 正则标志（如 "i" 不区分大小写、"s" 单行模式）
+}
+</code></pre>
+<h3 id="三层配置合并"><a class="header" href="#三层配置合并">三层配置合并</a></h3>
+<p>Shepherd 的配置（如 <code>projectRulesPattern</code>、<code>maxWarnings</code>）通过 pi-shared-utils 的 <code>getEffectiveConfig</code> 做三层合并：</p>
+<pre><code>defaults → 全局 ~/.pi/agent/settings.json → 项目 .pi/settings.json
+</code></pre>
+<p>在 <code>.pi/settings.json</code> 中可以覆盖 Shepherd 的配置：</p>
+<pre><code class="language-json">{
+	"shepherd": {
+		"projectRulesPattern": "my-rules-",
+		"maxWarnings": 3
+	}
 }
 </code></pre>
 <h2 id="context-的配置方式"><a class="header" href="#context-的配置方式">Context 的配置方式</a></h2>
-<p>pi-context-manager 通过 <code>settings.json</code> 中的 <code>packages</code> 配置安装（包名为 <code>"pi-context-manager"</code>），默认提供：</p>
-<ul>
-<li>自动 distill 大型工具输出</li>
-<li>按优先级排序上下文</li>
-<li>payload_analyze 工具——分析 token 预算、增长趋势、最贵的工具调用</li>
-<li>可通过 AGENTS.md 注入全局提示</li>
-</ul>
-<p>高级用户可以在 <code>.pi/config.json</code> 中自定义过滤规则。</p>
+<p>pi-context-manager 提供以下命令：</p>
+<div class="table-wrapper"><table><thead><tr><th>命令</th><th>用途</th></tr></thead><tbody>
+<tr><td><code>/record [on|off]</code></td><td>开关 payload 录制</td></tr>
+<tr><td><code>/context</code></td><td>TUI 面板：可视化上下文使用情况</td></tr>
+<tr><td><code>/distill-config [N]</code></td><td>查看/设置 distill token 阈值</td></tr>
+<tr><td><code>/distill-config --cap [N]</code></td><td>查看/设置首次全文上限（<code>firstSeenCap</code>，0 = 不设上限）</td></tr>
+<tr><td><code>/processor-config [N|off]</code></td><td>查看/设置 tool-result-processor 阈值</td></tr>
+<tr><td><code>/aging-config [N|off]</code></td><td>查看/设置 aging 淘汰轮数</td></tr>
+<tr><td><code>/context-clean [sessionId]</code></td><td>清理持久化数据</td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p>💡 <strong>所有命令无参调用时显示当前配置和用法说明</strong>，例如直接输入 <code>/distill-config</code> 即可查看当前阈值和用法。</p>
+</blockquote>
+<p>详细原理见 <a href="./context.html">3.3 Context Manager 原理</a>。</p>
 <h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
 <h3 id="-好的规则设计"><a class="header" href="#-好的规则设计">✅ 好的规则设计</a></h3>
 <ul>
-<li><strong>精确的条件</strong>：只拦截需要拦截的场景，不要一刀切</li>
+<li><strong>精确的条件</strong>：用 <code>conditions</code> 限定触发范围，不要一刀切</li>
 <li><strong>清晰的提示</strong>：告诉 AI "为什么不行"和"应该怎么做"</li>
-<li><strong>分层防护</strong>：重要的事情用 <code>deny</code>（强制），次要的用 <code>warn</code>（提醒）</li>
+<li><strong>分层防护</strong>：重要的事情用 <code>deny</code>（强制），次要的用 <code>notify</code>（提醒），内部引导用 <code>steer</code>（静默）</li>
+<li><strong>善用状态追踪</strong>：连续出错 3 次再提醒，比每次都提醒更有效</li>
 </ul>
 <h3 id="-不好的规则设计"><a class="header" href="#-不好的规则设计">❌ 不好的规则设计</a></h3>
 <ul>
-<li><strong>过于宽松</strong>：<code>"condition": "always"</code> 会拦截所有操作，AI 什么都做不了</li>
-<li><strong>过于严厉</strong>：禁止所有 <code>bash</code> 命令，AI 连 <code>ls</code> 都不能执行</li>
-<li><strong>模糊的提示</strong>：<code>"message": "注意"</code> —— 注意什么？</li>
+<li><strong>过于频繁</strong>：每个工具调用都 <code>notify</code>，AI 会被提醒淹没</li>
+<li><strong>过于严厉</strong>：<code>deny</code> 所有 <code>bash</code> 命令，AI 连 <code>ls</code> 都不能执行</li>
+<li><strong>模糊的提示</strong>：<code>"reason": "注意"</code> —— 注意什么？</li>
+<li><strong>忽略子代理</strong>：某些规则用 <code>"subagent": false</code> 排除子代理场景，避免干扰独立任务</li>
 </ul>
 <h3 id="规则的优先级"><a class="header" href="#规则的优先级">规则的优先级</a></h3>
 <p>当多条规则同时匹配时：</p>
 <ol>
-<li><code>deny</code> &gt; <code>warn</code> &gt; <code>inject</code></li>
-<li>同优先级下，后定义的先生效</li>
-<li><code>agent_end</code> 钩子按定义顺序依次执行</li>
+<li><code>deny</code> &gt; <code>notify</code> &gt; <code>steer</code>（阻止 &gt; 提醒 &gt; 静默引导）</li>
+<li>同优先级下，按规则文件中的定义顺序依次执行</li>
+<li><code>agent_end</code> 钩子中，<code>check</code> 条件不满足的规则直接跳过</li>
 </ol>
 <h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
 <p>有了记忆、规划和规矩，AI 已经是一个靠谱的助手了。但一个会话做了很多事之后——你怎么知道它具体做了什么？哪些文件改了？哪些决策做了？</p>
@@ -348,20 +408,26 @@ AI 看到精炼后的信息，做出更好的判断
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../chapter-2/roadmap.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-
-                            <a rel="next prefetch" href="../chapter-4/review.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
+                        <a rel="prev" href="../" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a rel="next" href="../" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
 
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
-            <!-- nav-wide-wrapper removed -->
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                <a rel="prev" href="../" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                <a rel="next" href="../" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </nav>
 
         </div>
 

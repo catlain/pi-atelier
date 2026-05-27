@@ -59,11 +59,8 @@ code, pre, kbd, samp {
   z-index: 100;
 }
 
-/* 侧边栏 + 浮动导航箭头已从模板移除，隐藏残留 */
-#sidebar, #sidebar-resize-handle, .sidebar,
-.nav-wide-wrapper, .nav-wide-wrapper .nav-chapters {
-  display: none !important;
-}
+/* 侧边栏已恢复，内容在 index.hbs 的 <nav id="sidebar"> 中生成 */
+/* nav-wide-wrapper 导航按钮也已恢复 */
 
 /* 内容区也需要留出菜单栏空间 */
 #page-wrapper {

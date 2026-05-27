@@ -327,6 +327,9 @@ export function activate(context: ExtensionContext) {
 <tr><td><code>paths</code></td><td>统一路径处理</td><td>需要找文件位置</td></tr>
 <tr><td><code>json</code></td><td>安全的 JSON 读写</td><td>需要操作 JSON 文件</td></tr>
 <tr><td><code>validator</code></td><td>参数校验</td><td>需要验证工具参数</td></tr>
+<tr><td><code>settings-backup</code></td><td>settings.json 备份与回滚</td><td>需要安全写入配置</td></tr>
+<tr><td><code>file-lock</code></td><td>文件锁（proper-lockfile 封装）</td><td>需要防竞态写入</td></tr>
+<tr><td><code>config</code></td><td>三层配置合并（defaults → 全局 → 项目）</td><td>扩展需要可配置参数</td></tr>
 </tbody></table>
 </div>
 <h3 id="使用示例"><a class="header" href="#使用示例">使用示例</a></h3>
@@ -343,6 +346,14 @@ await storage.write('config.json', { theme: 'dark' });
 // 路径
 const projectRoot = paths.getProjectRoot();
 const memoryDir = paths.getMemoryDir();
+</code></pre>
+<h3 id="配置-api-示例"><a class="header" href="#配置-api-示例">配置 API 示例</a></h3>
+<p>如果你的扩展需要用户可配置的参数：</p>
+<pre><code class="language-typescript">import { getEffectiveConfig } from 'pi-shared-utils';
+
+const defaults = { threshold: 1000, enabled: true };
+const config = getEffectiveConfig('my-extension', defaults, cwd);
+// config = 三层合并后的最终配置
 </code></pre>
 <h2 id="调试你的扩展"><a class="header" href="#调试你的扩展">调试你的扩展</a></h2>
 <p>扩展开发中最常遇到的问题：工具注册了但 AI 不调用、handler 报错了看不到日志、返回结果不是预期的。</p>
@@ -443,9 +454,10 @@ npm publish --access public
 });
 </code></pre>
 <h3 id="registerhook"><a class="header" href="#registerhook">registerHook</a></h3>
-<pre><code class="language-typescript">context.registerHook({
-  event: 'before_edit' | 'after_edit' | 'before_bash' | 'after_bash' | 'agent_end',
-  handler: (context) =&gt; HookResult
+<pre><code class="language-typescript">// 注册事件钩子——在 AI 工作流的关键节点注入自定义逻辑
+context.registerHook({
+  event: string,    // 事件名：如 'tool_call', 'tool_result', 'agent_end', 'session_start', 'before_provider_request'
+  handler: (payload) =&gt; HookResult  // HookResult 可以是 void、提示文本、或工具调用改写
 });
 </code></pre>
 <h3 id="injectprompt"><a class="header" href="#injectprompt">injectPrompt</a></h3>
@@ -454,14 +466,17 @@ npm publish --access public
   content: string
 });
 </code></pre>
+<blockquote>
+<p>📖 详细的 API 文档请参考 pi SDK 的类型定义和 <a href="https://github.com/catlain/pi-atelier">pi 扩展开发文档</a>。</p>
+</blockquote>
 <h2 id="恭喜你读完了"><a class="header" href="#恭喜你读完了">恭喜你读完了！</a></h2>
 <p>现在你已经了解了 pi-atelier 的全部核心概念：</p>
 <ol>
 <li><strong>记忆</strong>（pi-memory）— 让 AI 记住知识</li>
 <li><strong>规划</strong>（pi-roadmap）— 让 AI 管理任务</li>
-<li><strong>规矩</strong>（pi-shepherd + pi-context-manager）— 让 AI 遵守规则</li>
-<li><strong>复盘</strong>（pi-journal + pi-session-analyzer）— 让 AI 记录工作</li>
-<li><strong>压缩与诊断</strong>（pi-smart-compact + pi-context-manager）— 让 AI 保持聪明</li>
+<li><strong>规矩</strong>（pi-shepherd + pi-context-manager）— 让 AI 遵守规则、控制信息质量</li>
+<li><strong>复盘</strong>（pi-session-analyzer）— 让 AI 记录和回溯工作</li>
+<li><strong>压缩与诊断</strong>（pi-smart-compact + pi-context-manager）— 让 AI 在长会话中保持聪明</li>
 <li><strong>自动化</strong>（pi-scheduler + pi-workflow）— 让 AI 主动工作</li>
 <li><strong>扩展</strong>（pi-shared-utils + 你自己的扩展）— 让 AI 无所不能</li>
 </ol>
@@ -471,20 +486,26 @@ npm publish --access public
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../chapter-6/automation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-
-                            <a rel="next prefetch" href="../appendix/reference.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
+                        <a rel="prev" href="../" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a rel="next" href="../" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
 
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
-            <!-- nav-wide-wrapper removed -->
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                <a rel="prev" href="../" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                <a rel="next" href="../" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </nav>
 
         </div>
 
