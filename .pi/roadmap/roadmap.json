@@ -128,6 +128,69 @@
           "createdDate": "2026-05-27"
         }
       ]
+    },
+    {
+      "id": "E3.S3",
+      "title": "审查书内容准确性——对照真实会话验证描述",
+      "description": "逐一审查各章节内容，对比实际代码接口、会话历史中的真实行为，修正认知偏差、矛盾描述和可能误导用户的内容。会话内容才是真实历史，书的描述必须与之一致。",
+      "status": "todo",
+      "createdDate": "2026-05-27",
+      "tasks": [
+        {
+          "id": "E3.S3.T1",
+          "title": "审查第一章记忆章节——描述 vs 实际 memory 工具行为",
+          "status": "done",
+          "priority": "high",
+          "createdDate": "2026-05-27",
+          "doingDate": "2026-05-27",
+          "doneDate": "2026-05-27",
+          "doneBySessionId": "2026-05-27T07-52-21-601Z_019e686b-9561-7b69-9cd7-64c06db29fd3",
+          "note": "发现 3 个问题：1) 缺少冲突检测硬拒绝描述 2) 清理步骤没强调必须用已有文件名覆盖 3) 阈值体系描述不完整。已修复。"
+        },
+        {
+          "id": "E3.S3.T2",
+          "title": "审查第二章路线图章节——描述 vs 实际 roadmap 工具接口",
+          "status": "done",
+          "priority": "high",
+          "createdDate": "2026-05-27",
+          "doingDate": "2026-05-27",
+          "doneDate": "2026-05-27",
+          "doneBySessionId": "2026-05-27T07-52-21-601Z_019e686b-9561-7b69-9cd7-64c06db29fd3",
+          "note": "发现路径错误（.pi/roadmaps/*.json → ~/.pi/roadmap/<id>.roadmap.json），缺少项目级同步描述。已修复。"
+        },
+        {
+          "id": "E3.S3.T3",
+          "title": "审查第三章 Shepherd 章节——规则格式 vs 实际代码接口",
+          "status": "done",
+          "priority": "high",
+          "createdDate": "2026-05-27",
+          "doingDate": "2026-05-27",
+          "doneDate": "2026-05-27",
+          "doneBySessionId": "2026-05-27T07-52-21-601Z_019e686b-9561-7b69-9cd7-64c06db29fd3",
+          "note": "发现并修复关键错误：action 字段 \"deny\" 应为 \"block\"；hook 默认值 \"tool_call\" 和 tool 默认值 \"bash\" 未提及；check 字段缺少 git_uncommitted 和 always 选项；best practice 中 deny→block。共 5 处文件。"
+        },
+        {
+          "id": "E3.S3.T4",
+          "title": "审查第四章 session-analyzer 章节——描述 vs 实际工具输出",
+          "status": "todo",
+          "priority": "high",
+          "createdDate": "2026-05-27"
+        },
+        {
+          "id": "E3.S3.T5",
+          "title": "审查第五章 context/payload 章节——命令和参数 vs 实际代码",
+          "status": "todo",
+          "priority": "high",
+          "createdDate": "2026-05-27"
+        },
+        {
+          "id": "E3.S3.T6",
+          "title": "审查第七章扩展参考——API 签名和依赖声明 vs 实际 package.json",
+          "status": "todo",
+          "priority": "medium",
+          "createdDate": "2026-05-27"
+        }
+      ]
     }
   ]
 }
