@@ -45,19 +45,19 @@ jobs:
           cp -r book/book/* merged/
           cp -r book/book-en/* merged/en/
 
-      # Add language switcher
+      # Add language switcher to ALL pages (not just index)
       - name: Add language links
         run: |
-          # Add link to English in Chinese index
-          # Style: pill button with solid background, visible in all themes
           LANG_BTN_STYLE='position:fixed;bottom:10px;right:10px;background:#4a90d9;padding:6px 14px;border-radius:16px;z-index:100;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.3)'
           LANG_LINK_STYLE='color:#fff;text-decoration:none;font-weight:bold'
-          if [ -f merged/index.html ]; then
-            sed -i "s|</body>|<div style=\"${LANG_BTN_STYLE}\"><a href=\"./en/\" style=\"${LANG_LINK_STYLE}\">English</a></div></body>|" merged/index.html
-          fi
-          if [ -f merged/en/index.html ]; then
-            sed -i "s|</body>|<div style=\"${LANG_BTN_STYLE}\"><a href=\"../\" style=\"${LANG_LINK_STYLE}\">中文</a></div></body>|" merged/en/index.html
-          fi
+          # Chinese pages: link to /pi-atelier/en/
+          find merged -name '*.html' -not -path 'merged/en/*' | while read f; do
+            sed -i "s|</body>|<div style=\"${LANG_BTN_STYLE}\"><a href=\"/pi-atelier/en/\" style=\"${LANG_LINK_STYLE}\">English</a></div></body>|" "$f"
+          done
+          # English pages: link to /pi-atelier/
+          find merged/en -name '*.html' | while read f; do
+            sed -i "s|</body>|<div style=\"${LANG_BTN_STYLE}\"><a href=\"/pi-atelier/\" style=\"${LANG_LINK_STYLE}\">中文</a></div></body>|" "$f"
+          done
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
