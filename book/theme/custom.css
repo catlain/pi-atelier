@@ -17,7 +17,7 @@
   --menu-bar-height: 50px;
 
   /* 侧边栏（用 min 动态公式，resize 拖动时 JS 会改 --sidebar-target-width） */
-  --sidebar-target-width: 280px;
+  --sidebar-target-width: 300px;
   --sidebar-width: min(var(--sidebar-target-width), 80vw);
 
   /* 内容区 */
