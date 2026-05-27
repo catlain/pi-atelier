@@ -49,12 +49,14 @@ jobs:
       - name: Add language links
         run: |
           # Add link to English in Chinese index
+          # Style: pill button with solid background, visible in all themes
+          LANG_BTN_STYLE='position:fixed;bottom:10px;right:10px;background:#4a90d9;padding:6px 14px;border-radius:16px;z-index:100;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.3)'
+          LANG_LINK_STYLE='color:#fff;text-decoration:none;font-weight:bold'
           if [ -f merged/index.html ]; then
-            sed -i 's|</body>|<div style="position:fixed;bottom:10px;right:10px;background:var(--sidebar-bg);padding:8px 12px;border-radius:4px;z-index:100"><a href="./en/" style="color:var(--fg)">English</a></div></body>|' merged/index.html
+            sed -i "s|</body>|<div style=\"${LANG_BTN_STYLE}\"><a href=\"./en/\" style=\"${LANG_LINK_STYLE}\">English</a></div></body>|" merged/index.html
           fi
-          # Add link to Chinese in English index
           if [ -f merged/en/index.html ]; then
-            sed -i 's|</body>|<div style="position:fixed;bottom:10px;right:10px;background:var(--sidebar-bg);padding:8px 12px;border-radius:4px;z-index:100"><a href="../" style="color:var(--fg)">中文</a></div></body>|' merged/en/index.html
+            sed -i "s|</body>|<div style=\"${LANG_BTN_STYLE}\"><a href=\"../\" style=\"${LANG_LINK_STYLE}\">中文</a></div></body>|" merged/en/index.html
           fi
 
       - name: Deploy to GitHub Pages
