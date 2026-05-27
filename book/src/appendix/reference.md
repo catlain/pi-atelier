@@ -13,7 +13,7 @@
 | pi-scheduler | `"pi-scheduler"` | `schedule`, `/loop`, `/remind`, `/tasks` | 定时任务和提醒 |
 | pi-workflow | `"pi-workflow"` | `registerWorkflowTool`（供其他扩展调用） | 工作流框架库 |
 | pi-shared-utils | `"pi-shared-utils"` | logger, storage, paths, json, validator, settings-backup, file-lock | 扩展开发工具库 |
-| pi-journal | `"pi-journal"` | ⚠️ 开发中，功能未注册 | 日志报告生成器 |
+| pi-journal | `"pi-journal"` | ✅ 可用 | 日志报告生成器（`/journal` 命令 + `journal` 工具） |
 
 ## B. 推荐扩展组合
 
