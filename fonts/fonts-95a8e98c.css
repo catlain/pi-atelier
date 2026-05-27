@@ -1,0 +1,13 @@
+/* 使用系统字体栈，不依赖远程 CDN，页面秒开 */
+:root {
+  --font-sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
+  --font-mono: "Source Code Pro", "JetBrains Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
+}
+
+/* 覆盖 mdBook 默认字体变量，使用中文友好的系统字体 */
+body, .content {
+  font-family: var(--font-sans) !important;
+}
+code, pre, .code-header {
+  font-family: var(--font-mono) !important;
+}
