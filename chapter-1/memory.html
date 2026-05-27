@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "../searchindex-66e6d587.js";
+            window.path_to_searchindex_js = "../searchindex-b2bf7b94.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4d4df149.js"></script>
@@ -332,6 +332,60 @@ DuckDB 默认用 UTC 时区。查询 `SELECT NOW()` 返回 UTC 时间。
 </tbody>
 </table>
 </div>
+<h2 id="进阶场景记忆清理与知识演化"><a class="header" href="#进阶场景记忆清理与知识演化">进阶场景：记忆清理与知识演化</a></h2>
+<h3 id="场景记忆碎片化了"><a class="header" href="#场景记忆碎片化了">场景：记忆碎片化了</a></h3>
+<p>用了一个月，记忆文件越来越多：</p>
+<pre><code>.pi/memory/
+├── 数据库选型--DuckDB,嵌入式,ARM.md
+├── DB选型--数据库,DuckDB,性能.md       ← 跟上一个重复！
+├── 部署问题--Docker,ARM,内存.md
+├── 部署问题2--Docker,内存,OOM.md      ← 跟上一个也重复！
+├── auth-bug--JWT,过期,refresh.md
+├── fastapi-cors--CORS,FastAPI,跨域.md
+├── test-tricks--vitest,mock,测试.md
+└── ... （还有 20 个文件）
+</code></pre>
+<p>AI 在每次写入前会自动检查（<code>memory_index</code>），如果发现同主题的已有记忆，会先合并再写入。但如果碎片化已经发生，需要手动清理。</p>
+<p><strong>清理步骤</strong>：</p>
+<ol>
+<li>让 AI 执行 <code>memory_index</code>，查看当前所有记忆</li>
+<li>标记同主题的文件（关键词 3+ 重叠）</li>
+<li>让 AI 读取标记的文件，合并为一个</li>
+<li>用 <code>memory_update</code> 覆盖写入合并后的文件</li>
+<li>删除旧的碎片文件</li>
+</ol>
+<h3 id="场景旧结论被推翻了"><a class="header" href="#场景旧结论被推翻了">场景：旧结论被推翻了</a></h3>
+<p>上个月写的记忆说“用 Express.js 做后端“，但这个月项目决定迁移到 FastAPI。每次 AI 读到旧记忆都会用 Express 的思路，产生错误的建议。</p>
+<p><strong>处理方式</strong>：用 <code>memory_update</code> 覆盖旧文件，写入新结论：</p>
+<pre><code class="language-markdown"># 后端框架选型
+
+关键词：`FastAPI` `Python` `迁移`
+
+## 当前决策
+
+2026-05: 从 Express.js 迁移到 FastAPI。
+
+## 迁移原因
+
+- 需要更好的异步支持
+- Python 生态的数据分析库更丰富
+- Express.js 版本已归档，不再更新
+
+&gt; ⚠️ 旧结论（已废弃）：使用 Express.js + TypeScript
+</code></pre>
+<p><strong>关键</strong>：不要只删旧文件——把新结论和旧结论的关系写清楚，这样 AI 不会在别的上下文里又“发明“出旧的方案。</p>
+<h3 id="场景跨项目的知识复用"><a class="header" href="#场景跨项目的知识复用">场景：跨项目的知识复用</a></h3>
+<p>你在项目 A 里踩了一个坑，想确保项目 B 不会重蹈覆辙。</p>
+<p><strong>方案</strong>：把通用知识写到全局记忆：</p>
+<pre><code>~/.pi/agent/memory/
+└── npm-file引用陷阱--npm,file引用,node_modules,缓存.md
+</code></pre>
+<p>全局记忆对所有项目可见。这样不管在哪个项目里，AI 都会知道“npm <code>file:</code> 引用有缓存陷阱“。</p>
+<p><strong>原则</strong>：</p>
+<ul>
+<li><strong>项目特有</strong>的知识（这个项目的架构、约定）→ 项目级 <code>.pi/memory/</code></li>
+<li><strong>通用经验</strong>（工具链踩坑、编码纪律）→ 全局 <code>~/.pi/agent/memory/</code></li>
+</ul>
 <h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
 <p>现在 AI 有了记忆，能记住过去的知识。但面对一个大项目，它知道第一步该做什么、第二步该做什么吗？</p>
 <p>下一章，我们来看如何让 AI 学会<strong>规划</strong>。</p>

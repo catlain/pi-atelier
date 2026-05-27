@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "../searchindex-66e6d587.js";
+            window.path_to_searchindex_js = "../searchindex-b2bf7b94.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4d4df149.js"></script>
@@ -338,6 +338,52 @@ E0.S0.T1 — 提炼 README 模板（high priority）
 <li><strong>Task 应该 30 分钟内可执行</strong>：“配置 package.json 的 name 字段“而不是“配置构建”</li>
 <li><strong>同层级的项应该是同粒度</strong>：不要一个 Story 有 2 个 Task，另一个有 20 个</li>
 </ol>
+<h2 id="进阶场景计划调整与进度追踪"><a class="header" href="#进阶场景计划调整与进度追踪">进阶场景：计划调整与进度追踪</a></h2>
+<h3 id="场景需要改变方向"><a class="header" href="#场景需要改变方向">场景：需要改变方向</a></h3>
+<p>计划赶不上变化。昨天规划好的路线图，今天发现需求变了。你不需要重新建一个——用 <code>roadmap_plan</code> 更新即可：</p>
+<pre><code>你：昨天规划的重构方案太大了，我想先只做认证模块。
+
+AI 调用 roadmap_plan(action="update")：
+  → 对比当前路线图和你的新需求
+  → 保留已完成的任务不动
+  → 标记不需要的任务为 dropped
+  → 添加新的任务
+</code></pre>
+<p><strong>关键原则</strong>：<code>roadmap_plan</code> 是增量更新，不是覆盖。已经 <code>done</code> 的任务永远不会被改回去。</p>
+<h3 id="场景追踪谁做了什么"><a class="header" href="#场景追踪谁做了什么">场景：追踪谁做了什么</a></h3>
+<p>在多会话协作中，你经常想知道“这个 task 是哪个会话完成的？“Roadmap 自动追踪：</p>
+<pre><code>roadmap_show(roadmapId="package-docs")
+
+结果：
+  E0.S0.T0 调研 GitHub 文档规范 ✅ by: 8740-8fce3e7af232
+  E0.S0.T1 提炼 README 模板 ✅ by: b8b5-85516ead6253
+  E0.S0.T2 用第一个包验证模板 ✅ by: b8b5-85516ead6253
+  E1.S0.T0 核心扩展 - pi-shepherd 🔄 doing by: aa55-a4860e851afb
+</code></pre>
+<p>每个完成的 task 后面的 <code>by: xxxx-xxxxxxxxxxxx</code> 是会话 ID 的短格式（UUID 最后两段）。你可以用这个 ID 搜索到具体的会话：</p>
+<pre><code>session_search(action="grep", query="8740-8fce3e7af232")
+
+→ 找到该会话，然后用 session_analyze(action="summary") 查看详情
+</code></pre>
+<h3 id="场景归档已完成的-epic"><a class="header" href="#场景归档已完成的-epic">场景：归档已完成的 Epic</a></h3>
+<p>项目做完了，不想让已完成的 Epic 占据视线：</p>
+<pre><code>roadmap_archive(roadmapId="package-docs")
+
+→ 自动归档所有已完成的 Epic
+→ 默认隐藏，需要时用 show_archived=true 查看
+</code></pre>
+<h3 id="场景不知道下一步做什么"><a class="header" href="#场景不知道下一步做什么">场景：不知道下一步做什么</a></h3>
+<p>打开 pi 时不知道该继续什么：</p>
+<pre><code>roadmap_next()
+
+结果：
+  📊 推荐下一步任务（按优先级排序）：
+  
+  1. E1.S0.T3 — 配置 package.json 的 files 白名单 (high, todo)
+  2. E1.S1.T0 — 工具扩展 - pi-roadmap (medium, todo)
+  3. E2.S0.T0 — 调研 mdBook 主题定制 (low, todo)
+</code></pre>
+<p><code>roadmap_next</code> 自动按 doing → todo、high → medium → low 排序，告诉你最该做什么。</p>
 <h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
 <p>AI 有了记忆（记住知识）和路线图（管理任务）。但有时候，AI 还是会“犯错“——改不该改的文件、用不该用的方式。</p>
 <p>下一章，我们来看如何给 AI <strong>立规矩</strong>。</p>

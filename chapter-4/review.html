@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "../searchindex-66e6d587.js";
+            window.path_to_searchindex_js = "../searchindex-b2bf7b94.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4d4df149.js"></script>
@@ -304,6 +304,54 @@ session_analyze(action="entries", compact=true)
 <li>不要用 <code>session_search</code> 代替记忆——搜索是回溯（过去做了什么），记忆是知识（学到了什么）</li>
 <li>不要期望找到代码全文——会话记录是摘要，不是完整备份</li>
 </ul>
+<h2 id="进阶场景"><a class="header" href="#进阶场景">进阶场景</a></h2>
+<h3 id="场景审查-ai-是否遵守了规范"><a class="header" href="#场景审查-ai-是否遵守了规范">场景：审查 AI 是否遵守了规范</a></h3>
+<p>你给 AI 定了很多规矩（不要直接写 settings.json、不要覆盖大文件），但不确定它是否真的遵守了。用 <code>audit</code> 模式检查：</p>
+<pre><code>你：审查一下上次会话有没有违规操作
+
+AI：
+  🛠 session_analyze(action="audit", sessionId="...")
+  
+  ⚠️ 发现 2 个问题：
+  1. [违规] 直接 writeFileSync(settings.json) — 应该用 patchSettingsSectionWithBackup
+  2. [警告] 大文件 write 覆盖（312 行）— 应拆分或用 edit
+</code></pre>
+<p>audit 模式会检查：是否用了被禁止的操作、是否遵循了文件修改规范、是否有不安全的操作。</p>
+<h3 id="场景了解-ai-的探索过程"><a class="header" href="#场景了解-ai-的探索过程">场景：了解 AI 的探索过程</a></h3>
+<p>AI 用 <code>/tree</code> 开了探索分支——试了方案 A 不行，又试了方案 B 成功了。你想知道方案 A 为什么不行：</p>
+<pre><code>你：上次 AI 试了两种方案，帮我看看每个分支的结果
+
+AI：
+  🛠 session_analyze(action="branches", sessionId="...")
+  
+  🌿 分支分析
+  
+  [主分支] 讨论重构方案
+  [B1] 方案 A — 修改函数签名 + 兼容层
+    结果：测试失败，兼容层引入了循环依赖
+  [B2] 方案 B — 新建接口 + 渐进迁移
+    结果：所有测试通过 ✅，已合回主分支
+</code></pre>
+<p>这比翻 git log 更有用——git 只记录最终结果，branches 能看到 AI 的试错过程。</p>
+<h3 id="场景追踪子代理做了什么"><a class="header" href="#场景追踪子代理做了什么">场景：追踪子代理做了什么</a></h3>
+<p>会话中用了 <code>subagent</code> 启动了多个子代理。你想知道每个子代理的具体输出：</p>
+<pre><code>你：上次会话的子代理都干了什么？
+
+AI：
+  🛠 session_analyze(action="chain", sessionId="...")
+  
+  🔗 子代理链
+  
+  主代理
+    ├──→ pv-explorer
+    │     任务：分析 src/auth/ 目录的架构
+    │     结果：5 个模块，2 个设计模式，依赖方向正确
+    │
+    └──→ pv-reviewer
+          任务：审查 JWT → session 迁移方案
+          结果：发现 1 个数据模型违反，2 个测试缺口
+</code></pre>
+<p>chain 模式追踪主代理和子代理之间的调用关系，清晰展示每个子代理收到了什么任务、返回了什么结果。</p>
 <h2 id="下一步"><a class="header" href="#下一步">下一步</a></h2>
 <p>有了复盘能力，AI 和你都能回顾过去的工作。但还有一个问题：会话越长，AI 越容易“变笨“——开始重复自己、忘记前面的约定。</p>
 <p>下一章，我们来看如何让 AI 在长会话中保持聪明。</p>
