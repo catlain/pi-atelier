@@ -34,6 +34,17 @@ session_search(action="grep", query="DuckDB 时区")
 
 搜索结果包含上下文片段，不用打开每个会话就能判断是否相关。
 
+**高级用法**：`editOnly=true` 只搜索包含文件编辑操作的会话，过滤掉纯讨论：
+
+```
+session_search(action="grep", query="settings.json", editOnly=true)
+
+结果：
+  匹配 2 个编辑过 settings.json 的会话
+```
+
+这对于追踪
+
 ### file 模式——按文件追踪
 
 找到所有修改过某个文件的会话：
@@ -68,6 +79,8 @@ session_search(action="list", limit=10)
 ## session_analyze：单会话分析
 
 Session Analyzer 提供多种分析维度，应对不同需求：
+
+> ⚠️ 注意：`session_analyze` 的 `action` 参数只接受以下值，不要传 `grep`/`file`/`list`（那是 `session_search` 的 action）。
 
 ### summary——快速了解一个会话
 
@@ -159,6 +172,32 @@ session_analyze(action="audit", sessionId="...")
 - 检查 AI 是否遵守了项目规范
 - 审查别人的会话是否有问题
 - 定期质量检查
+
+### digest——对话序列
+
+提取会话中的 user/assistant 对话序列，去掉工具调用细节，只保留人类可读的对话：
+
+```
+session_analyze(action="digest", sessionId="...")
+
+结果：
+  👤 帮我修复 roadmap 显示 bug
+  🤖 好的，让我先看看代码...
+  👤 测试没通过，看一下
+  🤖 发现 formatTimestamps 的截取逻辑有误...
+```
+
+**什么时候用**：快速了解会话中用户和 AI 之间的对话脉络，不需要看工具细节。
+
+### raw——原始数据
+
+直接查看 JSONL 原始记录（默认最多 10 条）：
+
+```
+session_analyze(action="raw", sessionId="...", limit=5)
+```
+
+**什么时候用**：上面的分析模式都不能满足需求时，直接看原始数据。一般用于调试或数据格式确认。
 
 ### branches——分支分析
 

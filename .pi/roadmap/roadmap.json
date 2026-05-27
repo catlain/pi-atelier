@@ -109,9 +109,12 @@
         {
           "id": "E3.S2.T3",
           "title": "第四章：补充 session_analyzer 各模式的实战案例（grep 搜 bug、takeover 接手、audit 审计）",
-          "status": "todo",
+          "status": "done",
           "priority": "medium",
-          "createdDate": "2026-05-27"
+          "createdDate": "2026-05-27",
+          "doneDate": "2026-05-27",
+          "doneBySessionId": "2026-05-27T07-52-21-601Z_019e686b-9561-7b69-9cd7-64c06db29fd3",
+          "note": "修正 Smart Compact 60%/80% 虚构阈值、Shepherd deny→block、记忆冲突检测描述、路线图路径、4 个空壳章节填充"
         },
         {
           "id": "E3.S2.T4",
@@ -172,9 +175,13 @@
         {
           "id": "E3.S3.T4",
           "title": "审查第四章 session-analyzer 章节——描述 vs 实际工具输出",
-          "status": "todo",
+          "status": "done",
           "priority": "high",
-          "createdDate": "2026-05-27"
+          "createdDate": "2026-05-27",
+          "doingDate": "2026-05-27",
+          "doneDate": "2026-05-27",
+          "doneBySessionId": "2026-05-27T07-52-21-601Z_019e686b-9561-7b69-9cd7-64c06db29fd3",
+          "note": "补充 editOnly 参数说明、digest/raw 模式完整描述、action 参数警告。命令列表和实际代码一致。"
         },
         {
           "id": "E3.S3.T5",

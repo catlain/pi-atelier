@@ -75,10 +75,11 @@ npm init -y
   "name": "pi-code-stats",
   "version": "0.1.0",
   "main": "index.ts",
-  "piExtension": true,
-  "activationEvents": ["onTool:code_stats"]
+  "piExtension": true
 }
 ```
+
+> 💡 `"piExtension": true` 告诉 pi 这是一个扩展包。`"main"` 指向入口文件（TypeScript 或 JavaScript 均可，pi 用 jiti 加载）。
 
 ### 第 2 步：写工具实现
 
@@ -111,12 +112,15 @@ export function countLines(directory: string, extension: string): {
 `index.ts`：
 
 ```typescript
+import type { ExtensionAPI } from '@earendil-works/pi-coding-agent';
 import { countLines } from './lib/tools-stats';
 
-export function activate(context: ExtensionContext) {
-  context.registerTool({
+export default function (pi: ExtensionAPI) {
+  pi.registerTool({
     name: 'code_stats',
-    description: '统计项目代码行数',
+    label: 'Code Stats',
+    description: '统计项目代码行数。用户说"统计代码"、"多少行代码"时使用。',
+    promptSnippet: '统计项目代码行数',
     parameters: {
       type: 'object',
       properties: {
@@ -131,8 +135,8 @@ export function activate(context: ExtensionContext) {
       },
       required: ['directory']
     },
-    handler: async (args) => {
-      const result = countLines(args.directory, args.extension || 'ts');
+    async execute(_toolCallId: string, params: any): Promise<any> {
+      const result = countLines(params.directory, params.extension || 'ts');
       return {
         totalLines: result.total,
         fileCount: result.files.length,
@@ -195,15 +199,11 @@ export function activate(context: ExtensionContext) {
 ### 使用示例
 
 ```typescript
-import { logger, storage, paths } from 'pi-shared-utils';
+import { logger, storage, paths } from '@pi-atelier/shared-utils';
 
 // 日志
 logger.info('扩展已激活');
 logger.warn('配置文件缺失，使用默认值');
-
-// 存储
-const config = await storage.read('config.json');
-await storage.write('config.json', { theme: 'dark' });
 
 // 路径
 const projectRoot = paths.getProjectRoot();
@@ -215,7 +215,7 @@ const memoryDir = paths.getMemoryDir();
 如果你的扩展需要用户可配置的参数：
 
 ```typescript
-import { getEffectiveConfig } from 'pi-shared-utils';
+import { getEffectiveConfig } from '@pi-atelier/shared-utils';
 
 const defaults = { threshold: 1000, enabled: true };
 const config = getEffectiveConfig('my-extension', defaults, cwd);
@@ -249,7 +249,7 @@ pi
 如果 AI 看不到你的工具，检查：
 - `package.json` 中是否有 `"piExtension": true`
 - `settings.json` 中包路径是否正确
-- `activate()` 函数是否正确导出
+- 入口函数是否正确导出（`export default function(pi)`）
 
 ### 常见问题排查
 
@@ -333,31 +333,58 @@ npm publish --access public
 ### registerTool
 
 ```typescript
-context.registerTool({
-  name: string,           // 工具名（唯一标识）
-  description: string,    // 工具描述（AI 看到的）
-  parameters: JSONSchema, // 参数的 JSON Schema
-  handler: (args) => any  // 执行函数
+pi.registerTool({
+  name: string,           // 工具名（唯一标识，AI 用这个调用）
+  label: string,          // 显示名（可选，TUI 中展示用）
+  description: string,    // 工具描述（AI 看到的，决定 AI 什么时候调用）
+  promptSnippet: string,  // 短描述（注入 AI system prompt）
+  promptGuidelines: string[],  // AI 使用指南（可选）
+  parameters: TypeBox.Object({...}) | JSONSchema,  // 参数定义
+  async execute(
+    toolCallId: string,   // 工具调用 ID
+    params: any,          // AI 传入的参数
+    signal?: AbortSignal, // 取消信号（可选）
+    onUpdate?: Function,  // 流式更新回调（可选）
+    ctx?: any             // 执行上下文（可选）
+  ): Promise<ToolResult>
 });
 ```
 
-### registerHook
+> 💡 `execute` 返回值会直接作为工具结果返回给 AI。格式为 `{ content: [{ type: "text", text: "..." }], details: {} }`。
+
+### registerCommand
 
 ```typescript
-// 注册事件钩子——在 AI 工作流的关键节点注入自定义逻辑
-context.registerHook({
-  event: string,    // 事件名：如 'tool_call', 'tool_result', 'agent_end', 'session_start', 'before_provider_request'
-  handler: (payload) => HookResult  // HookResult 可以是 void、提示文本、或工具调用改写
+pi.registerCommand(name: string, {
+  description: string,    // 命令描述
+  handler: async (args: string, ctx) => {
+    // args: 用户输入的参数（/command 后面的文本）
+    // ctx.ui.notify(message, level): 显示通知
+  }
 });
 ```
 
-### injectPrompt
+### 事件监听
 
 ```typescript
-context.injectPrompt({
-  target: 'system' | 'tool_description',
-  content: string
+// 监听 pi 生命周期事件
+pi.on('agent_start', (event, ctx) => { ... });
+pi.on('agent_end', (event, ctx) => { ... });
+pi.on('tool_call', (event, ctx) => { ... });    // 工具调用前
+pi.on('tool_result', (event, ctx) => { ... });  // 工具返回后
+pi.on('session_start', (event, ctx) => { ... });
+pi.on('session_shutdown', (event, ctx) => { ... });
+pi.on('before_provider_request', (event, ctx) => {
+  // 在 AI 请求发送前注入额外信息
+  // event.messages.push({ role: 'user', content: '...' })
 });
+```
+
+### 辅助方法
+
+```typescript
+pi.appendEntry(role: string, content: string);  // 向会话追加一条消息
+ctx.ui.notify(message: string, level: 'info' | 'warning' | 'error');  // 显示通知
 ```
 
 > 📖 详细的 API 文档请参考 pi SDK 的类型定义和 [pi 扩展开发文档](https://github.com/catlain/pi-atelier)。
