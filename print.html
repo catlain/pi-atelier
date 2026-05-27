@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "searchindex-342acbd6.js";
+            window.path_to_searchindex_js = "searchindex-d20b5cec.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4d4df149.js"></script>
@@ -2625,10 +2625,12 @@ npm init -y
   "name": "pi-code-stats",
   "version": "0.1.0",
   "main": "index.ts",
-  "piExtension": true,
-  "activationEvents": ["onTool:code_stats"]
+  "piExtension": true
 }
 </code></pre>
+<blockquote>
+<p>💡 <code>"piExtension": true</code> 告诉 pi 这是一个扩展包。<code>"main"</code> 指向入口文件（TypeScript 或 JavaScript 均可，pi 用 jiti 加载）。</p>
+</blockquote>
 <h3 id="第-2-步写工具实现"><a class="header" href="#第-2-步写工具实现">第 2 步：写工具实现</a></h3>
 <p><code>lib/tools-stats.ts</code>：</p>
 <pre><code class="language-typescript">import { execSync } from 'child_process';
@@ -2653,12 +2655,15 @@ export function countLines(directory: string, extension: string): {
 </code></pre>
 <h3 id="第-3-步写入口文件"><a class="header" href="#第-3-步写入口文件">第 3 步：写入口文件</a></h3>
 <p><code>index.ts</code>：</p>
-<pre><code class="language-typescript">import { countLines } from './lib/tools-stats';
+<pre><code class="language-typescript">import type { ExtensionAPI } from '@earendil-works/pi-coding-agent';
+import { countLines } from './lib/tools-stats';
 
-export function activate(context: ExtensionContext) {
-  context.registerTool({
+export default function (pi: ExtensionAPI) {
+  pi.registerTool({
     name: 'code_stats',
-    description: '统计项目代码行数',
+    label: 'Code Stats',
+    description: '统计项目代码行数。用户说"统计代码"、"多少行代码"时使用。',
+    promptSnippet: '统计项目代码行数',
     parameters: {
       type: 'object',
       properties: {
@@ -2673,8 +2678,8 @@ export function activate(context: ExtensionContext) {
       },
       required: ['directory']
     },
-    handler: async (args) =&gt; {
-      const result = countLines(args.directory, args.extension || 'ts');
+    async execute(_toolCallId: string, params: any): Promise&lt;any&gt; {
+      const result = countLines(params.directory, params.extension || 'ts');
       return {
         totalLines: result.total,
         fileCount: result.files.length,
@@ -2730,15 +2735,11 @@ export function activate(context: ExtensionContext) {
 </table>
 </div>
 <h3 id="使用示例"><a class="header" href="#使用示例">使用示例</a></h3>
-<pre><code class="language-typescript">import { logger, storage, paths } from 'pi-shared-utils';
+<pre><code class="language-typescript">import { logger, storage, paths } from '@pi-atelier/shared-utils';
 
 // 日志
 logger.info('扩展已激活');
 logger.warn('配置文件缺失，使用默认值');
-
-// 存储
-const config = await storage.read('config.json');
-await storage.write('config.json', { theme: 'dark' });
 
 // 路径
 const projectRoot = paths.getProjectRoot();
@@ -2746,7 +2747,7 @@ const memoryDir = paths.getMemoryDir();
 </code></pre>
 <h3 id="配置-api-示例"><a class="header" href="#配置-api-示例">配置 API 示例</a></h3>
 <p>如果你的扩展需要用户可配置的参数：</p>
-<pre><code class="language-typescript">import { getEffectiveConfig } from 'pi-shared-utils';
+<pre><code class="language-typescript">import { getEffectiveConfig } from '@pi-atelier/shared-utils';
 
 const defaults = { threshold: 1000, enabled: true };
 const config = getEffectiveConfig('my-extension', defaults, cwd);
@@ -2770,7 +2771,7 @@ pi
 <ul>
 <li><code>package.json</code> 中是否有 <code>"piExtension": true</code></li>
 <li><code>settings.json</code> 中包路径是否正确</li>
-<li><code>activate()</code> 函数是否正确导出</li>
+<li>入口函数是否正确导出（<code>export default function(pi)</code>）</li>
 </ul>
 <h3 id="常见问题排查"><a class="header" href="#常见问题排查">常见问题排查</a></h3>
 <div class="table-wrapper">
@@ -2843,25 +2844,50 @@ npm publish --access public
 </ul>
 <h2 id="附录pi-扩展-api-速查"><a class="header" href="#附录pi-扩展-api-速查">附录：pi 扩展 API 速查</a></h2>
 <h3 id="registertool"><a class="header" href="#registertool">registerTool</a></h3>
-<pre><code class="language-typescript">context.registerTool({
-  name: string,           // 工具名（唯一标识）
-  description: string,    // 工具描述（AI 看到的）
-  parameters: JSONSchema, // 参数的 JSON Schema
-  handler: (args) =&gt; any  // 执行函数
+<pre><code class="language-typescript">pi.registerTool({
+  name: string,           // 工具名（唯一标识，AI 用这个调用）
+  label: string,          // 显示名（可选，TUI 中展示用）
+  description: string,    // 工具描述（AI 看到的，决定 AI 什么时候调用）
+  promptSnippet: string,  // 短描述（注入 AI system prompt）
+  promptGuidelines: string[],  // AI 使用指南（可选）
+  parameters: TypeBox.Object({...}) | JSONSchema,  // 参数定义
+  async execute(
+    toolCallId: string,   // 工具调用 ID
+    params: any,          // AI 传入的参数
+    signal?: AbortSignal, // 取消信号（可选）
+    onUpdate?: Function,  // 流式更新回调（可选）
+    ctx?: any             // 执行上下文（可选）
+  ): Promise&lt;ToolResult&gt;
 });
 </code></pre>
-<h3 id="registerhook"><a class="header" href="#registerhook">registerHook</a></h3>
-<pre><code class="language-typescript">// 注册事件钩子——在 AI 工作流的关键节点注入自定义逻辑
-context.registerHook({
-  event: string,    // 事件名：如 'tool_call', 'tool_result', 'agent_end', 'session_start', 'before_provider_request'
-  handler: (payload) =&gt; HookResult  // HookResult 可以是 void、提示文本、或工具调用改写
+<blockquote>
+<p>💡 <code>execute</code> 返回值会直接作为工具结果返回给 AI。格式为 <code>{ content: [{ type: "text", text: "..." }], details: {} }</code>。</p>
+</blockquote>
+<h3 id="registercommand"><a class="header" href="#registercommand">registerCommand</a></h3>
+<pre><code class="language-typescript">pi.registerCommand(name: string, {
+  description: string,    // 命令描述
+  handler: async (args: string, ctx) =&gt; {
+    // args: 用户输入的参数（/command 后面的文本）
+    // ctx.ui.notify(message, level): 显示通知
+  }
 });
 </code></pre>
-<h3 id="injectprompt"><a class="header" href="#injectprompt">injectPrompt</a></h3>
-<pre><code class="language-typescript">context.injectPrompt({
-  target: 'system' | 'tool_description',
-  content: string
+<h3 id="事件监听"><a class="header" href="#事件监听">事件监听</a></h3>
+<pre><code class="language-typescript">// 监听 pi 生命周期事件
+pi.on('agent_start', (event, ctx) =&gt; { ... });
+pi.on('agent_end', (event, ctx) =&gt; { ... });
+pi.on('tool_call', (event, ctx) =&gt; { ... });    // 工具调用前
+pi.on('tool_result', (event, ctx) =&gt; { ... });  // 工具返回后
+pi.on('session_start', (event, ctx) =&gt; { ... });
+pi.on('session_shutdown', (event, ctx) =&gt; { ... });
+pi.on('before_provider_request', (event, ctx) =&gt; {
+  // 在 AI 请求发送前注入额外信息
+  // event.messages.push({ role: 'user', content: '...' })
 });
+</code></pre>
+<h3 id="辅助方法"><a class="header" href="#辅助方法">辅助方法</a></h3>
+<pre><code class="language-typescript">pi.appendEntry(role: string, content: string);  // 向会话追加一条消息
+ctx.ui.notify(message: string, level: 'info' | 'warning' | 'error');  // 显示通知
 </code></pre>
 <blockquote>
 <p>📖 详细的 API 文档请参考 pi SDK 的类型定义和 <a href="https://github.com/catlain/pi-atelier">pi 扩展开发文档</a>。</p>
@@ -2896,7 +2922,7 @@ context.registerHook({
 <tr><td>pi-scheduler</td><td><code>"pi-scheduler"</code></td><td><code>schedule</code>, <code>/loop</code>, <code>/remind</code>, <code>/tasks</code></td><td>定时任务和提醒</td></tr>
 <tr><td>pi-workflow</td><td><code>"pi-workflow"</code></td><td><code>registerWorkflowTool</code>（供其他扩展调用）</td><td>工作流框架库</td></tr>
 <tr><td>pi-shared-utils</td><td><code>"pi-shared-utils"</code></td><td>logger, storage, paths, json, validator, settings-backup, file-lock</td><td>扩展开发工具库</td></tr>
-<tr><td>pi-journal</td><td><code>"pi-journal"</code></td><td>✅ 可用</td><td>日志报告生成器（<code>/journal</code> 命令 + <code>journal</code> 工具）</td></tr>
+<tr><td>pi-journal</td><td><code>"pi-journal"</code></td><td><code>/journal</code>, <code>journal</code></td><td>日志报告生成（git 活动 + 会话事件 + 记忆变更）</td></tr>
 </tbody>
 </table>
 </div>
@@ -2952,7 +2978,7 @@ context.registerHook({
 <pre><code>1. AI 决定调用工具
      │
      ▼
-2. Shepherd tool_call 钩子（rewrite / block / notify）
+2. Shepherd tool_call 钩子（rewrite / block / notify / steer）
      │
      ▼
 3. 执行工具
@@ -2975,7 +3001,7 @@ context.registerHook({
 ├── skills/               # 全局技能
 ├── extensions/           # 内联扩展
 ├── agents/               # 子代理定义
-├── roadmaps/             # 全局路线图
+└── roadmap/              # 全局路线图（~/.pi/roadmap/）
 ├── npm/node_modules/     # npm 安装的扩展包
 ├── git/                  # git 包安装位置
 └── distill/              # context-manager 的数据
@@ -2984,7 +3010,7 @@ context.registerHook({
 {project}/.pi/
 ├── settings.json         # 项目级配置（覆盖全局）
 ├── memory/               # 项目级记忆（L2）
-└── roadmaps/             # 项目级路线图
+└── roadmap/              # 项目级路线图
 </code></pre>
 <h2 id="d-常见问题"><a class="header" href="#d-常见问题">D. 常见问题</a></h2>
 <h3 id="q-安装扩展后不生效"><a class="header" href="#q-安装扩展后不生效">Q: 安装扩展后不生效？</a></h3>
