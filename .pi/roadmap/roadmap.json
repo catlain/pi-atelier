@@ -1,6 +1,6 @@
 {
   "source": "pi-atelier-docs",
-  "syncedAt": "2026-05-26",
+  "syncedAt": "2026-05-27",
   "stories": [
     {
       "id": "E3.S12",
@@ -63,6 +63,16 @@
           "doneDate": "2026-05-26",
           "doneBySessionId": "2026-05-26T10-41-52-185Z_019e63e0-6a39-755b-bdcf-2a4762b7f2e4",
           "note": "页脚显示\"© 2026 pi-atelier contributors · GitHub\""
+        },
+        {
+          "id": "E3.S12.T8",
+          "title": "恢复侧边栏导航，解决页面间无法跳转的问题",
+          "status": "done",
+          "priority": "high",
+          "createdDate": "2026-05-27",
+          "doneDate": "2026-05-27",
+          "doneBySessionId": "2026-05-27T07-52-21-601Z_019e686b-9561-7b69-9cd7-64c06db29fd3",
+          "note": "删除 custom.css 中的 display:none!important 规则，确认 index.hbs 模板已有 sidebar HTML"
         }
       ],
       "doneDate": "2026-05-26"
