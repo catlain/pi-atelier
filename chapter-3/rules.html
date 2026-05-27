@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "../searchindex-d20b5cec.js";
+            window.path_to_searchindex_js = "../searchindex-1d3c5cca.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4d4df149.js"></script>
@@ -420,7 +420,7 @@ AI 看到精炼后的信息,做出更好的判断
 <ul>
 <li><strong>精确的条件</strong>:用 <code>conditions</code> 限定触发范围,不要一刀切</li>
 <li><strong>清晰的提示</strong>:告诉 AI “为什么不行“和“应该怎么做”</li>
-<li><strong>分层防护</strong>:重要的事情用 <code>deny</code>(强制),次要的用 <code>notify</code>(提醒),内部引导用 <code>steer</code>(静默)</li>
+<li><strong>分层防护</strong>:重要的事情用 <code>block</code>(强制阻止),次要的用 <code>notify</code>(提醒),内部引导用 <code>steer</code>(静默)</li>
 <li><strong>善用状态追踪</strong>:连续出错 3 次再提醒,比每次都提醒更有效</li>
 </ul>
 <h3 id="-不好的规则设计"><a class="header" href="#-不好的规则设计">❌ 不好的规则设计</a></h3>

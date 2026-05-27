@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "../searchindex-d20b5cec.js";
+            window.path_to_searchindex_js = "../searchindex-1d3c5cca.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4d4df149.js"></script>
@@ -268,19 +268,21 @@
 6. 结果返回给 AI
 </code></pre>
 <h3 id="会话存储"><a class="header" href="#会话存储">会话存储</a></h3>
-<p>所有会话数据存储在 <code>~/.pi/agent/</code> 目录下：</p>
-<pre><code>~/.pi/agent/
-├── settings.json         # 全局配置（安装扩展、provider）
-├── mcp.json              # MCP server 配置
-├── memory/               # 全局记忆文件（L1）
-├── skills/               # 全局技能
-├── extensions/           # 内联扩展
-├── agents/               # 子代理定义
-└── roadmap/              # 全局路线图（~/.pi/roadmap/）
-├── npm/node_modules/     # npm 安装的扩展包
-├── git/                  # git 包安装位置
-└── distill/              # context-manager 的数据
-    └── recordings/       # payload 录制文件
+<p>所有会话数据存储在 <code>~/.pi/</code> 目录下：</p>
+<pre><code>~/.pi/
+├── roadmap/              # 全局路线图
+└── agent/
+    ├── settings.json         # 全局配置（安装扩展、provider）
+    ├── mcp.json              # MCP server 配置
+    ├── memory/               # 全局记忆文件（L1）
+    ├── skills/               # 全局技能
+    ├── extensions/           # 内联扩展
+    ├── agents/               # 子代理定义
+    ├── npm/node_modules/     # npm 安装的扩展包
+    ├── git/                  # git 包安装位置
+    ├── sessions/             # 会话历史记录（JSONL）
+    ├── distill/              # context-manager 的数据
+    │   └── recordings/       # payload 录制文件
 
 {project}/.pi/
 ├── settings.json         # 项目级配置（覆盖全局）
