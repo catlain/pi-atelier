@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "rust";
             const default_dark_theme = "coal";
-            window.path_to_searchindex_js = "searchindex-c0f8faa3.js";
+            window.path_to_searchindex_js = "searchindex-3129d071.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4d4df149.js"></script>
@@ -274,38 +274,62 @@
 <h3 id="按需查阅路线"><a class="header" href="#按需查阅路线">按需查阅路线</a></h3>
 <p>遇到具体问题时，直接翻到对应章节。每章独立完整。</p>
 <h2 id="快速安装"><a class="header" href="#快速安装">快速安装</a></h2>
-<p>在 pi 的 <code>settings.json</code> 中添加你需要的扩展：</p>
+<p>所有扩展包已发布到 npm，在 pi 的 <code>settings.json</code> 中添加你需要的扩展：</p>
+<h3 id="推荐组合日常开发"><a class="header" href="#推荐组合日常开发">推荐组合（日常开发）</a></h3>
 <pre><code class="language-json">{
   "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-context-manager",
-    "pi-session-analyzer",
-    "pi-smart-compact",
-    "pi-scheduler"
+    "npm:pi-shepherd",
+    "npm:pi-ate-memory",
+    "npm:pi-roadmap",
+    "npm:pi-ate-smart-compact"
   ]
 }
 </code></pre>
-<p>或者全部安装（pi-workflow 和 pi-shared-utils 是开发库，一般用户不需要直接安装）：</p>
+<h3 id="全量安装"><a class="header" href="#全量安装">全量安装</a></h3>
 <pre><code class="language-json">{
   "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-context-manager",
-    "pi-session-analyzer",
-    "pi-smart-compact",
-    "pi-scheduler",
-    "pi-workflow",
-    "pi-shared-utils"
+    "npm:pi-shepherd",
+    "npm:pi-ate-memory",
+    "npm:pi-roadmap",
+    "npm:pi-context-manager",
+    "npm:pi-session-analyzer",
+    "npm:pi-ate-smart-compact",
+    "npm:pi-ate-scheduler",
+    "npm:pi-ate-workflow",
+    "npm:@pi-atelier/shared-utils",
+    "npm:pi-usage-stats",
+    "npm:pi-journal"
   ]
 }
 </code></pre>
 <p>大部分扩展都是 <strong>开箱即用</strong>——安装后无需额外配置（但你可以按需定制）。</p>
 <blockquote>
-<p>💡 <strong>提示</strong>：pi-workflow 和 pi-shared-utils 是供其他扩展调用的开发库，一般用户不需要直接安装。</p>
+<p>💡 <strong>提示</strong>：pi-ate-workflow 和 @pi-atelier/shared-utils 是供其他扩展调用的开发库，一般用户不需要直接安装。</p>
 </blockquote>
+<blockquote>
+<p>💡 <strong>安装方式</strong>：<code>npm:</code> 前缀表示从 npm registry 安装。也可以用 <code>git:github.com/catlain/pi-&lt;name&gt;</code> 从源码安装（适合开发者）。</p>
+</blockquote>
+<h3 id="包名速查"><a class="header" href="#包名速查">包名速查</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>功能</th><th>npm 包名</th><th>源码仓库</th></tr>
+</thead>
+<tbody>
+<tr><td>守卫</td><td><code>pi-shepherd</code></td><td><a href="https://github.com/catlain/pi-shepherd">catlain/pi-shepherd</a></td></tr>
+<tr><td>记忆</td><td><code>pi-ate-memory</code></td><td><a href="https://github.com/catlain/pi-memory">catlain/pi-memory</a></td></tr>
+<tr><td>规划</td><td><code>pi-roadmap</code></td><td><a href="https://github.com/catlain/pi-roadmap">catlain/pi-roadmap</a></td></tr>
+<tr><td>上下文与诊断</td><td><code>pi-context-manager</code></td><td><a href="https://github.com/catlain/pi-context-manager">catlain/pi-context-manager</a></td></tr>
+<tr><td>会话分析</td><td><code>pi-session-analyzer</code></td><td><a href="https://github.com/catlain/pi-session-analyzer">catlain/pi-session-analyzer</a></td></tr>
+<tr><td>智能压缩</td><td><code>pi-ate-smart-compact</code></td><td><a href="https://github.com/catlain/pi-smart-compact">catlain/pi-smart-compact</a></td></tr>
+<tr><td>定时任务</td><td><code>pi-ate-scheduler</code></td><td><a href="https://github.com/catlain/pi-scheduler">catlain/pi-scheduler</a></td></tr>
+<tr><td>工作流</td><td><code>pi-ate-workflow</code></td><td><a href="https://github.com/catlain/pi-workflow">catlain/pi-workflow</a></td></tr>
+<tr><td>日志报告</td><td><code>pi-journal</code></td><td><a href="https://github.com/catlain/pi-journal">catlain/pi-journal</a></td></tr>
+<tr><td>使用统计</td><td><code>pi-usage-stats</code></td><td><a href="https://github.com/catlain/pi-usage-stats">catlain/pi-usage-stats</a></td></tr>
+<tr><td>工具库</td><td><code>@pi-atelier/shared-utils</code></td><td><a href="https://github.com/catlain/pi-shared-utils">catlain/pi-shared-utils</a></td></tr>
+</tbody>
+</table>
+</div>
 <h2 id="重要文件路径"><a class="header" href="#重要文件路径">重要文件路径</a></h2>
 <p>在开始之前，你需要知道 pi 的关键文件在哪里：</p>
 <div class="table-wrapper">
