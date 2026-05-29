@@ -2,18 +2,21 @@
 
 ## A. 扩展速查表
 
-| 扩展 | 安装命令 | 核心工具/命令 | 一句话用途 |
-|------|----------|--------------|-----------|
-| pi-memory | `"pi-memory"` | `memory_update`, `memory_index` | 跨会话知识持久化 |
-| pi-roadmap | `"pi-roadmap"` | `roadmap_plan`, `roadmap_next`, `roadmap_done` 等 | 任务拆解和进度追踪 |
-| pi-shepherd | `"pi-shepherd"` | 规则驱动的钩子引擎 | AI 行为守卫（无工具/命令） |
-| pi-context-manager | `"pi-context-manager"` | `payload_analyze`, `/record`, `/context`, `/distill-config`, `/aging-config` 等 | 上下文质量控制 + Token 诊断 |
-| pi-session-analyzer | `"pi-session-analyzer"` | `session_search`, `session_analyze` | 历史会话搜索和回溯 |
-| pi-smart-compact | `"pi-smart-compact"` | `/smart-compact`, `/smart-compact-config` | 长会话智能压缩 |
-| pi-scheduler | `"pi-scheduler"` | `schedule`, `/loop`, `/remind`, `/tasks` | 定时任务和提醒 |
-| pi-workflow | `"pi-workflow"` | `registerWorkflowTool`（供其他扩展调用） | 工作流框架库 |
-| pi-shared-utils | `"pi-shared-utils"` | logger, storage, paths, json, validator, settings-backup, file-lock | 扩展开发工具库 |
-| pi-journal | `"pi-journal"` | `/journal`, `journal` | 日志报告生成（git 活动 + 会话事件 + 记忆变更） |
+| 扩展 | npm 安装 | 源码仓库 | 核心工具/命令 | 一句话用途 |
+|------|---------|----------|--------------|-----------|
+| pi-shepherd | `npm:pi-shepherd` | [GitHub](https://github.com/catlain/pi-shepherd) | 规则驱动的钩子引擎 | AI 行为守卫 |
+| pi-ate-memory | `npm:pi-ate-memory` | [GitHub](https://github.com/catlain/pi-memory) | `memory_update`, `memory_index` | 跨会话知识持久化 |
+| pi-roadmap | `npm:pi-roadmap` | [GitHub](https://github.com/catlain/pi-roadmap) | `roadmap_plan`, `roadmap_next`, `roadmap_done` 等 | 任务拆解和进度追踪 |
+| pi-context-manager | `npm:pi-context-manager` | [GitHub](https://github.com/catlain/pi-context-manager) | `payload_analyze`, `/record`, `/context`, `/distill-config`, `/aging-config` 等 | 上下文质量控制 + Token 诊断 |
+| pi-session-analyzer | `npm:pi-session-analyzer` | [GitHub](https://github.com/catlain/pi-session-analyzer) | `session_search`, `session_analyze` | 历史会话搜索和回溯 |
+| pi-ate-smart-compact | `npm:pi-ate-smart-compact` | [GitHub](https://github.com/catlain/pi-smart-compact) | `/smart-compact`, `/smart-compact-config` | 长会话智能压缩 |
+| pi-ate-scheduler | `npm:pi-ate-scheduler` | [GitHub](https://github.com/catlain/pi-scheduler) | `schedule`, `/loop`, `/remind`, `/tasks` | 定时任务和提醒 |
+| pi-ate-workflow | `npm:pi-ate-workflow` | [GitHub](https://github.com/catlain/pi-workflow) | `registerWorkflowTool`（供其他扩展调用） | 工作流框架库 |
+| @pi-atelier/shared-utils | `npm:@pi-atelier/shared-utils` | [GitHub](https://github.com/catlain/pi-shared-utils) | logger, storage, paths, json, validator, settings-backup, file-lock | 扩展开发工具库 |
+| pi-journal | `npm:pi-journal` | [GitHub](https://github.com/catlain/pi-journal) | `/journal`, `journal` | 日志报告生成（git 活动 + 会话事件 + 记忆变更） |
+| pi-usage-stats | `npm:pi-usage-stats` | [GitHub](https://github.com/catlain/pi-usage-stats) | `usage_stats` | 工具使用次数统计 |
+
+> 💡 **安装方式**：在 `settings.json` 的 `packages` 数组中添加 `"<npm包名>"` 或 `"npm:<npm包名>"`。开发者也可以用 `"git:github.com/catlain/pi-<name>"` 从源码安装。
 
 ## B. 推荐扩展组合
 
@@ -22,9 +25,9 @@
 ```json
 {
   "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-smart-compact"
+    "npm:pi-ate-memory",
+    "npm:pi-roadmap",
+    "npm:pi-ate-smart-compact"
   ]
 }
 ```
@@ -36,11 +39,11 @@
 ```json
 {
   "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-session-analyzer",
-    "pi-smart-compact"
+    "npm:pi-shepherd",
+    "npm:pi-ate-memory",
+    "npm:pi-roadmap",
+    "npm:pi-session-analyzer",
+    "npm:pi-ate-smart-compact"
   ]
 }
 ```
@@ -52,13 +55,13 @@
 ```json
 {
   "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-context-manager",
-    "pi-session-analyzer",
-    "pi-smart-compact",
-    "pi-scheduler"
+    "npm:pi-shepherd",
+    "npm:pi-ate-memory",
+    "npm:pi-roadmap",
+    "npm:pi-context-manager",
+    "npm:pi-session-analyzer",
+    "npm:pi-ate-smart-compact",
+    "npm:pi-ate-scheduler"
   ]
 }
 ```

@@ -109,43 +109,62 @@ pi-atelier 的扩展补上了这些能力缺口：
 
 ## 快速安装
 
-在 pi 的 `settings.json` 中添加你需要的扩展：
+所有扩展包已发布到 npm，在 pi 的 `settings.json` 中添加你需要的扩展：
+
+### 推荐组合（日常开发）
 
 ```json
 {
   "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-context-manager",
-    "pi-session-analyzer",
-    "pi-smart-compact",
-    "pi-scheduler"
+    "npm:pi-shepherd",
+    "npm:pi-ate-memory",
+    "npm:pi-roadmap",
+    "npm:pi-ate-smart-compact"
   ]
 }
 ```
 
-或者全部安装（pi-workflow 和 pi-shared-utils 是开发库，一般用户不需要直接安装）：
+### 全量安装
 
 ```json
 {
   "packages": [
-    "pi-memory",
-    "pi-roadmap",
-    "pi-shepherd",
-    "pi-context-manager",
-    "pi-session-analyzer",
-    "pi-smart-compact",
-    "pi-scheduler",
-    "pi-workflow",
-    "pi-shared-utils"
+    "npm:pi-shepherd",
+    "npm:pi-ate-memory",
+    "npm:pi-roadmap",
+    "npm:pi-context-manager",
+    "npm:pi-session-analyzer",
+    "npm:pi-ate-smart-compact",
+    "npm:pi-ate-scheduler",
+    "npm:pi-ate-workflow",
+    "npm:@pi-atelier/shared-utils",
+    "npm:pi-usage-stats",
+    "npm:pi-journal"
   ]
 }
 ```
 
 大部分扩展都是 **开箱即用**——安装后无需额外配置（但你可以按需定制）。
 
-> 💡 **提示**：pi-workflow 和 pi-shared-utils 是供其他扩展调用的开发库，一般用户不需要直接安装。
+> 💡 **提示**：pi-ate-workflow 和 @pi-atelier/shared-utils 是供其他扩展调用的开发库，一般用户不需要直接安装。
+
+> 💡 **安装方式**：`npm:` 前缀表示从 npm registry 安装。也可以用 `git:github.com/catlain/pi-<name>` 从源码安装（适合开发者）。
+
+### 包名速查
+
+| 功能 | npm 包名 | 源码仓库 |
+|------|---------|----------|
+| 守卫 | `pi-shepherd` | [catlain/pi-shepherd](https://github.com/catlain/pi-shepherd) |
+| 记忆 | `pi-ate-memory` | [catlain/pi-memory](https://github.com/catlain/pi-memory) |
+| 规划 | `pi-roadmap` | [catlain/pi-roadmap](https://github.com/catlain/pi-roadmap) |
+| 上下文与诊断 | `pi-context-manager` | [catlain/pi-context-manager](https://github.com/catlain/pi-context-manager) |
+| 会话分析 | `pi-session-analyzer` | [catlain/pi-session-analyzer](https://github.com/catlain/pi-session-analyzer) |
+| 智能压缩 | `pi-ate-smart-compact` | [catlain/pi-smart-compact](https://github.com/catlain/pi-smart-compact) |
+| 定时任务 | `pi-ate-scheduler` | [catlain/pi-scheduler](https://github.com/catlain/pi-scheduler) |
+| 工作流 | `pi-ate-workflow` | [catlain/pi-workflow](https://github.com/catlain/pi-workflow) |
+| 日志报告 | `pi-journal` | [catlain/pi-journal](https://github.com/catlain/pi-journal) |
+| 使用统计 | `pi-usage-stats` | [catlain/pi-usage-stats](https://github.com/catlain/pi-usage-stats) |
+| 工具库 | `@pi-atelier/shared-utils` | [catlain/pi-shared-utils](https://github.com/catlain/pi-shared-utils) |
 
 ## 重要文件路径
 
